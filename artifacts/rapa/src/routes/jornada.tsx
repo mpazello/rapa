@@ -208,14 +208,43 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
 
   if (!open) {
     return (
-      <button
-        onClick={handleOpen}
-        className="w-full glass-panel rounded-2xl px-5 py-4 flex items-center gap-3 text-on-surface-variant hover:border-white/20 transition-all group text-left"
-      >
-        <span className="material-symbols-outlined text-xl text-astral-violet/70 group-hover:text-astral-violet transition-colors">edit_note</span>
-        <span className="font-body-md text-sm">O que aconteceu hoje?</span>
-        <span className="ml-auto font-label-sm text-label-sm text-muted-stardust/60 text-xs">registrar</span>
-      </button>
+      <div className="glass-panel rounded-2xl flex overflow-hidden border border-white/8 hover:border-white/20 transition-all">
+        {/* main area — registro para hoje */}
+        <button
+          onClick={handleOpen}
+          className="flex-1 px-5 py-4 flex items-center gap-3 text-on-surface-variant group text-left"
+        >
+          <span className="material-symbols-outlined text-xl text-astral-violet/70 group-hover:text-astral-violet transition-colors">edit_note</span>
+          <span className="font-body-md text-sm">O que aconteceu hoje?</span>
+          <span className="font-label-sm text-label-sm text-muted-stardust/60 text-xs">registrar</span>
+        </button>
+
+        {/* divider */}
+        <div className="w-px bg-white/8 self-stretch" />
+
+        {/* calendar icon — picks a date and opens composer */}
+        <label
+          className="px-4 flex items-center justify-center cursor-pointer text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
+          title="Registrar em outro dia"
+        >
+          <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+            calendar_month
+          </span>
+          <input
+            type="date"
+            max={todayISO()}
+            value={entryDate}
+            onChange={(e) => {
+              if (e.target.value) {
+                setEntryDate(e.target.value);
+                setOpen(true);
+                setTimeout(() => textareaRef.current?.focus(), 80);
+              }
+            }}
+            className="sr-only"
+          />
+        </label>
+      </div>
     );
   }
 
