@@ -131,15 +131,32 @@ function CiclosPage() {
                 <span className="font-label-sm text-label-sm text-primary tracking-widest uppercase">
                   Módulo 13:20
                 </span>
-                <Link
-                  to="/ciclos/kin/$kin"
-                  params={{ kin: String(today) }}
-                  className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors"
-                >
-                  Kin de hoje: {today}
-                  <span suppressHydrationWarning> · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })}</span>
-                  {" →"}
-                </Link>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => navigate({ to: "/ciclos/kin/$kin", params: { kin: String(((today - 2 + 260) % 260) + 1) } })}
+                    className="w-7 h-7 rounded-full border border-outline-variant/40 flex items-center justify-center hover:bg-surface-container-low transition-colors"
+                    aria-label="Kin anterior"
+                  >
+                    <span className="material-symbols-outlined text-base">chevron_left</span>
+                  </button>
+                  <Link
+                    to="/ciclos/kin/$kin"
+                    params={{ kin: String(today) }}
+                    className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors px-1"
+                  >
+                    Kin de hoje: {today}
+                    <span suppressHydrationWarning> · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })}</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => navigate({ to: "/ciclos/kin/$kin", params: { kin: String((today % 260) + 1) } })}
+                    className="w-7 h-7 rounded-full border border-outline-variant/40 flex items-center justify-center hover:bg-surface-container-low transition-colors"
+                    aria-label="Próximo Kin"
+                  >
+                    <span className="material-symbols-outlined text-base">chevron_right</span>
+                  </button>
+                </div>
               </div>
               <div className="tzolkin-matrix mb-2">
                 {SEALS.map((seal) => (
