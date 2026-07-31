@@ -53,6 +53,37 @@ const COLOR_CLASS: Record<SealColor, { text: string; bg: string; border: string 
   amarelo: { text: "text-tertiary", bg: "bg-tertiary", border: "border-tertiary/40" },
 };
 
+/** Retorna a data mais próxima de hoje (passado ou futuro) em que o Kin ocorre. */
+function dateFromKin(targetKin: number): Date {
+  const today = new Date();
+  const todayKin = kinFromDate(today);
+  let diff = (targetKin - todayKin + 260) % 260;
+  // Prefer the nearest occurrence: past if more than half-cycle away
+  if (diff > 130) diff -= 260;
+  const result = new Date(today);
+  result.setDate(result.getDate() + diff);
+  // Fine-tune for Dreamspell Feb-29 skips (at most 1-2 days off)
+  for (let i = 0; i < 4 && kinFromDate(result) !== targetKin; i++) {
+    const actual = kinFromDate(result);
+    result.setDate(result.getDate() + ((targetKin - actual + 260) % 260 <= 130 ? 1 : -1));
+  }
+  return result;
+}
+
+function formatKinDate(d: Date): string {
+  const today = new Date();
+  const todayStr = today.toDateString();
+  const dStr = d.toDateString();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (dStr === todayStr) return "hoje";
+  if (dStr === tomorrow.toDateString()) return "amanhã";
+  if (dStr === yesterday.toDateString()) return "ontem";
+  return d.toLocaleDateString("pt-BR", { day: "numeric", month: "short" });
+}
+
 function KinDetailPage() {
   const params = Route.useParams();
   const navigate = useNavigate();
@@ -114,7 +145,10 @@ function KinDetailPage() {
       <section className="relative mb-8">
         <div className="relative glass-panel rounded-3xl p-8 flex flex-col items-center text-center">
           <KinSeal kin={kin} size={112} pulse eager className="mb-4" />
-          <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`}>KIN {kin}</span>
+          <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`}>
+            KIN {kin}
+            <span className="text-on-surface-variant/60 normal-case tracking-normal"> · {formatKinDate(dateFromKin(kin))}</span>
+          </span>
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-1">{info.fullName}</h1>
           <p className="font-body-md text-on-surface-variant italic">
             {info.seal.maya} · {info.tone.maya}
