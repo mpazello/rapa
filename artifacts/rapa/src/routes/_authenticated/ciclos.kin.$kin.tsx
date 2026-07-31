@@ -72,16 +72,16 @@ function dateFromKin(targetKin: number): Date {
 
 function formatKinDate(d: Date): string {
   const today = new Date();
-  const todayStr = today.toDateString();
+  const formatted = d.toLocaleDateString("pt-BR", { day: "numeric", month: "short" });
   const dStr = d.toDateString();
+  if (dStr === today.toDateString()) return `hoje · ${formatted}`;
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
-  if (dStr === todayStr) return "hoje";
-  if (dStr === tomorrow.toDateString()) return "amanhã";
-  if (dStr === yesterday.toDateString()) return "ontem";
-  return d.toLocaleDateString("pt-BR", { day: "numeric", month: "short" });
+  if (dStr === tomorrow.toDateString()) return `amanhã · ${formatted}`;
+  if (dStr === yesterday.toDateString()) return `ontem · ${formatted}`;
+  return formatted;
 }
 
 function KinDetailPage() {
@@ -145,9 +145,9 @@ function KinDetailPage() {
       <section className="relative mb-8">
         <div className="relative glass-panel rounded-3xl p-8 flex flex-col items-center text-center">
           <KinSeal kin={kin} size={112} pulse eager className="mb-4" />
-          <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`}>
+          <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`} suppressHydrationWarning>
             KIN {kin}
-            <span className="text-on-surface-variant/60 normal-case tracking-normal"> · {formatKinDate(dateFromKin(kin))}</span>
+            <span className="text-on-surface-variant/60 normal-case tracking-normal" suppressHydrationWarning> · {formatKinDate(dateFromKin(kin))}</span>
           </span>
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-1">{info.fullName}</h1>
           <p className="font-body-md text-on-surface-variant italic">
