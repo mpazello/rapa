@@ -437,7 +437,10 @@ function HojePage() {
             </button>
 
             <div className="flex-1 min-w-0">
-              <span className="font-label-sm text-label-sm text-muted-stardust uppercase tracking-widest">Ciclo do Dia</span>
+              <span className="font-label-sm text-label-sm text-muted-stardust uppercase tracking-widest">
+                Ciclo do Dia
+                <span className="normal-case tracking-normal"> · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })}</span>
+              </span>
               <Link
                 to="/ciclos/kin/$kin"
                 params={{ kin: String(todayKin.kin) }}
