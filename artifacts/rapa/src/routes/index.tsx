@@ -225,7 +225,7 @@ function HojePage() {
     <main className="pt-24 pb-32 px-container-margin max-w-[720px] mx-auto min-h-screen relative">
       <section className="mb-section-gap">
         <h2 className="font-serif text-[2rem] leading-tight mb-2 text-ethereal-white">
-          {user ? "Bem-vindo de volta." : "Bem-vindo à RAPA."}
+          {user ? "Bem-vindo de volta." : "Bem-vindo à RAPPAA."}
         </h2>
         <p className="text-on-surface-variant font-body-md mb-6">
           {user ? "Sintonize-se com o ritmo universal." : (
