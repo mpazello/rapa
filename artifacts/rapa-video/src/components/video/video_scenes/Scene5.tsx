@@ -18,7 +18,7 @@ export default function Scene5() {
         >
           <div className="absolute inset-0 bg-[#b6c7eb] blur-[60px] opacity-10 rounded-full" />
           <h1 className="text-[#e6ebf5] font-serif text-[12vw] leading-none tracking-tighter">
-            RAPA
+            RAPPAA
           </h1>
         </motion.div>
         

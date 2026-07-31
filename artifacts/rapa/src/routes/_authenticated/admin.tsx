@@ -9,7 +9,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin — RAPA" },
+      { title: "Admin — RAPPAA" },
       { name: "description", content: "Gestão de usuários e papéis." },
     ],
   }),
@@ -135,7 +135,7 @@ function AdminPage() {
       <header className="mb-8">
         <h1 className="font-headline-lg-mobile text-headline-lg-mobile mb-1">Gestão de usuários</h1>
         <p className="text-on-surface-variant text-sm">
-          {rows.length} {rows.length === 1 ? "pessoa" : "pessoas"} na RAPA
+          {rows.length} {rows.length === 1 ? "pessoa" : "pessoas"} na RAPPAA
         </p>
       </header>
 

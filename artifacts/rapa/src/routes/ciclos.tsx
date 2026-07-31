@@ -16,13 +16,13 @@ export const Route = createFileRoute("/ciclos")({
     const todaySeal = SEAL_IMAGE[getKinInfo(kinFromDate(new Date())).seal.index];
     return {
       meta: [
-        { title: "Ciclos — RAPA" },
+        { title: "Ciclos — RAPPAA" },
         {
           name: "description",
           content:
             "Kin do dia, tom galáctico e selo maia: calculadora Tzolkin viva do Sincronário 13:20.",
         },
-        { property: "og:title", content: "Ciclos — RAPA" },
+        { property: "og:title", content: "Ciclos — RAPPAA" },
         { property: "og:url", content: "/ciclos" },
       ],
       links: [

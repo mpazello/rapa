@@ -10,7 +10,7 @@ import { askKai } from "@/lib/kai.functions";
 export const Route = createFileRoute("/kai")({
   head: () => ({
     meta: [
-      { title: "KAI — RAPA" },
+      { title: "KAI — RAPPAA" },
       { name: "description", content: "KAI, seu mentor de consciência. Diálogo contextual guiado pelo seu humor e filosofia." },
       { property: "og:title", content: "KAI — Mentor de Consciência" },
     ],

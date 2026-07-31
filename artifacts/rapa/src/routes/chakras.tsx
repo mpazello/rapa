@@ -14,13 +14,13 @@ import { SEAL_IMAGE } from "@/lib/seal-images";
 export const Route = createFileRoute("/chakras")({
   head: () => ({
     meta: [
-      { title: "7 Chakras — RAPA" },
+      { title: "7 Chakras — RAPPAA" },
       {
         name: "description",
         content:
           "Explore seu mapa energético através da sincronicidade do tempo: os 7 Chakras e suas correspondências galácticas no Sincronário 13:20.",
       },
-      { property: "og:title", content: "7 Chakras — RAPA" },
+      { property: "og:title", content: "7 Chakras — RAPPAA" },
       { property: "og:url", content: "/chakras" },
     ],
     links: [{ rel: "canonical", href: "/chakras" }],

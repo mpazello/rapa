@@ -51,7 +51,7 @@ export function TopAppBar() {
               <span className="material-symbols-outlined text-astral-violet text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 all_inclusive
               </span>
-              <span className="font-serif text-xl tracking-wide text-astral-violet">RAPA</span>
+              <span className="font-serif text-xl tracking-wide text-astral-violet">RAPPAA</span>
             </Link>
 
             <button

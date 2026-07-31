@@ -31,9 +31,9 @@ export const Route = createFileRoute("/")({
     const todaySeal = SEAL_IMAGE[getTodayKinInfo().seal.index];
     return {
       meta: [
-        { title: "Hoje — RAPA" },
+        { title: "Hoje — RAPPAA" },
         { name: "description", content: "Registre sua energia, veja o ciclo do dia e retome sua jornada." },
-        { property: "og:title", content: "Hoje — RAPA" },
+        { property: "og:title", content: "Hoje — RAPPAA" },
       ],
       links: [
         { rel: "canonical", href: "/" },
@@ -307,7 +307,7 @@ function HojePage() {
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             role="dialog"
             aria-modal="true"
-            aria-label="Apresentação da RAPA"
+            aria-label="Apresentação da RAPPAA"
           >
             <button
               className="absolute inset-0 bg-black/80 backdrop-blur-sm"

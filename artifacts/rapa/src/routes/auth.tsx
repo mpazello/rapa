@@ -8,8 +8,8 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Entrar — RAPA" },
-      { name: "description", content: "Entre ou crie sua conta na RAPA para iniciar sua jornada." },
+      { title: "Entrar — RAPPAA" },
+      { name: "description", content: "Entre ou crie sua conta na RAPPAA para iniciar sua jornada." },
     ],
   }),
   component: AuthPage,
@@ -52,7 +52,7 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Conta criada. Bem-vindo(a) à RAPA.");
+        toast.success("Conta criada. Bem-vindo(a) à RAPPAA.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -88,7 +88,7 @@ function AuthPage() {
         </h1>
         <p className="font-body-md text-on-surface-variant">
           {mode === "signin"
-            ? "Entre para continuar sua jornada RAPA"
+            ? "Entre para continuar sua jornada RAPPAA"
             : mode === "forgot"
               ? "Informe seu email e enviaremos um link para redefinir a senha"
               : "Crie sua conta e registre seus ciclos"}

@@ -9,7 +9,7 @@ import { sincronarioDate, yearBearer, sincronarioCoordinate, personalCubicPatter
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
     meta: [
-      { title: "Perfil — RAPA" },
+      { title: "Perfil — RAPPAA" },
       { name: "description", content: "Seu perfil, Kin natal e configurações." },
     ],
   }),

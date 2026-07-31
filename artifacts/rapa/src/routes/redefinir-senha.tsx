@@ -7,8 +7,8 @@ export const Route = createFileRoute("/redefinir-senha")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Redefinir senha — RAPA" },
-      { name: "description", content: "Escolha uma nova senha para sua conta RAPA." },
+      { title: "Redefinir senha — RAPPAA" },
+      { name: "description", content: "Escolha uma nova senha para sua conta RAPPAA." },
     ],
   }),
   component: ResetPasswordPage,

@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_authenticated/ciclos/kin/$kin")({
   head: ({ params }) => {
     const k = Number(params.kin);
     const info = k >= 1 && k <= 260 ? getKinInfo(k) : null;
-    const title = info ? `Kin ${k} — ${info.fullName} — RAPA` : `Kin ${params.kin} — RAPA`;
+    const title = info ? `Kin ${k} — ${info.fullName} — RAPPAA` : `Kin ${params.kin} — RAPPAA`;
     const description = info
       ? `${info.fullName}: ${info.affirmation}`
       : "Explore o Kin, seu Selo, Tom e a ressonância com sua jornada.";

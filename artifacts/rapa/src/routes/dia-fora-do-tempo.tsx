@@ -17,7 +17,7 @@ import { SEAL_IMAGE } from "@/lib/seal-images";
 export const Route = createFileRoute("/dia-fora-do-tempo")({
   head: () => ({
     meta: [
-      { title: "Dia Fora do Tempo — RAPA" },
+      { title: "Dia Fora do Tempo — RAPPAA" },
       { name: "description", content: "25 de julho — o espaço entre dois ciclos. Uma jornada de 7 portais para encerrar, liberar e renovar." },
     ],
   }),
@@ -781,7 +781,7 @@ function HeroSection({
 
         {!user && isDFTDT && (
           <p className="font-body-sm text-on-surface-variant/60 mt-6">
-            <Link to="/auth" className="text-primary underline">Entre na RAPA</Link> para salvar sua jornada.
+            <Link to="/auth" className="text-primary underline">Entre na RAPPAA</Link> para salvar sua jornada.
           </p>
         )}
       </div>

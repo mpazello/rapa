@@ -10,9 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/jornada")({
   head: () => ({
     meta: [
-      { title: "Jornada — RAPA" },
+      { title: "Jornada — RAPPAA" },
       { name: "description", content: "Sua linha da vida: marcos, reflexões diárias e ciclos de energia." },
-      { property: "og:title", content: "Jornada — RAPA" },
+      { property: "og:title", content: "Jornada — RAPPAA" },
     ],
     links: [{ rel: "canonical", href: "/jornada" }],
   }),

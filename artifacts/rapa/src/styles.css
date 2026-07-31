@@ -23,7 +23,7 @@
   --color-obsidian-deep: #0E1116;
   --color-obsidian-surface: #1E2128;
 
-  /* RAPA dark palette (Material 3 inspired) */
+  /* RAPPAA dark palette (Material 3 inspired) */
   --color-background: #0e1116;
   --color-surface: #141821;
   --color-surface-container-lowest: #0b0e13;
@@ -57,7 +57,7 @@
   --spacing-section-gap: 3.5rem;
 }
 
-/* Root always dark for RAPA Foundation */
+/* Root always dark for RAPPAA Foundation */
 :root,
 html {
   color-scheme: dark;
