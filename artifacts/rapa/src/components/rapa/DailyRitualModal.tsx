@@ -30,7 +30,7 @@ const DAILY_FLOW_STEPS = [
   },
 ];
 
-export function DailyFlowCards() {
+export function DailyFlowCards({ onClose }: { onClose?: () => void }) {
   const [active, setActive] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const total = DAILY_FLOW_STEPS.length;
@@ -232,7 +232,7 @@ export function DailyRitualModal({ open, onClose }: { open: boolean; onClose: ()
           Um ritual simples de poucos minutos — da manhã à noite.
         </p>
 
-        <DailyFlowCards />
+        <DailyFlowCards onClose={onClose} />
 
         <p className="font-body-sm text-on-surface-variant/70 mt-4 pt-3 border-t border-primary/10 flex items-start gap-2">
           <span
