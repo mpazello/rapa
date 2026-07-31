@@ -298,7 +298,7 @@ function HojePage() {
           className="mt-4 w-full flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-low px-4 py-3 text-on-surface-variant transition-all hover:bg-surface-container-high hover:text-on-surface"
         >
           <span className="material-symbols-outlined text-[24px] text-primary">play_circle</span>
-          <span className="font-label-lg">Assista à apresentação da RAPA</span>
+          <span className="font-label-lg">Assista à apresentação da RAPPAA</span>
           <span className="material-symbols-outlined ml-auto text-[18px]">play_arrow</span>
         </button>
 
