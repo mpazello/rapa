@@ -1,0 +1,36 @@
+kind = "web"
+previewPath = "/"
+title = "Rapa"
+version = "1.0.0"
+id = "artifacts/rapa"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25683
+
+[services.development]
+run = "pnpm --filter @workspace/rapa run dev"
+
+[services.production]
+
+[services.production.build]
+args = [ "pnpm", "--filter", "@workspace/rapa", "run", "build" ]
+
+[services.production.build.env]
+NODE_ENV = "production"
+NITRO_PRESET = "node-server"
+
+[services.production.run]
+args = [ "node", "artifacts/rapa/.output/server/index.mjs" ]
+
+[services.production.run.env]
+PORT = "25683"
+NODE_ENV = "production"
+SUPABASE_URL = "https://hzjmivuaxqlhwxbjbsht.supabase.co"
+SUPABASE_PUBLISHABLE_KEY = "REDACTED_SUPABASE_ANON_KEY"
+
+[services.env]
+PORT = "25683"
+BASE_PATH = "/"

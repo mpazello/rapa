@@ -1,0 +1,27 @@
+kind = "video"
+previewPath = "/rapa-video/"
+title = "Vídeo RAPA"
+version = "1.0.0"
+id = "artifacts/rapa-video"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/rapa-video/" ]
+localPort = 19488
+
+[services.development]
+run = "pnpm --filter @workspace/rapa-video run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/rapa-video", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/rapa-video/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19488"
+BASE_PATH = "/rapa-video/"

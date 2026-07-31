@@ -1,0 +1,281 @@
+Crie uma experiência visual e interativa para o módulo **"7 Chakras"** do sistema Tzolkin / Sincronário da Paz.
+
+O objetivo é apresentar os 7 Chakras de forma extremamente visual, intuitiva e contemplativa, permitindo que o usuário compreenda rapidamente a posição de cada chakra no corpo e explore sua relação com os elementos energéticos do sistema.
+
+### 1. VISUAL PRINCIPAL
+
+Criar uma representação central de uma figura humana estilizada, vista de frente, com os 7 Chakras posicionados verticalmente ao longo do eixo central do corpo.
+
+Cada chakra deve aparecer como um círculo luminoso, com sua cor tradicional, brilho suave e uma pequena animação de pulsação.
+
+Os 7 Chakras devem estar posicionados aproximadamente em:
+
+1. Chakra Raiz — base da coluna
+2. Chakra Sacral — região abaixo do umbigo
+3. Chakra do Plexo Solar — região do abdômen
+4. Chakra Cardíaco — centro do peito
+5. Chakra Laríngeo — garganta
+6. Chakra Frontal / Terceiro Olho — entre as sobrancelhas
+7. Chakra Coronário — topo da cabeça
+
+Criar uma linha vertical sutil conectando os 7 Chakras, representando o fluxo energético ascendente.
+
+A figura humana deve ter estética minimalista, elegante, espiritual e contemporânea, evitando excesso de elementos visuais.
+
+### 2. INTERAÇÃO
+
+Cada chakra deve ser clicável.
+
+Ao passar o mouse sobre um chakra, mostrar um tooltip contendo:
+
+* Nome do Chakra
+* Cor
+* Localização
+* Palavra-chave principal
+
+Ao clicar, abrir um painel detalhado com uma transição suave.
+
+O chakra selecionado deve aumentar levemente de escala e emitir um brilho mais intenso.
+
+Os outros chakras devem permanecer visíveis, mas com menor destaque.
+
+### 3. PAINEL DETALHADO DO CHAKRA
+
+Ao selecionar um chakra, apresentar:
+
+**Nome do Chakra**
+
+**Símbolo visual**
+
+**Cor**
+
+**Localização no corpo**
+
+**Elemento associado**
+
+**Função energética**
+
+**Órgãos relacionados**
+
+**Mantra**
+
+**Dia da semana**
+
+**Idade ou ciclo de desenvolvimento associado**
+
+**Plasma Radial relacionado**
+
+**Selo Solar relacionado**
+
+**Tom Galáctico relacionado**
+
+**Onda Encantada relacionada**
+
+**Kin relacionado**
+
+**Afirmação Galáctica**
+
+### 4. RELAÇÃO COM O TZOLKIN
+
+Criar uma seção chamada:
+
+"Correspondências Galácticas"
+
+Mostrar visualmente como o chakra selecionado se relaciona com:
+
+* 20 Selos Solares
+* 13 Tons Galácticos
+* Kin do dia
+* Onda Encantada
+* Castelo
+* 7 Plasmas Radiais
+* 13 Luas
+
+Usar cards conectados por linhas ou um fluxo visual:
+
+CHAKRA
+↓
+PLASMA RADIAL
+↓
+SELO SOLAR
+↓
+TOM GALÁCTICO
+↓
+KIN
+↓
+ONDA ENCANTADA
+↓
+CASTELO
+
+### 5. MAPA DOS 7 CHAKRAS
+
+Criar também uma visualização alternativa em formato de tabela/card vertical.
+
+Cada linha representa um chakra e contém:
+
+[Ícone] [Chakra] [Cor] [Localização] [Plasma] [Mantra] [Função]
+
+Permitir alternar entre:
+
+"Visualização Corporal"
+"Mapa Energético"
+"Correspondências"
+
+### 6. VISUALIZAÇÃO DO DIA
+
+Adicionar uma área chamada:
+
+"Chakra em Sintonia com o Kin de Hoje"
+
+O sistema deve identificar automaticamente o Kin correspondente à data atual e destacar o chakra relacionado, mostrando:
+
+"Hoje, a energia está relacionada ao Chakra X"
+
+Exibir:
+
+* Chakra
+* Plasma Radial
+* Selo Solar
+* Tom
+* Kin
+* Onda Encantada
+* Uma breve interpretação simbólica
+
+Criar uma animação visual conectando o Kin do dia ao chakra correspondente.
+
+### 7. NAVEGAÇÃO TEMPORAL
+
+Adicionar um seletor de data.
+
+O usuário pode escolher qualquer data e o sistema recalcula automaticamente:
+
+Data
+→ Kin
+→ Selo
+→ Tom
+→ Onda Encantada
+→ Castelo
+→ Lua
+→ Plasma Radial
+→ Chakra relacionado
+
+Permitir navegar entre:
+
+"Hoje"
+"Ontem"
+"Amanhã"
+"Escolher uma data"
+
+### 8. EXPERIÊNCIA VISUAL
+
+A interface deve transmitir sensação de:
+
+* Harmonia
+* Sincronicidade
+* Contemplação
+* Conexão
+* Fluxo energético
+* Exploração
+
+Usar fundo escuro ou gradiente profundo, com elementos luminosos.
+
+Os Chakras devem ser os elementos visuais mais importantes da tela.
+
+Evitar aparência de dashboard corporativo.
+
+Preferir uma estética semelhante a uma experiência digital de meditação, mapa cósmico ou observatório energético.
+
+Usar microanimações suaves.
+
+Não utilizar excesso de texto na tela principal.
+
+Priorizar:
+
+VISUALIZAÇÃO → INTERAÇÃO → EXPLORAÇÃO → DETALHAMENTO
+
+### 9. ARQUITETURA DE DADOS
+
+Estruturar os dados dos Chakras em uma estrutura independente para que as correspondências possam ser alteradas sem modificar a interface.
+
+Criar uma entidade:
+
+chakra
+
+Campos sugeridos:
+
+id
+nome
+numero
+cor
+simbolo
+localizacao
+elemento
+funcao_energetica
+orgaos
+mantra
+dia_semana
+idade_inicio
+idade_fim
+plasma_radial_id
+selo_solar_id
+tom_id
+kin_id
+descricao
+afirmacao
+
+Criar relacionamentos entre:
+
+chakra
+plasma_radial
+selo_solar
+tom_galactico
+kin
+onda_encantada
+castelo
+lua
+
+### 10. IMPORTANTE SOBRE AS CORRESPONDÊNCIAS
+
+Não inventar automaticamente correspondências entre Chakras, Plasmas Radiais, Selos, Tons e Kins.
+
+Essas associações devem ser armazenadas em uma tabela de correspondência configurável, permitindo que o administrador selecione qual tradição ou sistema está sendo utilizado.
+
+Criar uma estrutura:
+
+"Mapa de Correspondências"
+
+com a possibilidade de ativar/desativar diferentes modelos de correspondência.
+
+Deixar explícito na interface quando uma correspondência pertence ao sistema contemporâneo do Sincronário/Dreamspell ou quando é uma associação complementar criada pelo projeto.
+
+### RESULTADO ESPERADO
+
+Criar uma tela visualmente impactante onde o usuário veja imediatamente:
+
+```
+         ✨ CORONÁRIO
+              ●
+              │
+         👁 TERCEIRO OLHO
+              ●
+              │
+         🔵 GARGANTA
+              ●
+              │
+         💚 CORAÇÃO
+              ●
+              │
+         ☀️ PLEXO SOLAR
+              ●
+              │
+         🟠 SACRAL
+              ●
+              │
+         🔴 RAIZ
+```
+
+Ao clicar em qualquer chakra, toda a rede de correspondências daquele chakra deve ser revelada visualmente.
+
+O conceito central da experiência deve ser:
+
+"Explore seu mapa energético através da sincronicidade do tempo."

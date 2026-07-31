@@ -1,6 +1,6 @@
-# [Project name]
+# RAPA
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+App de bem-estar/jornada pessoal (registro de energia diária, ciclos Kin/Tzolkin, KAI) importado do Lovable (repo mpazello/rapa-57c2f292).
 
 ## Run & Operate
 
@@ -22,11 +22,14 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/rapa` — app importado (TanStack Start + Vite + React 19, Tailwind 4, shadcn). Rotas em `src/routes/`.
+- Supabase: cliente em `artifacts/rapa/src/integrations/supabase/`; env vars `VITE_SUPABASE_*` no `.env` do artifact (chave publishable, é pública por design).
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- O app roda como veio do Lovable: TanStack Start SSR via `@lovable.dev/vite-tanstack-config`, com auth e dados no Supabase (não migrado para o stack Replit por decisão do usuário).
+- Dev script adaptado para Node/pnpm: `vite dev --port $PORT --host 0.0.0.0`; `allowedHosts: true` adicionado no `vite.config.ts` para o proxy do preview.
+- Bun não é usado; `bun.lock`/`bunfig.toml` removidos, deps gerenciadas pelo pnpm workspace.
 
 ## Product
 

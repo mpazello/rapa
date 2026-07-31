@@ -1,0 +1,675 @@
+# ATUALIZAÇÃO DO SISTEMA — EXPERIÊNCIA DO DIA FORA DO TEMPO
+
+Quero atualizar o sistema existente no Replit, mantendo toda a arquitetura, funcionalidades e identidade visual já implementadas.
+
+NÃO recrie o projeto do zero.
+
+NÃO remova funcionalidades existentes.
+
+NÃO substitua componentes que já funcionam sem necessidade.
+
+Primeiro, analise o código existente, a estrutura de pastas, banco de dados, componentes, rotas, autenticação e arquitetura atual.
+
+Depois, implemente a nova experiência descrita abaixo, integrando-a ao sistema existente.
+
+---
+
+# 1. CONCEITO
+
+Criar uma experiência especial para o dia **25 de julho**, conhecido dentro do sistema do Sincronário de 13 Luas / Dreamspell como:
+
+# 🌈 DIA FORA DO TEMPO
+
+O conceito central é:
+
+> "25 de julho não é apenas o fim de um ciclo.
+> É o espaço entre dois ciclos.
+> Um dia para lembrar, liberar e escolher."
+
+O Dia Fora do Tempo deve funcionar como uma experiência de transição entre:
+
+**CICLO QUE TERMINA**
+↓
+**25 DE JULHO — DIA FORA DO TEMPO**
+↓
+**NOVO CICLO**
+↓
+**26 DE JULHO**
+
+A experiência deve ser contemplativa, visual, interativa e emocionalmente significativa.
+
+---
+
+# 2. REGRAS IMPORTANTES
+
+O Dia Fora do Tempo deve ser tratado como uma experiência especial do sistema.
+
+Não apresentar o Dia Fora do Tempo como um "Kin diário comum".
+
+A interface deve deixar claro que:
+
+* 25 de julho é o Dia Fora do Tempo dentro do Sincronário de 13 Luas utilizado pelo projeto;
+* é um dia de transição;
+* não pertence às 13 Luas de 28 dias;
+* antecede o início do novo ciclo anual em 26 de julho.
+
+Não alterar a lógica existente de cálculo do Tzolkin/Kin sem necessidade.
+
+Preservar a lógica atual do sistema.
+
+Se o sistema já possui cálculo de Kin, Selo Solar, Tom, Onda Encantada, Castelo, Lua ou Plasma Radial, reutilizar essas funções e componentes.
+
+Não duplicar lógica já existente.
+
+---
+
+# 3. DETECÇÃO AUTOMÁTICA DA DATA
+
+O sistema deve detectar automaticamente quando a data atual é:
+
+**25 de julho**
+
+Quando isso ocorrer, ativar automaticamente o:
+
+## MODO DIA FORA DO TEMPO
+
+Durante o dia 25/07, a experiência especial deve ser apresentada como destaque na página inicial.
+
+Criar também uma rota específica, por exemplo:
+
+/dia-fora-do-tempo
+
+ou adaptar à arquitetura existente.
+
+A rota deve ser acessível também manualmente.
+
+Durante os demais dias do ano, o usuário pode visualizar uma versão reduzida ou uma contagem regressiva para o próximo Dia Fora do Tempo.
+
+Exemplo:
+
+"Próximo Dia Fora do Tempo"
+
+XX dias
+
+---
+
+# 4. HERO PRINCIPAL
+
+Criar uma tela de abertura imersiva.
+
+No centro:
+
+## 25
+
+## JULHO
+
+### DIA FORA DO TEMPO
+
+Subtítulo:
+
+> Um dia entre dois ciclos.
+
+Texto:
+
+> Hoje você não precisa correr.
+> Não precisa chegar.
+> Este é um espaço para olhar para o ciclo que termina,
+> liberar o que não precisa continuar
+> e escolher conscientemente o que deseja cultivar.
+
+Criar um botão principal:
+
+### ✨ ENTRAR NO DIA FORA DO TEMPO
+
+Ao clicar, iniciar a experiência.
+
+---
+
+# 5. EXPERIÊNCIA DOS 7 PORTAIS
+
+Criar uma jornada interativa composta por 7 etapas.
+
+O usuário deve avançar uma etapa por vez.
+
+Mostrar no topo um indicador:
+
+**Portal 1 de 7**
+
+ou uma representação circular dos 7 portais.
+
+Os 7 portais são:
+
+## PORTAL 1 — ENCERRAR
+
+Título:
+
+### O que terminou?
+
+Pergunta:
+
+> Quais ciclos, situações ou experiências chegaram ao fim?
+
+Criar campo de texto livre.
+
+---
+
+## PORTAL 2 — LIBERAR
+
+Título:
+
+### O que você não quer carregar para o próximo ciclo?
+
+Campo de texto livre.
+
+Após o usuário confirmar, criar uma animação visual de dissolução das palavras ou partículas.
+
+Mensagem:
+
+> "Você não precisa levar tudo com você."
+
+---
+
+## PORTAL 3 — AGRADECER
+
+Título:
+
+### Pelo que você é grato?
+
+Permitir registrar até 3 itens.
+
+Criar três campos de entrada.
+
+Após salvar, apresentar visualmente os itens como pequenas estrelas ou pontos luminosos.
+
+---
+
+## PORTAL 4 — PERDOAR
+
+Título:
+
+### O que precisa ser perdoado?
+
+Campo de reflexão pessoal.
+
+Avisar que o conteúdo é privado.
+
+Não compartilhar essas informações publicamente.
+
+Mensagem:
+
+> "Perdoar não apaga o passado.
+> Apenas muda o que você escolhe carregar."
+
+---
+
+## PORTAL 5 — CELEBRAR
+
+Título:
+
+### O que você realizou?
+
+Sempre que possível, utilizar dados reais já existentes no sistema.
+
+Criar uma retrospectiva do ciclo anterior.
+
+Se houver dados disponíveis, mostrar:
+
+* Kins explorados;
+* dias visitados;
+* Chakras explorados;
+* Plasmas Radiais estudados;
+* Ondas Encantadas exploradas;
+* reflexões registradas;
+* favoritos;
+* atividades realizadas.
+
+Criar uma visualização chamada:
+
+## SEU CICLO EM RETROSPECTIVA
+
+Se não houver dados suficientes, mostrar uma experiência vazia elegante:
+
+> "Todo ciclo deixa marcas.
+> Comece registrando o que você viveu."
+
+---
+
+## PORTAL 6 — INTENCIONAR
+
+Título:
+
+### O que você deseja cultivar no novo ciclo?
+
+Permitir selecionar até 3 intenções.
+
+Sugestões:
+
+* 🌱 Crescimento
+* 💧 Fluidez
+* 🔥 Coragem
+* 💚 Harmonia
+* 🌬️ Liberdade
+* 🌙 Intuição
+* ☀️ Clareza
+* ✨ Presença
+* ❤️ Amor
+* 🌀 Transformação
+
+Permitir também criar uma intenção personalizada.
+
+As intenções escolhidas devem ser salvas no perfil do usuário ou no registro do ciclo, conforme a arquitetura existente.
+
+---
+
+## PORTAL 7 — RENOVAR
+
+Criar uma experiência de encerramento.
+
+Mostrar uma animação em que:
+
+1. O círculo do ciclo anterior se fecha.
+2. O círculo se dissolve.
+3. Surge um espaço vazio luminoso.
+4. Uma nova esfera começa a aparecer.
+5. Os 7 Chakras são iluminados progressivamente.
+
+Mensagem:
+
+> "O ciclo terminou.
+> O espaço foi criado.
+> Agora você pode escolher como entrar no próximo."
+
+Botão:
+
+# ✨ ATRAVESSAR PARA O NOVO CICLO
+
+---
+
+# 6. INTEGRAÇÃO COM OS 7 CHAKRAS
+
+Integrar os 7 Chakras à experiência dos 7 Portais.
+
+Usar os Chakras já existentes no sistema, caso estejam cadastrados.
+
+Mapeamento visual padrão:
+
+1. 🔴 Chakra Raiz → ENCERRAR
+2. 🟠 Chakra Sacral → LIBERAR
+3. 🟡 Plexo Solar → AGRADECER
+4. 💚 Chakra Cardíaco → PERDOAR
+5. 🔵 Chakra Laríngeo → EXPRESSAR
+6. 🟣 Terceiro Olho → INTENCIONAR
+7. ⚪ Chakra Coronário → RENOVAR
+
+Esse relacionamento deve ser apresentado como uma camada simbólica e interpretativa do projeto.
+
+Não afirmar que essa correspondência é uma regra histórica do calendário maia.
+
+A interface deve mostrar que se trata de uma correspondência energética criada para a experiência do projeto.
+
+Durante cada portal:
+
+* destacar o Chakra correspondente;
+* iluminar o Chakra;
+* mostrar nome e cor;
+* apresentar uma breve descrição;
+* criar uma animação de energia.
+
+No final dos 7 portais:
+
+Os 7 Chakras devem ficar iluminados simultaneamente.
+
+Mensagem:
+
+> "Você atravessou o ciclo."
+
+---
+
+# 7. PONTE ENTRE OS CICLOS
+
+Criar uma visualização especial.
+
+Representar:
+
+### CICLO QUE TERMINA
+
+↓
+
+### 25/07
+
+### DIA FORA DO TEMPO
+
+↓
+
+### NOVO CICLO
+
+Visualmente, criar uma ponte ou passagem luminosa.
+
+No início:
+
+> Eu agradeço pelo que vivi.
+
+No centro:
+
+> Eu libero o que não preciso carregar.
+
+No final:
+
+> Eu escolho o que quero cultivar.
+
+O usuário deve avançar pela ponte por meio de uma animação.
+
+---
+
+# 8. MAPA ENERGÉTICO DO DIA
+
+Criar uma seção:
+
+## ENERGIA DA TRANSIÇÃO
+
+Mostrar:
+
+**Data:** 25/07
+
+**Evento:** Dia Fora do Tempo
+
+**Ciclo anterior:** obter dinamicamente do sistema
+
+**Novo ciclo:** obter dinamicamente do sistema
+
+**Próximo início de ciclo:** 26/07
+
+Se o sistema já possui informações do Ano Galáctico, mostrar:
+
+* Ano Galáctico que termina;
+* Ano Galáctico que começa;
+* Selo Solar do Ano;
+* Tom do Ano;
+* Afirmação Galáctica.
+
+Não criar valores fictícios.
+
+Utilizar os dados reais existentes no banco ou na lógica do sistema.
+
+---
+
+# 9. RELAÇÃO COM O TZOLKIN
+
+Se o sistema possui um cálculo de Kin para 25/07, mostrar o Kin apenas como referência contextual.
+
+A interface deve destacar:
+
+## "O Dia Fora do Tempo"
+
+como o elemento principal.
+
+Não apresentar o dia como um dia normal do ciclo das 13 Luas.
+
+Se houver dados disponíveis, mostrar uma área secundária:
+
+### CONTEXTO GALÁCTICO
+
+* Kin;
+* Selo Solar;
+* Tom;
+* Onda Encantada;
+* Castelo;
+* Plasma Radial;
+* Lua anterior;
+* próximo ciclo.
+
+---
+
+# 10. CARTA DE TRANSIÇÃO
+
+Ao finalizar os 7 portais, gerar uma página final personalizada.
+
+Título:
+
+# 🌈 SUA CARTA DE TRANSIÇÃO
+
+Mostrar:
+
+* Nome do usuário;
+* Data: 25 de julho;
+* Ciclo encerrado;
+* Novo ciclo;
+* 3 agradecimentos;
+* coisas que decidiu liberar;
+* 3 intenções;
+* Chakra de destaque;
+* informações energéticas do novo ciclo.
+
+Criar uma mensagem final:
+
+> "Você encerrou um ciclo.
+>
+> Você criou espaço.
+>
+> Agora existe uma escolha.
+>
+> O próximo ciclo ainda não foi escrito.
+>
+> Entre o que foi e o que será,
+> existe você."
+
+Adicionar botões:
+
+### ✨ SALVAR MINHA CARTA
+
+### 📤 COMPARTILHAR
+
+### 🌅 ENTRAR NO NOVO CICLO
+
+A opção de compartilhar deve gerar uma imagem ou cartão visual, sem expor informações privadas do usuário por padrão.
+
+---
+
+# 11. EXPERIÊNCIA DO DIA 26 DE JULHO
+
+Após o Dia Fora do Tempo, o sistema deve reconhecer automaticamente o dia 26/07 como início do novo ciclo anual.
+
+Se o usuário concluiu a experiência do dia 25/07, mostrar uma mensagem personalizada:
+
+> "Você atravessou o Dia Fora do Tempo.
+> Bem-vindo a um novo ciclo."
+
+Mostrar o novo ciclo e as intenções registradas no dia anterior.
+
+Criar um botão:
+
+### 🌟 EXPLORAR MEU NOVO CICLO
+
+As intenções definidas no dia 25/07 devem aparecer como um elemento visual do novo ciclo.
+
+---
+
+# 12. DESIGN E UX
+
+A experiência deve ser visualmente impactante.
+
+Usar:
+
+* fundo cósmico;
+* gradientes;
+* partículas;
+* estrelas;
+* mandalas;
+* círculos concêntricos;
+* linhas de energia;
+* animações suaves;
+* transições entre etapas.
+
+Evitar excesso de cards tradicionais.
+
+Evitar aparência de dashboard corporativo.
+
+Criar uma experiência que combine:
+
+**Calendário Galáctico**
++
+**Mapa Energético**
++
+**Jornada de Reflexão**
++
+**Experiência de Transição**
+
+A experiência deve funcionar muito bem em:
+
+* desktop;
+* tablet;
+* celular.
+
+Priorizar acessibilidade e legibilidade.
+
+Respeitar a identidade visual existente do sistema.
+
+Se já existir um Design System, reutilizar seus componentes.
+
+---
+
+# 13. BANCO DE DADOS
+
+Antes de criar novas tabelas, verificar se já existem estruturas equivalentes.
+
+Se necessário, criar uma entidade para armazenar a experiência anual do usuário.
+
+Sugestão:
+
+time_out_of_time_experience
+
+Campos possíveis:
+
+id
+user_id
+year
+started_at
+completed_at
+portal_1_closing
+portal_2_release
+portal_3_gratitude
+portal_4_forgiveness
+portal_5_celebration
+portal_6_intentions
+portal_7_renewal
+intentions
+completed
+created_at
+updated_at
+
+Não duplicar tabelas existentes.
+
+Utilizar o padrão de banco de dados já adotado pelo projeto.
+
+Garantir que cada usuário tenha seu próprio registro.
+
+As respostas devem ser privadas.
+
+---
+
+# 14. REGRAS DE NEGÓCIO
+
+O sistema deve:
+
+1. Detectar automaticamente o dia 25/07.
+2. Ativar o Modo Dia Fora do Tempo.
+3. Permitir iniciar a experiência.
+4. Salvar o progresso.
+5. Permitir continuar posteriormente.
+6. Permitir concluir os 7 portais.
+7. Gerar a Carta de Transição.
+8. Registrar as intenções para o novo ciclo.
+9. No dia 26/07, apresentar o novo ciclo.
+10. Recuperar as intenções registradas no dia anterior.
+
+Se o usuário sair no meio da experiência, salvar o progresso.
+
+Ao retornar, mostrar:
+
+> "Você estava no Portal X de 7."
+
+Botão:
+
+### CONTINUAR MINHA JORNADA
+
+---
+
+# 15. IMPORTANTE — PRESERVAR O SISTEMA
+
+Antes de implementar:
+
+1. Analise a arquitetura atual.
+2. Identifique o framework utilizado.
+3. Identifique o banco de dados.
+4. Identifique o sistema de autenticação.
+5. Identifique o sistema de rotas.
+6. Identifique os componentes visuais existentes.
+7. Identifique como o Kin é calculado.
+8. Identifique como as datas são tratadas.
+9. Identifique se já existem entidades de Chakra, Kin, Lua, Plasma ou Ano Galáctico.
+
+Depois:
+
+* reutilize componentes;
+* reutilize funções;
+* reutilize dados;
+* evite duplicação;
+* não quebre funcionalidades existentes.
+
+Antes de finalizar, execute testes.
+
+Verifique:
+
+* funcionamento em 25/07;
+* funcionamento em 26/07;
+* funcionamento nos demais dias;
+* salvamento de progresso;
+* retomada da experiência;
+* persistência das intenções;
+* experiência mobile;
+* segurança dos dados privados.
+
+---
+
+# RESULTADO FINAL
+
+O objetivo é transformar o dia 25 de julho em um dos momentos mais especiais do sistema.
+
+O usuário deve sentir que está entrando em um espaço diferente do calendário normal.
+
+A experiência deve representar:
+
+### 25/07
+
+## O ESPAÇO ENTRE OS CICLOS
+
+**ENCERRAR**
+→
+**LIBERAR**
+→
+**AGRADECER**
+→
+**PERDOAR**
+→
+**CELEBRAR**
+→
+**INTENCIONAR**
+→
+**RENOVAR**
+
+E então:
+
+### 26/07
+
+## UM NOVO CICLO COMEÇA
+
+A implementação deve ser feita de forma modular, para que futuramente seja possível adicionar novas experiências anuais, como:
+
+* Dia do Equinócio;
+* Solstício;
+* Início de cada Lua;
+* Dia do Kin Galáctico;
+* Festival da Paz;
+* outros eventos do calendário do projeto.
+
+Crie a implementação de forma que o "Dia Fora do Tempo" seja o primeiro módulo de um futuro sistema de **Experiências Especiais do Calendário Galáctico**.

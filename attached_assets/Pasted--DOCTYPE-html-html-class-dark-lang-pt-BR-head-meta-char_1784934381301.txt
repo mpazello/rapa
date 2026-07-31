@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RAPA - Jornada Interior</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#d2bbff",
+                    "surface-container": "#1d2025",
+                    "on-tertiary-fixed": "#221b00",
+                    "on-secondary": "#3c1878",
+                    "obsidian-surface": "#1E2128",
+                    "on-error": "#690005",
+                    "surface-container-lowest": "#0b0e13",
+                    "tertiary-fixed-dim": "#e9c400",
+                    "inverse-surface": "#e1e2e9",
+                    "astral-violet": "#BC9BFF",
+                    "secondary-fixed-dim": "#d2bbff",
+                    "on-primary": "#07305f",
+                    "on-tertiary-container": "#615100",
+                    "primary-fixed": "#d6e3ff",
+                    "on-surface": "#e1e2e9",
+                    "secondary-container": "#533390",
+                    "primary-container": "#a8c7ff",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed": "#eaddff",
+                    "on-secondary-container": "#c4a6ff",
+                    "error": "#ffb4ab",
+                    "tertiary-container": "#e8c300",
+                    "on-background": "#e1e2e9",
+                    "on-primary-container": "#335283",
+                    "ritual-gold": "#FFD700",
+                    "cosmic-blue": "#A8C7FF",
+                    "on-primary-fixed-variant": "#264777",
+                    "outline-variant": "#43474f",
+                    "inverse-primary": "#405f90",
+                    "muted-stardust": "#74777F",
+                    "surface": "#111319",
+                    "on-secondary-fixed": "#25005a",
+                    "ethereal-white": "#F8F9FA",
+                    "primary": "#d5e2ff",
+                    "surface-dim": "#111319",
+                    "on-surface-variant": "#c3c6d0",
+                    "background": "#111319",
+                    "tertiary": "#ffe067",
+                    "outline": "#8d909a",
+                    "surface-container-low": "#191c21",
+                    "error-container": "#93000a",
+                    "inverse-on-surface": "#2e3036",
+                    "obsidian-deep": "#0E1116",
+                    "surface-bright": "#36393f",
+                    "on-primary-fixed": "#001b3d",
+                    "primary-fixed-dim": "#a9c7ff",
+                    "on-secondary-fixed-variant": "#533390",
+                    "surface-tint": "#a9c7ff",
+                    "surface-container-high": "#272a30",
+                    "tertiary-fixed": "#ffe16d",
+                    "surface-container-highest": "#32353a",
+                    "on-tertiary": "#3a3000",
+                    "surface-variant": "#32353a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "container-max": "1200px",
+                    "unit": "8px",
+                    "margin-mobile": "20px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["EB Garamond", "serif"],
+                    "display-lg": ["EB Garamond", "serif"],
+                    "headline-md": ["EB Garamond", "serif"],
+                    "body-md": ["Inter", "sans-serif"],
+                    "display-lg-mobile": ["EB Garamond", "serif"],
+                    "body-lg": ["Inter", "sans-serif"],
+                    "label-md": ["Inter", "sans-serif"],
+                    "title-lg": ["Inter", "sans-serif"],
+                    "label-sm": ["Inter", "sans-serif"]
+            },
+            "fontSize": {
+                    "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .aura-glow-violet {
+            background: radial-gradient(circle at center, rgba(188, 155, 255, 0.15) 0%, transparent 70%);
+        }
+        .aura-glow-blue {
+            background: radial-gradient(circle at center, rgba(168, 199, 255, 0.15) 0%, transparent 70%);
+        }
+        body {
+            background-color: #0E1116;
+            color: #e1e2e9;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md">
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] aura-glow-violet rounded-full blur-[100px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] aura-glow-blue rounded-full blur-[100px]"></div>
+</div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-2">
+<span class="font-display-lg text-display-lg-mobile tracking-widest text-astral-violet">RAPA</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform text-cosmic-blue">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A portrait of a serene individual with a mystical aura, high-end digital art style, soft bioluminescent highlights on the face, dark obsidian background, ethereal violet and cosmic blue lighting, highly detailed features, representing a user profile in a premium spiritual journey application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP3FME_OoywMGhtvXzrej7pmuXpmMS-0lLlMtN9Rfo7K3mqUKRdjxK7LaFaNKUxU6kybI2VVrOaAEvHwkZjdGTla2auPdvPD7yVodY8wQ0VvCmRQg4849jKgkePiLl_Wou854oFoSdBeu9OCfNqeGqQ4Aex7wTToBcNAw_TJ3oOSJtb-JxmdMs-IftA2EE3JNZ9kY8X6TOT8lG37KfnYsG56vUhnkZNUOEhBThMS3GxlgiTsVQnPbvSpbKwYoQlBx3BpnisAUt7Lk"/>
+</div>
+</div>
+</div>
+</header>
+<main class="relative z-10 pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto space-y-10">
+<!-- Welcome Section -->
+<section class="space-y-4">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-ethereal-white">Bem-vindo à RAPA.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+<a class="text-astral-violet underline decoration-ritual-gold/30 underline-offset-4 hover:text-ritual-gold transition-colors" href="#">Entre</a> para registrar sua energia e retomar sua jornada.
+            </p>
+</section>
+<!-- Energy Grid -->
+<section class="grid grid-cols-2 md:grid-cols-5 gap-4">
+<button class="glass-panel rounded-xl p-6 flex flex-col items-center gap-3 group hover:border-ritual-gold/50 transition-all active:scale-95">
+<span class="material-symbols-outlined text-3xl text-cosmic-blue group-hover:scale-110 transition-transform">clear_night</span>
+<span class="font-label-md text-label-md text-muted-stardust group-hover:text-ethereal-white">Calmo</span>
+</button>
+<button class="glass-panel rounded-xl p-6 flex flex-col items-center gap-3 group hover:border-astral-violet/50 transition-all active:scale-95">
+<span class="material-symbols-outlined text-3xl text-astral-violet group-hover:scale-110 transition-transform">self_improvement</span>
+<span class="font-label-md text-label-md text-muted-stardust group-hover:text-ethereal-white">Presente</span>
+</button>
+<button class="glass-panel rounded-xl p-6 flex flex-col items-center gap-3 group hover:border-cosmic-blue/50 transition-all active:scale-95">
+<span class="material-symbols-outlined text-3xl text-cosmic-blue group-hover:scale-110 transition-transform">water_drop</span>
+<span class="font-label-md text-label-md text-muted-stardust group-hover:text-ethereal-white">Fluido</span>
+</button>
+<button class="glass-panel rounded-xl p-6 flex flex-col items-center gap-3 group hover:border-ritual-gold/50 transition-all active:scale-95">
+<span class="material-symbols-outlined text-3xl text-ritual-gold group-hover:scale-110 transition-transform">flare</span>
+<span class="font-label-md text-label-md text-muted-stardust group-hover:text-ethereal-white">Vibrante</span>
+</button>
+<button class="glass-panel rounded-xl p-6 flex flex-col items-center gap-3 group hover:border-muted-stardust/50 transition-all active:scale-95 col-span-2 md:col-span-1">
+<span class="material-symbols-outlined text-3xl text-muted-stardust group-hover:scale-110 transition-transform">cloud</span>
+<span class="font-label-md text-label-md text-muted-stardust group-hover:text-ethereal-white">Reflexivo</span>
+</button>
+</section>
+<!-- Primary Actions Row -->
+<section class="flex flex-col md:flex-row gap-6 items-center">
+<button class="w-full md:w-auto px-10 py-5 bg-gradient-to-r from-cosmic-blue to-astral-violet text-on-primary rounded-full font-label-md text-label-md flex items-center justify-center gap-3 shadow-lg shadow-astral-violet/20 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">edit_note</span>
+                Registrar hoje
+            </button>
+<button class="flex items-center gap-3 text-muted-stardust hover:text-astral-violet transition-colors">
+<span class="material-symbols-outlined">play_circle</span>
+<span class="font-label-md text-label-md">Assista à apresentação da RAPA</span>
+</button>
+</section>
+<!-- Main Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Event Card -->
+<div class="relative group cursor-pointer overflow-hidden rounded-2xl glass-panel p-1">
+<div class="absolute inset-0 bg-gradient-to-br from-ritual-gold/20 via-transparent to-astral-violet/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative p-8 h-full flex flex-col justify-between space-y-8">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ritual-gold/10 border border-ritual-gold/20 text-ritual-gold font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+                                EM 1 DIA
+                            </span>
+<h3 class="font-headline-md text-headline-md text-ethereal-white pt-4">Dia Fora do Tempo</h3>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Prepare-se para a travessia de ciclo. Um momento de pausa e realinhamento cósmico antes do novo giro solar.</p>
+</div>
+</div>
+<!-- Kin Card -->
+<div class="glass-panel p-8 rounded-2xl border-l-4 border-l-cosmic-blue relative overflow-hidden">
+<div class="absolute -right-12 -top-12 opacity-10">
+<span class="material-symbols-outlined text-[200px] text-cosmic-blue rotate-12">cyclone</span>
+</div>
+<div class="relative space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl glass-panel border border-cosmic-blue/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-cosmic-blue">cyclone</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-muted-stardust tracking-widest">CICLO DO DIA</p>
+<h3 class="font-headline-sm text-headline-sm text-cosmic-blue">Kin 227: Mão Rítmico Azul</h3>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed italic">
+                        "A energia de hoje convida a saber através de realização, no tom rítmico de equanimidade."
+                    </p>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-full bg-surface-container text-cosmic-blue text-xs border border-cosmic-blue/10">Realização</span>
+<span class="px-3 py-1 rounded-full bg-surface-container text-astral-violet text-xs border border-astral-violet/10">Cura</span>
+<span class="px-3 py-1 rounded-full bg-surface-container text-ritual-gold text-xs border border-ritual-gold/10">Equilíbrio</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Ritual Progress Visualizer -->
+<section class="glass-panel p-8 rounded-2xl space-y-8">
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<h4 class="font-headline-sm text-headline-sm text-ethereal-white">Progresso da Jornada</h4>
+<p class="font-label-sm text-label-sm text-muted-stardust">Seu ritmo espiritual nesta semana</p>
+</div>
+<div class="text-right">
+<span class="font-display-lg-mobile text-display-lg-mobile text-astral-violet">84%</span>
+</div>
+</div>
+<div class="relative h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cosmic-blue to-astral-violet w-[84%] rounded-full shadow-[0_0_10px_rgba(188,155,255,0.4)]"></div>
+</div>
+<div class="grid grid-cols-7 gap-2">
+<div class="flex flex-col items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-cosmic-blue shadow-[0_0_6px_rgba(168,199,255,0.8)]"></div>
+<span class="font-label-sm text-[10px] text-muted-stardust uppercase">Seg</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-cosmic-blue shadow-[0_0_6px_rgba(168,199,255,0.8)]"></div>
+<span class="font-label-sm text-[10px] text-muted-stardust uppercase">Ter</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-cosmic-blue shadow-[0_0_6px_rgba(168,199,255,0.8)]"></div>
+<span class="font-label-sm text-[10px] text-muted-stardust uppercase">Qua</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-cosmic-blue shadow-[0_0_6px_rgba(168,199,255,0.8)]"></div>
+<span class="font-label-sm text-[10px] text-muted-stardust uppercase">Qui</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-astral-violet shadow-[0_0_6px_rgba(188,155,255,0.8)]"></div>
+<span class="font-label-sm text-[10px] text-astral-violet font-bold uppercase">Hoje</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-30">
+<div class="w-2 h-2 rounded-full bg-muted-stardust"></div>
+<span class="font-label-sm text-[10px] text-muted-stardust uppercase">Sab</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-30">
+<div class="w-2 h-2 rounded-full bg-muted-stardust"></div>
+<span class="font-label-sm text-[10px] text-muted-stardust uppercase">Dom</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-obsidian-surface/90 dark:bg-obsidian-surface/90 backdrop-blur-2xl border-t border-white/10 shadow-2xl">
+<div class="flex justify-around items-center pt-3 pb-6 px-4 w-full">
+<a class="flex flex-col items-center justify-center text-ritual-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)] active:translate-y-[-2px] transition-all" href="#">
+<span class="material-symbols-outlined active-icon">home_max</span>
+<span class="font-label-sm text-label-sm mt-1">Início</span>
+</a>
+<a class="flex flex-col items-center justify-center text-muted-stardust hover:text-cosmic-blue transition-all active:translate-y-[-2px]" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="font-label-sm text-label-sm mt-1">Jornada</span>
+</a>
+<a class="flex flex-col items-center justify-center text-muted-stardust hover:text-cosmic-blue transition-all active:translate-y-[-2px]" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-sm text-label-sm mt-1">Ciclos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-muted-stardust hover:text-cosmic-blue transition-all active:translate-y-[-2px]" href="#">
+<span class="material-symbols-outlined">energy_savings_leaf</span>
+<span class="font-label-sm text-label-sm mt-1">Energia</span>
+</a>
+<a class="flex flex-col items-center justify-center text-muted-stardust hover:text-cosmic-blue transition-all active:translate-y-[-2px]" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-sm text-label-sm mt-1">Perfil</span>
+</a>
+</div>
+</nav>
+<script>
+        // Micro-interactions and subtle effects
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.95)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = '';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
+        // Simple parallax for background glows
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const glows = document.querySelectorAll('.aura-glow-violet, .aura-glow-blue');
+            glows.forEach((glow, index) => {
+                const moveX = (x - 0.5) * (index + 1) * 20;
+                const moveY = (y - 0.5) * (index + 1) * 20;
+                glow.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+    </script>
+</body></html>

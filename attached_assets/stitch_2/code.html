@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RAPA - Registro de Energia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0E1116;
+            color: #e1e2e9;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-display-lg { font-family: 'EB Garamond', serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .active-glow-blue {
+            box-shadow: 0 0 20px rgba(168, 199, 255, 0.2);
+            border-color: rgba(168, 199, 255, 0.5);
+        }
+        .ritual-gradient {
+            background: linear-gradient(135deg, #A8C7FF 0%, #BC9BFF 100%);
+        }
+        .aura-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, rgba(188, 155, 255, 0.08) 0%, rgba(14, 17, 22, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .energy-selector input:checked + label {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #A8C7FF;
+            color: #A8C7FF;
+            transform: scale(1.05);
+        }
+        .energy-selector input:checked + label .material-symbols-outlined {
+            filter: drop-shadow(0 0 8px rgba(168, 199, 255, 0.6));
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface": "#111319",
+                "error": "#ffb4ab",
+                "on-tertiary-fixed-variant": "#544600",
+                "on-tertiary-fixed": "#221b00",
+                "inverse-surface": "#e1e2e9",
+                "ethereal-white": "#F8F9FA",
+                "outline-variant": "#43474f",
+                "muted-stardust": "#74777F",
+                "background": "#111319",
+                "secondary-fixed": "#eaddff",
+                "surface-tint": "#a9c7ff",
+                "surface-container-lowest": "#0b0e13",
+                "on-error": "#690005",
+                "surface-variant": "#32353a",
+                "surface-bright": "#36393f",
+                "secondary-container": "#533390",
+                "on-secondary": "#3c1878",
+                "on-secondary-fixed": "#25005a",
+                "on-secondary-fixed-variant": "#533390",
+                "astral-violet": "#BC9BFF",
+                "obsidian-surface": "#1E2128",
+                "on-surface": "#e1e2e9",
+                "on-error-container": "#ffdad6",
+                "primary": "#d5e2ff",
+                "surface-container-highest": "#32353a",
+                "surface-container": "#1d2025",
+                "on-surface-variant": "#c3c6d0",
+                "on-background": "#e1e2e9",
+                "tertiary-fixed-dim": "#e9c400",
+                "primary-fixed": "#d6e3ff",
+                "secondary": "#d2bbff",
+                "tertiary": "#ffe067",
+                "inverse-primary": "#405f90",
+                "secondary-fixed-dim": "#d2bbff",
+                "ritual-gold": "#FFD700",
+                "primary-fixed-dim": "#a9c7ff",
+                "primary-container": "#a8c7ff",
+                "on-tertiary-container": "#615100",
+                "inverse-on-surface": "#2e3036",
+                "cosmic-blue": "#A8C7FF",
+                "on-secondary-container": "#c4a6ff",
+                "obsidian-deep": "#0E1116",
+                "surface-container-high": "#272a30",
+                "on-tertiary": "#3a3000",
+                "on-primary-fixed": "#001b3d",
+                "outline": "#8d909a",
+                "on-primary": "#07305f",
+                "on-primary-fixed-variant": "#264777",
+                "on-primary-container": "#335283",
+                "tertiary-fixed": "#ffe16d",
+                "surface-dim": "#111319",
+                "error-container": "#93000a",
+                "surface-container-low": "#191c21",
+                "tertiary-container": "#e8c300"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "margin-mobile": "20px",
+                "unit": "8px",
+                "container-max": "1200px",
+                "gutter": "24px",
+                "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                "display-lg": ["EB Garamond"],
+                "display-lg-mobile": ["EB Garamond"],
+                "title-lg": ["Inter"],
+                "headline-md": ["EB Garamond"],
+                "label-sm": ["Inter"],
+                "label-md": ["Inter"],
+                "body-lg": ["Inter"],
+                "body-md": ["Inter"]
+            },
+            "fontSize": {
+                "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-obsidian-deep overflow-x-hidden selection:bg-astral-violet/30">
+<div class="aura-bg"></div>
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<button aria-label="Voltar" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-colors active:scale-95">
+<span class="material-symbols-outlined text-cosmic-blue">arrow_back</span>
+</button>
+<h1 class="font-display-lg text-headline-sm-mobile md:text-headline-sm text-on-surface tracking-wide">Registrar Energia</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-2xl mx-auto space-y-12">
+<!-- Energy Selector Section -->
+<section class="space-y-6">
+<div class="space-y-2">
+<h2 class="font-display-lg text-headline-sm text-astral-violet">Como você se sente?</h2>
+<p class="text-on-surface-variant font-body-md">Observe o ritmo do seu fluxo interno agora.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 energy-selector">
+<!-- Calmo -->
+<div class="relative">
+<input checked="" class="sr-only" id="energy_calmo" name="energy" type="radio"/>
+<label class="flex flex-col items-center justify-center p-4 rounded-xl glass-panel cursor-pointer transition-all duration-300 hover:bg-white/10 active:scale-95" for="energy_calmo">
+<span class="material-symbols-outlined text-3xl mb-2">potted_plant</span>
+<span class="font-label-md">Calmo</span>
+</label>
+</div>
+<!-- Presente -->
+<div class="relative">
+<input class="sr-only" id="energy_presente" name="energy" type="radio"/>
+<label class="flex flex-col items-center justify-center p-4 rounded-xl glass-panel cursor-pointer transition-all duration-300 hover:bg-white/10 active:scale-95" for="energy_presente">
+<span class="material-symbols-outlined text-3xl mb-2">visibility</span>
+<span class="font-label-md">Presente</span>
+</label>
+</div>
+<!-- Fluido -->
+<div class="relative">
+<input class="sr-only" id="energy_fluido" name="energy" type="radio"/>
+<label class="flex flex-col items-center justify-center p-4 rounded-xl glass-panel cursor-pointer transition-all duration-300 hover:bg-white/10 active:scale-95" for="energy_fluido">
+<span class="material-symbols-outlined text-3xl mb-2">waves</span>
+<span class="font-label-md">Fluido</span>
+</label>
+</div>
+<!-- Vibrante -->
+<div class="relative">
+<input class="sr-only" id="energy_vibrante" name="energy" type="radio"/>
+<label class="flex flex-col items-center justify-center p-4 rounded-xl glass-panel cursor-pointer transition-all duration-300 hover:bg-white/10 active:scale-95" for="energy_vibrante">
+<span class="material-symbols-outlined text-3xl mb-2">bolt</span>
+<span class="font-label-md">Vibrante</span>
+</label>
+</div>
+<!-- Reflexivo -->
+<div class="relative">
+<input class="sr-only" id="energy_reflexivo" name="energy" type="radio"/>
+<label class="flex flex-col items-center justify-center p-4 rounded-xl glass-panel cursor-pointer transition-all duration-300 hover:bg-white/10 active:scale-95" for="energy_reflexivo">
+<span class="material-symbols-outlined text-3xl mb-2">self_improvement</span>
+<span class="font-label-md">Reflexivo</span>
+</label>
+</div>
+</div>
+</section>
+<!-- Daily Intention Section -->
+<section class="space-y-6">
+<div class="space-y-2">
+<h2 class="font-display-lg text-headline-sm text-astral-violet">Intenção do Dia</h2>
+<p class="text-on-surface-variant font-body-md">Qual semente você deseja plantar hoje?</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<button class="px-5 py-2 rounded-full glass-panel border-ritual-gold/20 text-on-surface hover:bg-ritual-gold/10 transition-colors font-label-md active:scale-95">Gratidão</button>
+<button class="px-5 py-2 rounded-full glass-panel border-cosmic-blue/20 text-on-surface hover:bg-cosmic-blue/10 transition-colors font-label-md active:scale-95">Foco</button>
+<button class="px-5 py-2 rounded-full glass-panel border-astral-violet/20 text-on-surface hover:bg-astral-violet/10 transition-colors font-label-md active:scale-95">Cura</button>
+<button class="px-5 py-2 rounded-full glass-panel border-white/10 text-on-surface hover:bg-white/10 transition-colors font-label-md active:scale-95">Equilíbrio</button>
+<button class="px-5 py-2 rounded-full glass-panel border-white/10 text-on-surface hover:bg-white/10 transition-colors font-label-md active:scale-95">Criatividade</button>
+</div>
+<input class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-1 focus:ring-cosmic-blue focus:border-cosmic-blue outline-none transition-all placeholder:text-muted-stardust" placeholder="Ou digite sua própria intenção..." type="text"/>
+</section>
+<!-- Personal Notes Section -->
+<section class="space-y-6">
+<div class="space-y-2">
+<h2 class="font-display-lg text-headline-sm text-astral-violet">Notas Pessoais</h2>
+<p class="text-on-surface-variant font-body-md">Espaço sagrado para suas reflexões.</p>
+</div>
+<textarea class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-4 focus:ring-1 focus:ring-astral-violet focus:border-astral-violet outline-none transition-all placeholder:text-muted-stardust resize-none font-body-md" placeholder="Como está o seu diálogo interno hoje?" rows="5"></textarea>
+</section>
+</main>
+<!-- Fixed Action Button Area -->
+<div class="fixed bottom-0 left-0 w-full p-margin-mobile bg-gradient-to-t from-obsidian-deep via-obsidian-deep/90 to-transparent pt-10">
+<div class="max-w-2xl mx-auto">
+<button class="w-full ritual-gradient text-obsidian-deep font-title-lg py-4 rounded-full shadow-[0_8px_32px_rgba(188,155,255,0.3)] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                Confirmar Registro
+                <span class="material-symbols-outlined">auto_awesome</span>
+</button>
+</div>
+</div>
+<!-- Decoration Element (Ritual Progress Line Concept) -->
+<div class="fixed left-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-4">
+<div class="w-px h-32 bg-gradient-to-b from-transparent via-white/20 to-white/20"></div>
+<div class="w-2 h-2 rounded-full bg-cosmic-blue shadow-[0_0_8px_rgba(168,199,255,0.8)]"></div>
+<div class="w-px h-32 bg-gradient-to-t from-transparent via-white/20 to-white/20"></div>
+</div>
+<script>
+        // Simple micro-interaction for chips
+        document.querySelectorAll('.flex.flex-wrap button').forEach(button => {
+            button.addEventListener('click', () => {
+                const isActive = button.classList.contains('border-ritual-gold');
+                
+                // Clear others
+                document.querySelectorAll('.flex.flex-wrap button').forEach(b => {
+                    b.classList.remove('border-ritual-gold', 'bg-ritual-gold/10', 'text-ritual-gold');
+                    b.classList.add('border-white/10', 'text-on-surface');
+                });
+
+                if (!isActive) {
+                    button.classList.remove('border-white/10', 'text-on-surface');
+                    button.classList.add('border-ritual-gold', 'bg-ritual-gold/10', 'text-ritual-gold');
+                }
+            });
+        });
+
+        // Background visual effect tracking mouse (for desktop)
+        if (window.innerWidth > 1024) {
+            document.addEventListener('mousemove', (e) => {
+                const aura = document.querySelector('.aura-bg');
+                const x = e.clientX;
+                const y = e.clientY;
+                aura.style.left = `${x}px`;
+                aura.style.top = `${y}px`;
+            });
+        }
+    </script>
+</body></html>

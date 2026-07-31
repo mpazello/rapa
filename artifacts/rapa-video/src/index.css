@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+
+  --color-background: #0e1116;
+  --color-surface: #141821;
+  --color-surface-container-lowest: #0b0e13;
+  --color-surface-container-low: #161a24;
+  --color-surface-container: #1a1f2b;
+  --color-surface-container-high: #1f2532;
+  --color-surface-container-highest: #262d3c;
+
+  --color-on-surface: #e6ebf5;
+  --color-on-surface-variant: #a4adbf;
+  --color-outline: #3b4356;
+  --color-outline-variant: #262d3c;
+
+  --color-primary: #b6c7eb;
+  --color-on-primary: #0e1116;
+  --color-primary-container: #2a3550;
+
+  --color-secondary: #c9b892;
+  --color-on-secondary: #2a220f;
+
+  --color-error: #d97362;
+}
+
+@layer base {
+  :root,
+  html {
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+  }
+  
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .noise-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    pointer-events: none;
+  }
+
+  .kai-orb {
+    border-radius: 9999px;
+    position: relative;
+    background: radial-gradient(
+      circle at 35% 30%,
+      color-mix(in oklab, var(--color-primary) 60%, transparent),
+      transparent 60%
+    );
+  }
+  .kai-orb::before {
+    content: "";
+    position: absolute;
+    inset: -20px;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--color-primary) 25%, transparent),
+      transparent 70%
+    );
+    filter: blur(20px);
+    animation: soft-pulse 6s ease-in-out infinite;
+  }
+  .kai-orb-core {
+    position: absolute;
+    inset: 22%;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle at 40% 35%,
+      #ffffff 0%,
+      var(--color-primary) 45%,
+      color-mix(in oklab, var(--color-primary) 30%, var(--color-background)) 100%
+    );
+    box-shadow:
+      0 0 40px color-mix(in oklab, var(--color-primary) 50%, transparent),
+      inset 0 0 20px color-mix(in oklab, #ffffff 20%, transparent);
+    animation: soft-pulse 6s ease-in-out infinite;
+  }
+  @keyframes soft-pulse {
+    0%, 100% { opacity: 0.9; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+  }
+}
