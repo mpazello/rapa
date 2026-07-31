@@ -1,7 +1,61 @@
 import { useState, useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { kinFromDate, getKinInfo, sincronarioDate, PLASMAS, getEarthFamily } from "@/lib/tzolkin";
+import { kinFromDate, getKinInfo, sincronarioDate, PLASMAS, getEarthFamily, analogKin, antipodeKin, guideKin, occultKin, SEALS } from "@/lib/tzolkin";
 import { SEAL_IMAGE } from "@/lib/seal-images";
+import { PlasmaSymbol } from "@/components/PlasmaSymbol";
+
+// ─── Dados fixos por Selo (Dreamspell) ──────────────────────────────────────
+
+/** Planeta galáctico de cada selo (índice 1-20). */
+const SEAL_PLANET: Record<number, string> = {
+  1: "Netuno [GK]",  2: "Urano [GK]",   3: "Saturno [GK]",  4: "Júpiter [GK]",
+  5: "Maldek [GK]",  6: "Marte [GK]",   7: "Terra [GK]",    8: "Vénus [GK]",
+  9: "Mercúrio [GK]",10:"Mercúrio [SP]",11:"Vénus [SP]",    12:"Terra [SP]",
+ 13: "Marte [SP]",  14:"Maldek [SP]",  15:"Júpiter [SP]",  16:"Saturno [SP]",
+ 17: "Urano [SP]",  18:"Netuno [SP]",  19:"Plutão [SP]",   20:"Plutão [GK]",
+};
+
+/** Chakra + função por selo — segue ciclo (sealIndex-1)%5. */
+const CHAKRA_CYCLE: [string, string][] = [
+  ["Garganta", "Transmite"],
+  ["Coração",  "Transduz"],
+  ["Plexo Solar", "Recebe"],
+  ["Raiz",     "Transmite"],
+  ["Coroa",    "Recebe"],
+];
+function sealChakra(sealIndex: number): string {
+  const [name, fn] = CHAKRA_CYCLE[(sealIndex - 1) % 5];
+  return `${name} [${fn}]`;
+}
+
+/** Harmônica (1-65) e tipo por posição dentro da harmônica. */
+function harmonicInfo(kin: number): { number: number; type: string } {
+  const number = Math.ceil(kin / 4);
+  const pos = ((kin - 1) % 4); // 0-3
+  const types = ["Entrada Harmônica", "Processo Rítmico", "Saída Planetária", "Armazém"];
+  const storeColors = ["Magnético", "Lunar", "Solar", "Cristal"];
+  const type = pos < 3 ? types[pos] : `Armazém ${storeColors[(number - 1) % 4]}`;
+  return { number, type };
+}
+
+/** Onda Encantada (trecena) — seal do portador e kin de início. */
+function wavespellLabel(kin: number): { sealIndex: number; sealName: string; kinStart: number } {
+  const info = getKinInfo(kin);
+  return {
+    sealIndex: info.trecena.seal.index,
+    sealName:  info.trecena.seal.name,
+    kinStart:  info.trecena.kinStart,
+  };
+}
+
+/** Kin do Psi (crono-psi de 28 dias na lua). Âncora: Lua 1 Dia 1 do ano galáctico = KIN 1
+ *  Formula: psiBanco = (diaNoAno) % 260, em que diaNoAno = (moon-1)*28+(day-1).
+ *  Usa o mesmo contagem Dreamspell.
+ */
+function psiKin(moonNumber: number, dayInMoon: number): number {
+  const offset = (moonNumber - 1) * 28 + (dayInMoon - 1);
+  return ((offset % 260) + 260) % 260 + 1;
+}
 
 export const Route = createFileRoute("/almanaque")({
   head: () => ({
@@ -47,7 +101,7 @@ const HEPTAL_SUBTITLES = [
 
 // Display names (tzolkin.ts uses "Gamma"/"Alpha" — almanaque usa "GAMA"/"ALFA")
 const PLASMA_DISPLAY = ["DALI", "SELI", "GAMA", "KALI", "ALFA", "LIMI", "SILIO"] as const;
-const PLASMA_ICONS = ["wb_sunny", "water_drop", "spa", "bolt", "air", "brightness_5", "favorite"] as const;
+// Accent colours kept for text/border — SVGs already carry their own fill colours
 const PLASMA_COLORS = [
   "text-yellow-300",
   "text-red-400",
@@ -275,9 +329,7 @@ function CalendarView({
         <div className="grid grid-cols-7 gap-1 mb-2">
           {PLASMAS.map((p, i) => (
             <div key={p.name} className="flex flex-col items-center py-1.5">
-              <span className={`material-symbols-outlined text-[16px] ${PLASMA_COLORS[i]}`} style={{ fontVariationSettings: "'FILL' 1" }}>
-                {PLASMA_ICONS[i]}
-              </span>
+              <PlasmaSymbol index={i + 1} size={22} />
               <span className={`font-label-sm text-[9px] tracking-wider uppercase mt-0.5 ${PLASMA_COLORS[i]}`}>
                 {PLASMA_DISPLAY[i]}
               </span>
@@ -361,6 +413,31 @@ function CalendarView({
 
 // ─── Day detail ──────────────────────────────────────────────────────────────
 
+/** Mini kin card used in the oracle section. */
+function OracleKinCard({ kin, role, roleColor }: { kin: number; role: string; roleColor: string }) {
+  const info = getKinInfo(kin);
+  const colors = COLOR_CLASS[info.seal.color];
+  const isPortal = PORTAL_KINS.has(kin);
+  return (
+    <Link
+      to="/ciclos/kin/$kin"
+      params={{ kin: String(kin) }}
+      className={`flex flex-col items-center gap-1 p-2.5 rounded-2xl border ${colors.border}/40 bg-surface/40 hover:bg-surface-container-low transition-colors`}
+    >
+      <span className={`font-label-sm text-[9px] tracking-widest uppercase ${roleColor}`}>{role}</span>
+      <div className={`w-9 h-9 rounded-full border ${colors.border} flex items-center justify-center p-1 bg-surface/60`}>
+        <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain" />
+      </div>
+      <span className={`font-label-sm text-[10px] font-bold ${colors.text}`}>
+        {kin}{isPortal ? " PV" : ""}
+      </span>
+      <span className="font-body-sm text-[9px] text-on-surface-variant/70 text-center leading-tight line-clamp-2">
+        {info.seal.name} {info.tone.name}
+      </span>
+    </Link>
+  );
+}
+
 function DayDetail({
   galYear, moonNumber, moon, dayInMoon, date, todayUTC, todayKin, onBack,
 }: {
@@ -379,7 +456,7 @@ function DayDetail({
   const fam = useMemo(() => getEarthFamily(info.seal.index), [info.seal.index]);
 
   const plasmaIndex = (dayInMoon - 1) % 7; // 0-6
-  const plasma = PLASMAS[plasmaIndex]; // PLASMAS[0]=Dali, [1]=Seli, ...
+  const plasma = PLASMAS[plasmaIndex];
 
   const weekNumber = Math.floor((dayInMoon - 1) / 7) + 1;
   const heptalColor = HEPTAL_COLORS[weekNumber - 1];
@@ -387,18 +464,32 @@ function DayDetail({
   const isToday = date.getTime() === todayUTC.getTime();
   const isPortal = PORTAL_KINS.has(kin);
 
+  // Computed data
+  const harmonic = useMemo(() => harmonicInfo(kin), [kin]);
+  const wavespell = useMemo(() => wavespellLabel(kin), [kin]);
+  const psi = useMemo(() => psiKin(moonNumber, dayInMoon), [moonNumber, dayInMoon]);
+  const psiInfo = useMemo(() => getKinInfo(psi), [psi]);
+
+  // Oracle kins
+  const oGuide    = useMemo(() => guideKin(kin),    [kin]);
+  const oAnalog   = useMemo(() => analogKin(kin),   [kin]);
+  const oAntipode = useMemo(() => antipodeKin(kin), [kin]);
+  const oOccult   = useMemo(() => occultKin(kin),   [kin]);
+
   const colorLabel: Record<string, string> = {
     vermelho: "Vermelho [Inicia]",
-    branco: "Branco [Refina]",
-    azul: "Azul [Transforma]",
-    amarelo: "Amarelo [Amadurece]",
+    branco:   "Branco [Refina]",
+    azul:     "Azul [Transforma]",
+    amarelo:  "Amarelo [Amadurece]",
   };
 
-  const gregDate = formatDate(date, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const weekdayDate = formatDate(date, { weekday: "long" });
+  const shortDate   = formatDate(date, { day: "numeric", month: "numeric" });
+  const longDate    = formatDate(date, { day: "numeric", month: "long", year: "numeric" });
 
   return (
-    <div className="space-y-4">
-      {/* Back + meta */}
+    <div className="space-y-3">
+      {/* ── Back bar ── */}
       <div className="flex items-center justify-between">
         <button
           type="button"
@@ -406,125 +497,240 @@ function DayDetail({
           className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
         >
           <span className="material-symbols-outlined">arrow_back</span>
-          <span className="font-label-sm text-label-sm">Voltar ao calendário</span>
+          <span className="font-label-sm text-label-sm">Calendário</span>
         </button>
         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-label-sm tracking-widest uppercase ${heptalColor}`}>
           Lua {moonNumber} · Dia {dayInMoon}
         </div>
       </div>
 
-      {/* Plasma + date header */}
-      <div className="glass-panel rounded-3xl p-5 flex flex-col items-center text-center gap-3">
-        {/* Plasma */}
-        <div className="flex items-center gap-2">
-          <span className={`material-symbols-outlined text-[28px] ${PLASMA_COLORS[plasmaIndex]}`} style={{ fontVariationSettings: "'FILL' 1" }}>
-            {PLASMA_ICONS[plasmaIndex]}
-          </span>
-          <div className="text-left">
-            <p className={`font-label-sm text-label-sm uppercase tracking-widest font-bold ${PLASMA_COLORS[plasmaIndex]}`}>
-              {PLASMA_DISPLAY[plasmaIndex]}
+      {/* ── Date + Plasma header (like almanaque top strip) ── */}
+      <div className="glass-panel rounded-3xl overflow-hidden">
+        {/* Plasma strip */}
+        <div className={`flex items-center justify-between px-5 py-3 border-b border-white/8 bg-surface-container-low`}>
+          <div className="flex items-center gap-3">
+            <PlasmaSymbol index={plasmaIndex + 1} size={42} />
+            <div>
+              <p className={`font-label-sm text-label-sm uppercase tracking-[0.15em] font-bold ${PLASMA_COLORS[plasmaIndex]}`}>
+                {PLASMA_DISPLAY[plasmaIndex]}
+              </p>
+              <p className="text-[10px] text-on-surface-variant/60 uppercase tracking-wider">{plasma.action} · {plasma.chakra}</p>
+              <p className="text-[9px] text-on-surface-variant/40 font-mono mt-0.5">{plasma.mantraSolar}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className={`font-headline-sm text-2xl font-bold ${isToday ? "text-primary" : "text-on-surface"}`}>
+              {shortDate}
             </p>
-            <p className="text-[11px] text-on-surface-variant/70">{plasma.action} · {plasma.chakra}</p>
+            <p className="font-label-sm text-[10px] text-on-surface-variant/60 uppercase tracking-wider capitalize">{weekdayDate}</p>
+            {isPortal && (
+              <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-error/20 text-error text-[9px] font-label-sm tracking-wide uppercase">Portal PV</span>
+            )}
           </div>
         </div>
 
-        <div className="w-full border-t border-white/8 pt-3">
-          <p className="font-body-sm text-on-surface-variant/70 capitalize">{gregDate}</p>
-          <p className={`font-label-sm text-label-sm tracking-widest mt-1 ${heptalColor.split(" ")[0]}`}>
-            {HEPTAL_NAMES[weekNumber - 1]} · {HEPTAL_SUBTITLES[weekNumber - 1]}
-          </p>
+        {/* Heptal week strip */}
+        <div className={`flex items-center justify-between px-5 py-2 text-[10px] font-label-sm tracking-widest uppercase ${heptalColor.split(" ")[0]}`}>
+          <span>{HEPTAL_NAMES[weekNumber - 1]}</span>
+          <span className="opacity-70">{HEPTAL_SUBTITLES[weekNumber - 1]}</span>
         </div>
       </div>
 
-      {/* KIN identity */}
-      <div className={`relative glass-panel rounded-3xl p-6 flex flex-col items-center text-center border-l-4 ${colors.border}`}>
-        <div className={`absolute inset-0 rounded-3xl ${colors.bg}/5 pointer-events-none`} />
-        <div className={`w-20 h-20 rounded-full border-2 ${colors.border} flex items-center justify-center bg-surface/40 p-3 mb-4 relative`}>
-          <div className={`absolute inset-0 rounded-full ${colors.bg} blur-xl opacity-20`} />
-          <img
-            src={SEAL_IMAGE[info.seal.index]}
-            alt={info.seal.name}
-            className="w-full h-full object-contain relative"
-          />
+      {/* ── KIN identity + mantra (main almanaque card) ── */}
+      <div className={`relative glass-panel rounded-3xl overflow-hidden border-l-4 ${colors.border}`}>
+        <div className={`absolute inset-0 ${colors.bg}/4 pointer-events-none`} />
+
+        {/* KIN header */}
+        <div className="relative flex items-start gap-4 p-5 pb-3">
+          <div className={`shrink-0 w-16 h-16 rounded-full border-2 ${colors.border} flex items-center justify-center bg-surface/40 p-2`}>
+            <div className={`absolute w-16 h-16 rounded-full ${colors.bg} blur-2xl opacity-15`} />
+            <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain relative" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <span className={`font-label-sm text-label-sm ${colors.text} tracking-widest uppercase font-bold`}>KIN {kin}</span>
+              {isToday && <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[9px] font-label-sm">hoje</span>}
+            </div>
+            <h2 className="font-headline-md text-on-surface leading-tight mb-0.5">{info.fullName}</h2>
+            <p className="font-body-sm text-on-surface-variant/60 italic text-xs">{info.seal.maya} · {info.tone.maya}</p>
+          </div>
+          {/* Onda Encantada badge top-right */}
+          <div className={`shrink-0 flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl border ${colors.border}/50 bg-surface/30`}>
+            <p className="font-label-sm text-[8px] text-on-surface-variant/60 uppercase tracking-wider">Onda</p>
+            <p className={`font-headline-sm text-lg font-bold ${colors.text} leading-none`}>{info.tone.index}</p>
+            <p className="font-label-sm text-[8px] text-on-surface-variant/60 text-center leading-tight">{info.tone.name}</p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 mb-1">
-          <span className={`font-label-sm text-label-sm ${colors.text} tracking-widest uppercase`}>
-            KIN {kin}
-          </span>
-          {isToday && (
-            <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-label-sm tracking-wide">hoje</span>
-          )}
-          {isPortal && (
-            <span className="px-2 py-0.5 rounded-full bg-error/20 text-error text-[10px] font-label-sm tracking-wide">portal</span>
-          )}
-        </div>
-        <h2 className="font-headline-md text-headline-md text-on-surface mb-1">{info.fullName}</h2>
-        <p className="font-body-sm text-on-surface-variant/70 italic">{info.seal.maya} · {info.tone.maya}</p>
-      </div>
-
-      {/* Mantra */}
-      <div className="glass-panel rounded-3xl p-5 space-y-3">
-        <h3 className="font-title-sm text-title-sm flex items-center gap-2">
-          <span className={`material-symbols-outlined text-base ${colors.text}`} style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-          Mantra Galáctico
-        </h3>
-        <div className={`border-l-2 pl-4 space-y-0.5 ${colors.border}`}>
+        {/* Mantra */}
+        <div className={`mx-5 mb-3 border-l-2 pl-4 space-y-0.5 ${colors.border}`}>
           {info.mantra.map((line, i) => (
             <p
               key={i}
               className={`leading-relaxed ${
-                i === 4
-                  ? "font-body-sm text-on-surface-variant/70 italic mt-2 pt-2 border-t border-white/8"
-                  : i === 0
-                  ? "font-body-lg text-on-surface font-medium"
-                  : "font-body-md text-on-surface-variant"
+                i === 0 ? "font-body-md text-on-surface font-medium" :
+                i === 4 ? "font-body-sm text-on-surface-variant/70 italic mt-1" :
+                          "font-body-sm text-on-surface-variant"
               }`}
             >
               {line}
             </p>
           ))}
         </div>
-        <div className={`rounded-2xl px-4 py-3 ${colors.bg}/10 border ${colors.border}`}>
-          <p className={`font-label-sm text-label-sm uppercase tracking-widest mb-1 ${colors.text}`}>Frase do dia</p>
-          <p className="font-body-sm italic text-on-surface">"{info.affirmation}"</p>
+
+        {/* Affirmation */}
+        <div className={`mx-5 mb-5 rounded-xl px-4 py-2.5 ${colors.bg}/10 border ${colors.border}/50`}>
+          <p className={`font-label-sm text-[9px] uppercase tracking-widest mb-0.5 ${colors.text}`}>Afirmação</p>
+          <p className="font-body-sm italic text-on-surface text-sm">"{info.affirmation}"</p>
         </div>
       </div>
 
-      {/* Attributes grid */}
-      <div className="glass-panel rounded-3xl p-5">
-        <h3 className="font-title-sm text-title-sm mb-3 flex items-center gap-2">
-          <span className="material-symbols-outlined text-base text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
-          Atributos do Kin
-        </h3>
-        <div className="grid grid-cols-2 gap-3">
-          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}`}>
-            <p className="font-label-sm text-[10px] text-on-surface-variant/60 uppercase tracking-widest mb-0.5">Cor</p>
-            <p className={`font-body-sm font-medium ${colors.text}`}>{colorLabel[info.seal.color]}</p>
+      {/* ── Atributos grid (like almanaque info boxes) ── */}
+      <div className="glass-panel rounded-3xl p-4">
+        <p className="font-label-sm text-[10px] text-on-surface-variant/50 uppercase tracking-widest mb-3">Assinatura Galáctica</p>
+        <div className="grid grid-cols-2 gap-2">
+          {/* Cor */}
+          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}/50`}>
+            <p className="font-label-sm text-[9px] text-on-surface-variant/55 uppercase tracking-widest mb-0.5">Cor</p>
+            <p className={`font-body-sm font-semibold ${colors.text} text-sm`}>{colorLabel[info.seal.color]}</p>
           </div>
-          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}`}>
-            <p className="font-label-sm text-[10px] text-on-surface-variant/60 uppercase tracking-widest mb-0.5">Família Terrestre</p>
-            <p className="font-body-sm font-medium text-on-surface">{fam.name.replace("Família ", "")}</p>
+          {/* Planeta */}
+          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}/50`}>
+            <p className="font-label-sm text-[9px] text-on-surface-variant/55 uppercase tracking-widest mb-0.5">Planeta</p>
+            <p className="font-body-sm font-semibold text-on-surface text-sm">{SEAL_PLANET[info.seal.index]}</p>
           </div>
-          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}`}>
-            <p className="font-label-sm text-[10px] text-on-surface-variant/60 uppercase tracking-widest mb-0.5">Ação · Essência</p>
-            <p className="font-body-sm font-medium text-on-surface">{info.seal.action} · {info.seal.essence}</p>
+          {/* Chakra */}
+          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}/50`}>
+            <p className="font-label-sm text-[9px] text-on-surface-variant/55 uppercase tracking-widest mb-0.5">Chakra</p>
+            <p className="font-body-sm font-semibold text-on-surface text-sm">{sealChakra(info.seal.index)}</p>
           </div>
-          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}`}>
-            <p className="font-label-sm text-[10px] text-on-surface-variant/60 uppercase tracking-widest mb-0.5">Tom · Poder</p>
-            <p className="font-body-sm font-medium text-on-surface">{info.tone.name} · {info.tone.power}</p>
+          {/* Família */}
+          <div className={`rounded-2xl p-3 ${colors.bg}/8 border ${colors.border}/50`}>
+            <p className="font-label-sm text-[9px] text-on-surface-variant/55 uppercase tracking-widest mb-0.5">Família Terrestre</p>
+            <p className="font-body-sm font-semibold text-on-surface text-sm">{fam.name.replace("Família ", "")}</p>
           </div>
-        </div>
-
-        {/* Plasma detail */}
-        <div className="mt-3 rounded-2xl p-3 bg-surface-container-low border border-outline-variant/30">
-          <p className="font-label-sm text-[10px] text-on-surface-variant/60 uppercase tracking-widest mb-1">Plasma radial do dia</p>
-          <p className={`font-body-sm font-medium ${PLASMA_COLORS[plasmaIndex]}`}>{plasma.name} · {plasma.action}</p>
-          <p className="font-body-sm text-on-surface-variant/70 text-xs mt-0.5">{plasma.mantra}</p>
+          {/* Harmônica */}
+          <div className={`rounded-2xl p-3 col-span-2 bg-surface-container-low border border-outline-variant/30`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-label-sm text-[9px] text-on-surface-variant/55 uppercase tracking-widest mb-0.5">Harmônica</p>
+                <p className="font-body-sm font-semibold text-on-surface text-sm">{harmonic.number} · {harmonic.type}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-label-sm text-[9px] text-on-surface-variant/55 uppercase tracking-widest mb-0.5">Ação · Essência</p>
+                <p className="font-body-sm text-on-surface text-xs">{info.seal.action} · {info.seal.essence}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Link to full kin detail */}
+      {/* ── Onda Encantada (wavespell/trecena) ── */}
+      <div className="glass-panel rounded-3xl p-4">
+        <p className="font-label-sm text-[10px] text-on-surface-variant/50 uppercase tracking-widest mb-3">Onda Encantada {info.tone.index}</p>
+        <div className="flex items-center gap-3">
+          <div className={`w-11 h-11 shrink-0 rounded-full border ${COLOR_CLASS[SEALS[wavespell.sealIndex - 1].color].border} flex items-center justify-center p-1.5 bg-surface/40`}>
+            <img src={SEAL_IMAGE[wavespell.sealIndex]} alt={wavespell.sealName} className="w-full h-full object-contain" />
+          </div>
+          <div>
+            <p className={`font-label-sm text-[10px] uppercase tracking-widest ${COLOR_CLASS[SEALS[wavespell.sealIndex - 1].color].text}`}>
+              portador
+            </p>
+            <p className="font-body-md text-on-surface font-medium">{wavespell.sealName}</p>
+            <p className="font-body-sm text-on-surface-variant/60 text-xs">Kin {wavespell.kinStart} → {wavespell.kinStart + 12}</p>
+          </div>
+          <div className="ml-auto text-right">
+            <p className="font-label-sm text-[9px] text-on-surface-variant/50 uppercase tracking-widest">Dia {info.tone.index} de 13</p>
+            <div className="flex gap-0.5 mt-1 justify-end">
+              {Array.from({ length: 13 }, (_, i) => (
+                <div
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full ${i < info.tone.index ? colors.bg.replace("bg-", "bg-") + " opacity-80" : "bg-on-surface/15"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Oráculo dos 5 Kins ── */}
+      <div className="glass-panel rounded-3xl p-4">
+        <p className="font-label-sm text-[10px] text-on-surface-variant/50 uppercase tracking-widest mb-3">Oráculo · Família de 5</p>
+        <div className="grid grid-cols-5 gap-1.5">
+          {/* Self */}
+          <div className={`flex flex-col items-center gap-1 p-2 rounded-2xl border-2 ${colors.border} ${colors.bg}/10`}>
+            <span className={`font-label-sm text-[8px] tracking-widest uppercase ${colors.text}`}>Eu</span>
+            <div className={`w-9 h-9 rounded-full border-2 ${colors.border} flex items-center justify-center p-1 bg-surface/60`}>
+              <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain" />
+            </div>
+            <span className={`font-label-sm text-[10px] font-bold ${colors.text}`}>{kin}</span>
+            <span className="font-body-sm text-[8px] text-on-surface-variant/70 text-center leading-tight">{info.seal.name}</span>
+          </div>
+          <OracleKinCard kin={oGuide}    role="Guia"      roleColor="text-tertiary" />
+          <OracleKinCard kin={oAnalog}   role="Analógico" roleColor="text-primary" />
+          <OracleKinCard kin={oAntipode} role="Antípoda"  roleColor="text-error" />
+          <OracleKinCard kin={oOccult}   role="Oculto"    roleColor="text-on-surface-variant" />
+        </div>
+      </div>
+
+      {/* ── Plasma radial detalhado ── */}
+      <div className="glass-panel rounded-3xl p-4">
+        <p className="font-label-sm text-[10px] text-on-surface-variant/50 uppercase tracking-widest mb-3">Plasma Radial</p>
+        <div className="flex items-start gap-4">
+          <div className="flex flex-col items-center gap-1 shrink-0">
+            <PlasmaSymbol index={plasmaIndex + 1} size={48} />
+            <span className={`font-label-sm text-[9px] font-mono tracking-wider ${PLASMA_COLORS[plasmaIndex]}`}>
+              {plasma.mantraSolar}
+            </span>
+          </div>
+          <div className="flex-1">
+            <p className={`font-label-sm text-label-sm uppercase tracking-widest font-bold ${PLASMA_COLORS[plasmaIndex]} mb-0.5`}>
+              {PLASMA_DISPLAY[plasmaIndex]} · {plasma.action}
+            </p>
+            <p className="font-body-sm text-on-surface-variant/70 text-xs mb-2">{plasma.chakra} · {plasma.element}</p>
+            <p className={`font-body-sm italic text-on-surface text-sm border-l-2 pl-3 ${PLASMA_COLORS[plasmaIndex].replace("text-", "border-")}`}>
+              "{plasma.mantra}"
+            </p>
+            {plasma.center && (
+              <p className="font-body-sm text-on-surface-variant/55 text-xs mt-2 leading-relaxed">{plasma.center}</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── PSI Kin do dia ── */}
+      <div className="glass-panel rounded-3xl p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-full border ${COLOR_CLASS[psiInfo.seal.color].border} flex items-center justify-center p-1.5 bg-surface/40`}>
+              <img src={SEAL_IMAGE[psiInfo.seal.index]} alt={psiInfo.seal.name} className="w-full h-full object-contain" />
+            </div>
+            <div>
+              <p className="font-label-sm text-[9px] text-on-surface-variant/50 uppercase tracking-widest">KIN PSI do dia</p>
+              <p className={`font-body-sm font-semibold ${COLOR_CLASS[psiInfo.seal.color].text}`}>KIN {psi} · {psiInfo.fullName}</p>
+            </div>
+          </div>
+          <Link
+            to="/ciclos/kin/$kin"
+            params={{ kin: String(psi) }}
+            className="text-on-surface-variant hover:text-primary transition-colors"
+          >
+            <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Lua info + pergunta ── */}
+      <div className="glass-panel rounded-3xl p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="material-symbols-outlined text-base text-astral-violet" style={{ fontVariationSettings: "'FILL' 1" }}>dark_mode</span>
+          <p className="font-label-sm text-[10px] text-on-surface-variant/50 uppercase tracking-widest">Lua {moonNumber} · {moon.tone} do {moon.animal}</p>
+        </div>
+        <p className="font-body-sm text-on-surface-variant/70 italic text-sm mb-1">"{moon.question}"</p>
+        <p className="font-body-sm text-on-surface-variant/50 text-xs">Essência: {moon.essence} · Qualidade: {moon.quality}</p>
+      </div>
+
+      {/* ── Link to full kin detail ── */}
       <Link
         to="/ciclos/kin/$kin"
         params={{ kin: String(kin) }}
@@ -533,7 +739,7 @@ function DayDetail({
         <div className="flex items-center justify-between">
           <div>
             <p className="font-label-sm text-label-sm text-on-surface-variant/70">Leitura completa</p>
-            <p className="font-body-md text-on-surface font-medium">Abrir KIN {kin} · {info.fullName}</p>
+            <p className="font-body-md text-on-surface font-medium">KIN {kin} · {info.fullName}</p>
           </div>
           <span className="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
         </div>
