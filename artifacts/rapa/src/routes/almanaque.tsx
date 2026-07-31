@@ -101,6 +101,8 @@ const HEPTAL_SUBTITLES = [
 
 // Display names (tzolkin.ts uses "Gamma"/"Alpha" — almanaque usa "GAMA"/"ALFA")
 const PLASMA_DISPLAY = ["DALI", "SELI", "GAMA", "KALI", "ALFA", "LIMI", "SILIO"] as const;
+// Weekday abbreviations PT (indexed by getUTCDay(): 0=Dom, 1=Seg, ...)
+const WEEKDAY_PT = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"] as const;
 // Accent colours kept for text/border — SVGs already carry their own fill colours
 const PLASMA_COLORS = [
   "text-yellow-300",
@@ -325,16 +327,25 @@ function CalendarView({
 
       {/* Grid */}
       <div className="glass-panel rounded-3xl p-3 overflow-x-auto">
-        {/* Plasma header */}
+        {/* Plasma + weekday header
+            All 13 moons are exactly 28 days = 4 × 7, so the plasma→weekday
+            mapping is the same for every week of every moon in a given year.
+            We only need the weekday of Day 1 of this moon. */}
         <div className="grid grid-cols-7 gap-1 mb-2">
-          {PLASMAS.map((p, i) => (
-            <div key={p.name} className="flex flex-col items-center py-1.5">
-              <PlasmaSymbol index={i + 1} size={22} />
-              <span className={`font-label-sm text-[9px] tracking-wider uppercase mt-0.5 ${PLASMA_COLORS[i]}`}>
-                {PLASMA_DISPLAY[i]}
-              </span>
-            </div>
-          ))}
+          {PLASMAS.map((p, i) => {
+            const weekdayIdx = (dates[0].getUTCDay() + i) % 7;
+            return (
+              <div key={p.name} className="flex flex-col items-center py-1.5 gap-0.5">
+                <PlasmaSymbol index={i + 1} size={22} />
+                <span className={`font-label-sm text-[9px] tracking-wider uppercase ${PLASMA_COLORS[i]}`}>
+                  {PLASMA_DISPLAY[i]}
+                </span>
+                <span className="font-label-sm text-[8px] text-on-surface-variant/50 tracking-wide">
+                  {WEEKDAY_PT[weekdayIdx]}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* 4 weeks */}
