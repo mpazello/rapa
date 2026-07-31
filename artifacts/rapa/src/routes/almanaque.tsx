@@ -187,6 +187,8 @@ function AlmanaquePage() {
 
   // Selected day detail (dayInMoon 1-28, or null for calendar view)
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  // Animation direction for day-to-day navigation
+  const [slideDir, setSlideDir] = useState<"left" | "right">("right");
 
   const moon = MOONS[viewMoon - 1];
   const dates = useMemo(() => moonAllDates(viewGalYear, viewMoon), [viewGalYear, viewMoon]);
@@ -210,6 +212,37 @@ function AlmanaquePage() {
     setSelectedDay(null);
   }
 
+  function prevDay() {
+    setSlideDir("left");
+    if (selectedDay === 1) {
+      // cross into the last day of the previous moon
+      if (viewMoon === 1) {
+        setViewGalYear(y => y - 1);
+        setViewMoon(13);
+      } else {
+        setViewMoon(m => m - 1);
+      }
+      setSelectedDay(28);
+    } else {
+      setSelectedDay(d => d! - 1);
+    }
+  }
+  function nextDay() {
+    setSlideDir("right");
+    if (selectedDay === 28) {
+      // cross into the first day of the next moon
+      if (viewMoon === 13) {
+        setViewGalYear(y => y + 1);
+        setViewMoon(1);
+      } else {
+        setViewMoon(m => m + 1);
+      }
+      setSelectedDay(1);
+    } else {
+      setSelectedDay(d => d! + 1);
+    }
+  }
+
   const isCurrentMoon = viewGalYear === todayGalYear && viewMoon === (todaySync.dayOutOfTime ? 0 : todaySync.moon);
 
   return (
@@ -231,6 +264,7 @@ function AlmanaquePage() {
         />
       ) : (
         <DayDetail
+          key={`${viewGalYear}-${viewMoon}-${selectedDay}`}
           galYear={viewGalYear}
           moonNumber={viewMoon}
           moon={moon}
@@ -238,7 +272,10 @@ function AlmanaquePage() {
           date={dates[selectedDay - 1]}
           todayUTC={todayUTC}
           todayKin={todayKin}
+          slideDir={slideDir}
           onBack={() => setSelectedDay(null)}
+          onPrevDay={prevDay}
+          onNextDay={nextDay}
         />
       )}
     </main>
@@ -450,7 +487,7 @@ function OracleKinCard({ kin, role, roleColor }: { kin: number; role: string; ro
 }
 
 function DayDetail({
-  galYear, moonNumber, moon, dayInMoon, date, todayUTC, todayKin, onBack,
+  galYear, moonNumber, moon, dayInMoon, date, todayUTC, todayKin, slideDir, onBack, onPrevDay, onNextDay,
 }: {
   galYear: number;
   moonNumber: number;
@@ -459,7 +496,10 @@ function DayDetail({
   date: Date;
   todayUTC: Date;
   todayKin: number;
+  slideDir: "left" | "right";
   onBack: () => void;
+  onPrevDay: () => void;
+  onNextDay: () => void;
 }) {
   const kin = useMemo(() => kinFromDate(date), [date]);
   const info = useMemo(() => getKinInfo(kin), [kin]);
@@ -499,19 +539,44 @@ function DayDetail({
   const longDate    = formatDate(date, { day: "numeric", month: "long", year: "numeric" });
 
   return (
-    <div className="space-y-3">
+    <div className={`space-y-3 ${slideDir === "right" ? "animate-slide-in-right" : "animate-slide-in-left"}`}>
       {/* ── Back bar ── */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
+          className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors shrink-0"
+          aria-label="Voltar ao calendário"
         >
-          <span className="material-symbols-outlined">arrow_back</span>
+          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
           <span className="font-label-sm text-label-sm">Calendário</span>
         </button>
-        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-label-sm tracking-widest uppercase ${heptalColor}`}>
-          Lua {moonNumber} · Dia {dayInMoon}
+
+        {/* Day badge */}
+        <div className={`flex-1 flex justify-center`}>
+          <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-label-sm tracking-widest uppercase ${heptalColor}`}>
+            Lua {moonNumber} · Dia {dayInMoon}
+          </div>
+        </div>
+
+        {/* Prev / Next day buttons */}
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            type="button"
+            onClick={onPrevDay}
+            className="w-8 h-8 rounded-full border border-outline-variant/40 flex items-center justify-center hover:bg-surface-container-low hover:text-primary transition-colors"
+            aria-label="Dia anterior"
+          >
+            <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+          </button>
+          <button
+            type="button"
+            onClick={onNextDay}
+            className="w-8 h-8 rounded-full border border-outline-variant/40 flex items-center justify-center hover:bg-surface-container-low hover:text-primary transition-colors"
+            aria-label="Próximo dia"
+          >
+            <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+          </button>
         </div>
       </div>
 
