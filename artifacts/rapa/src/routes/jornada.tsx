@@ -143,15 +143,32 @@ function useVoiceInput(onTranscript: (text: string) => void) {
   return { listening, toggle };
 }
 
-function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: string; content: string; photoFile: File | null }) => Promise<void> }) {
+function todayISO() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
+}
+
+function formatDateLabel(iso: string): string {
+  const t = todayISO();
+  if (iso === t) return "Hoje";
+  const y = new Date(t + "T00:00:00");
+  const d = new Date(iso + "T00:00:00");
+  const diff = Math.round((y.getTime() - d.getTime()) / 86400000);
+  if (diff === 1) return "Ontem";
+  return d.toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: diff > 300 ? "numeric" : undefined });
+}
+
+function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: string; content: string; photoFile: File | null; entryDate: string }) => Promise<void> }) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [kind, setKind] = useState<KindKey>("reflexao");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [entryDate, setEntryDate] = useState(todayISO);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   const { listening, toggle: toggleVoice } = useVoiceInput(
     useCallback((transcript: string) => {
@@ -169,6 +186,7 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
     setKind("reflexao");
     setTitle("");
     setContent("");
+    setEntryDate(todayISO());
     setPhotoFile(null);
     setPhotoPreview(null);
   }
@@ -177,7 +195,7 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
     if (!content.trim()) return;
     setBusy(true);
     try {
-      await onSave({ kind, title, content, photoFile });
+      await onSave({ kind, title, content, photoFile, entryDate });
       handleCancel();
     } catch {
       // error toasted upstream
@@ -185,6 +203,8 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
       setBusy(false);
     }
   }
+
+  const isToday = entryDate === todayISO();
 
   if (!open) {
     return (
@@ -201,6 +221,45 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
 
   return (
     <div className="glass-panel rounded-2xl p-5 space-y-4 border-white/15">
+      {/* Date picker row */}
+      <div className="flex items-center gap-2">
+        <span className="material-symbols-outlined text-[16px] text-astral-violet/70">calendar_today</span>
+        <span className="font-label-sm text-xs text-on-surface-variant/70">Registrando para:</span>
+        <button
+          type="button"
+          onClick={() => dateInputRef.current?.showPicker?.() ?? dateInputRef.current?.click()}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-medium transition-all ${
+            isToday
+              ? "border-astral-violet/40 text-astral-violet bg-astral-violet/10"
+              : "border-ritual-gold/40 text-ritual-gold bg-ritual-gold/10"
+          }`}
+        >
+          <span className="material-symbols-outlined text-[13px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+            {isToday ? "today" : "event"}
+          </span>
+          {formatDateLabel(entryDate)}
+        </button>
+        {/* hidden native date input */}
+        <input
+          ref={dateInputRef}
+          type="date"
+          value={entryDate}
+          max={todayISO()}
+          onChange={(e) => e.target.value && setEntryDate(e.target.value)}
+          className="sr-only"
+          aria-label="Selecionar data"
+        />
+        {!isToday && (
+          <button
+            type="button"
+            onClick={() => setEntryDate(todayISO())}
+            className="ml-auto text-[10px] text-muted-stardust hover:text-on-surface underline transition-colors"
+          >
+            voltar para hoje
+          </button>
+        )}
+      </div>
+
       {/* Kind selector */}
       <div className="flex gap-2 flex-wrap">
         {(Object.keys(KIND_META) as KindKey[]).map((k) => {
@@ -492,7 +551,7 @@ function JornadaPage() {
   });
 
   const addMut = useMutation({
-    mutationFn: async ({ kind, title, content, photoFile }: { kind: KindKey; title: string; content: string; photoFile: File | null }) => {
+    mutationFn: async ({ kind, title, content, photoFile, entryDate }: { kind: KindKey; title: string; content: string; photoFile: File | null; entryDate: string }) => {
       let photo_path: string | undefined;
       if (photoFile && user) {
         const ext = photoFile.name.split(".").pop()?.toLowerCase() || "jpg";
@@ -503,7 +562,7 @@ function JornadaPage() {
         if (upErr) throw new Error(upErr.message);
         photo_path = path;
       }
-      return fnAdd({ data: { kind, title: title || undefined, content: content.trim(), photo_path } });
+      return fnAdd({ data: { kind, title: title || undefined, content: content.trim(), entry_date: entryDate, photo_path } });
     },
     onSuccess: () => {
       toast.success("Momento adicionado à sua jornada.");
