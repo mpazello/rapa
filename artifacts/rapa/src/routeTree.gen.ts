@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AlmanaqueRouteImport } from './routes/almanaque'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ChakrasRouteImport } from './routes/chakras'
 import { Route as CiclosRouteImport } from './routes/ciclos'
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlmanaqueRoute = AlmanaqueRouteImport.update({
+  id: '/almanaque',
+  path: '/almanaque',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -85,6 +91,7 @@ const AuthenticatedCiclosKinKinRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/almanaque': typeof AlmanaqueRoute
   '/auth': typeof AuthRoute
   '/chakras': typeof ChakrasRoute
   '/ciclos': typeof CiclosRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/almanaque': typeof AlmanaqueRoute
   '/auth': typeof AuthRoute
   '/chakras': typeof ChakrasRoute
   '/ciclos': typeof CiclosRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/almanaque': typeof AlmanaqueRoute
   '/auth': typeof AuthRoute
   '/chakras': typeof ChakrasRoute
   '/ciclos': typeof CiclosRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/almanaque'
     | '/auth'
     | '/chakras'
     | '/ciclos'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/almanaque'
     | '/auth'
     | '/chakras'
     | '/ciclos'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/almanaque'
     | '/auth'
     | '/chakras'
     | '/ciclos'
@@ -170,6 +182,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AlmanaqueRoute: typeof AlmanaqueRoute
   AuthRoute: typeof AuthRoute
   ChakrasRoute: typeof ChakrasRoute
   CiclosRoute: typeof CiclosRoute
@@ -193,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/almanaque': {
+      id: '/almanaque'
+      path: '/almanaque'
+      fullPath: '/almanaque'
+      preLoaderRoute: typeof AlmanaqueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -286,6 +306,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AlmanaqueRoute: AlmanaqueRoute,
   AuthRoute: AuthRoute,
   ChakrasRoute: ChakrasRoute,
   CiclosRoute: CiclosRoute,

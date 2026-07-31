@@ -69,6 +69,21 @@ export function TopAppBar() {
               </span>
               <span className="font-label-sm text-label-sm hidden sm:inline">Ritual do dia</span>
             </button>
+
+            <Link
+              to="/almanaque"
+              aria-label="Almanaque — Calendário das 13 Luas"
+              title="Almanaque"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-astral-violet/30 text-astral-violet hover:bg-astral-violet/10 transition-colors group"
+            >
+              <span
+                className="material-symbols-outlined text-[18px] group-hover:scale-110 transition-transform"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                auto_stories
+              </span>
+              <span className="font-label-sm text-label-sm hidden sm:inline">Almanaque</span>
+            </Link>
           </div>
 
           {/* Right side */}

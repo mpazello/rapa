@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 
 type NavItem = {
-  to: "/" | "/jornada" | "/ciclos" | "/chakras" | "/kai" | "/perfil";
+  to: "/" | "/jornada" | "/ciclos" | "/chakras" | "/kai" | "/perfil" | "/almanaque";
   label: string;
   icon: string;
 };
