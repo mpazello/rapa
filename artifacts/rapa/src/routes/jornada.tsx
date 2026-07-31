@@ -224,7 +224,7 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
 
         {/* calendar icon — picks a date and opens composer */}
         <label
-          className="px-4 flex items-center justify-center cursor-pointer text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
+          className="relative px-4 flex items-center justify-center cursor-pointer text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
           title="Registrar em outro dia"
         >
           <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -241,7 +241,7 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
                 setTimeout(() => textareaRef.current?.focus(), 80);
               }
             }}
-            className="sr-only"
+            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
           />
         </label>
       </div>
@@ -273,7 +273,7 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
             value={entryDate}
             max={todayISO()}
             onChange={(e) => e.target.value && setEntryDate(e.target.value)}
-            className="sr-only"
+            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
             aria-label="Selecionar data"
           />
         </label>
