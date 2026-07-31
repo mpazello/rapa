@@ -351,7 +351,7 @@ function KinDetailPage() {
                 <p className="text-2xl font-headline-lg text-primary group-hover:opacity-80">Kin {today}</p>
                 <p className="font-title-md text-title-md">{todayInfo.fullName}</p>
                 <p className="font-body-sm text-on-surface-variant italic">{todayInfo.seal.maya} · {todayInfo.tone.maya}</p>
-                <p className="font-label-sm text-label-sm text-on-surface-variant/60 mt-0.5">
+                <p className="font-label-sm text-label-sm text-on-surface-variant/60 mt-0.5" suppressHydrationWarning>
                   {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}
                 </p>
               </div>
