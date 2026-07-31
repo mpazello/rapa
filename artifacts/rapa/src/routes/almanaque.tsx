@@ -166,7 +166,9 @@ function moonAllDates(galYear: number, moonNumber: number): Date[] {
 }
 
 function formatDate(d: Date, opts: Intl.DateTimeFormatOptions): string {
-  return d.toLocaleDateString("pt-BR", opts);
+  // All Dreamspell dates are stored as UTC midnight — always format in UTC
+  // so that e.g. 2026-07-26T00:00Z shows as "26/07" even in UTC-3 (Brazil).
+  return d.toLocaleDateString("pt-BR", { timeZone: "UTC", ...opts });
 }
 
 // ─── Page component ──────────────────────────────────────────────────────────

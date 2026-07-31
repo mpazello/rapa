@@ -36,6 +36,12 @@ Types: 0=Entrada Harmônica, 1=Processo Rítmico, 2=Saída Planetária, 3=Armaz�
 ## PSI Kin
 psi = ((moonNumber-1)*28 + (dayInMoon-1)) % 260 + 1 (Dreamspell offset from galactic year start)
 
+## Timezone trap in date display
+All Dreamspell dates are stored as `Date.UTC(y, m, d)` (UTC midnight).
+Always format with `timeZone: "UTC"` or dates shift one day back in Brazil (UTC-3).
+CORRECT: `d.toLocaleDateString("pt-BR", { timeZone: "UTC", ...opts })`
+WRONG: `d.toLocaleDateString("pt-BR", opts)` — shows 25/jul instead of 26/jul in UTC-3.
+
 ## suppressHydrationWarning placement
 Must be on the actual DOM element (span/p/div) containing `new Date()`, never on <Link> or React components — TanStack Router won't forward it.
 
