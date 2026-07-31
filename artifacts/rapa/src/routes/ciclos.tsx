@@ -135,9 +135,10 @@ function CiclosPage() {
                   to="/ciclos/kin/$kin"
                   params={{ kin: String(today) }}
                   className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors"
-                  suppressHydrationWarning
                 >
-                  Kin de hoje: {today} · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })} →
+                  Kin de hoje: {today}
+                  <span suppressHydrationWarning> · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })}</span>
+                  {" →"}
                 </Link>
               </div>
               <div className="tzolkin-matrix mb-2">
