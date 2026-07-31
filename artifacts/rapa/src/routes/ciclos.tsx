@@ -135,8 +135,9 @@ function CiclosPage() {
                   to="/ciclos/kin/$kin"
                   params={{ kin: String(today) }}
                   className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors"
+                  suppressHydrationWarning
                 >
-                  Kin de hoje: {today} →
+                  Kin de hoje: {today} · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })} →
                 </Link>
               </div>
               <div className="tzolkin-matrix mb-2">
@@ -199,7 +200,7 @@ function CiclosPage() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <span className={`font-label-sm text-label-sm ${colors.text} tracking-widest`}>KIN {info.kin} · HOJE</span>
+                  <span className={`font-label-sm text-label-sm ${colors.text} tracking-widest`} suppressHydrationWarning>KIN {info.kin} · HOJE · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })}</span>
                   <p className="font-title-lg text-title-lg text-on-surface">{info.fullName}</p>
                   <p className="font-body-sm text-on-surface-variant italic">Toque para abrir a leitura completa</p>
                 </div>
