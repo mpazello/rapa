@@ -185,8 +185,8 @@ function AlmanaquePage() {
   const [viewGalYear, setViewGalYear] = useState(() => todayGalYear);
   const [viewMoon, setViewMoon] = useState(() => todaySync.dayOutOfTime ? 1 : todaySync.moon);
 
-  // Selected day detail (dayInMoon 1-28, or null for calendar view)
-  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  // Selected day detail (dayInMoon 1-28, "dot" for Dia Fora do Tempo, or null for calendar view)
+  const [selectedDay, setSelectedDay] = useState<number | "dot" | null>(null);
   // Animation direction for day-to-day navigation
   const [slideDir, setSlideDir] = useState<"left" | "right">("right");
 
@@ -223,8 +223,8 @@ function AlmanaquePage() {
         setViewMoon(m => m - 1);
       }
       setSelectedDay(28);
-    } else {
-      setSelectedDay(d => d! - 1);
+    } else if (typeof selectedDay === "number") {
+      setSelectedDay(d => (d as number) - 1);
     }
   }
   function nextDay() {
@@ -238,8 +238,8 @@ function AlmanaquePage() {
         setViewMoon(m => m + 1);
       }
       setSelectedDay(1);
-    } else {
-      setSelectedDay(d => d! + 1);
+    } else if (typeof selectedDay === "number") {
+      setSelectedDay(d => (d as number) + 1);
     }
   }
 
@@ -261,6 +261,12 @@ function AlmanaquePage() {
           onSelectDay={setSelectedDay}
           onPrev={prevMoon}
           onNext={nextMoon}
+        />
+      ) : selectedDay === "dot" ? (
+        <DayOutOfTimeDetail
+          galYear={viewGalYear}
+          todayUTC={todayUTC}
+          onBack={() => setSelectedDay(null)}
         />
       ) : (
         <DayDetail
@@ -294,7 +300,7 @@ function CalendarView({
   todayUTC: Date;
   todayKin: number;
   isCurrentMoon: boolean;
-  onSelectDay: (d: number) => void;
+  onSelectDay: (d: number | "dot") => void;
   onPrev: () => void;
   onNext: () => void;
 }) {
@@ -443,6 +449,47 @@ function CalendarView({
           );
         })}
       </div>
+
+      {/* Dia Fora do Tempo card — only on Lua 13 */}
+      {moonNumber === 13 && (() => {
+        const dotDate = new Date(Date.UTC(galYear + 1, 6, 25));
+        const dotKin = kinFromDate(dotDate);
+        const dotInfo = getKinInfo(dotKin);
+        const dotColors = COLOR_CLASS[dotInfo.seal.color];
+        const isToday = dotDate.getTime() === todayUTC.getTime();
+        return (
+          <button
+            type="button"
+            onClick={() => onSelectDay("dot")}
+            className={`w-full glass-panel rounded-2xl p-4 flex items-center gap-4 border transition-all active:scale-[0.98] hover:border-primary/40 ${
+              isToday
+                ? "border-primary/60 shadow-[0_0_16px_rgba(99,102,241,0.25)]"
+                : "border-outline-variant/30"
+            }`}
+          >
+            {/* Star icon */}
+            <div className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400/30 to-orange-400/20 border border-yellow-400/40 flex items-center justify-center">
+              <span className="material-symbols-outlined text-yellow-300 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+            </div>
+            {/* Text */}
+            <div className="flex-1 text-left">
+              <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                <span className="font-label-sm text-[9px] tracking-widest uppercase text-yellow-300">Dia Fora do Tempo</span>
+                {isToday && <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[9px] font-label-sm">hoje</span>}
+              </div>
+              <p className="font-body-md text-on-surface font-medium text-sm">25 de julho · dia 29</p>
+              <p className="font-body-sm text-on-surface-variant/60 text-xs">
+                KIN {dotKin} · {dotInfo.fullName}
+              </p>
+            </div>
+            {/* Seal */}
+            <div className={`shrink-0 w-9 h-9 rounded-full border ${dotColors.border} flex items-center justify-center p-1.5 bg-surface/40`}>
+              <img src={SEAL_IMAGE[dotInfo.seal.index]} alt={dotInfo.seal.name} className="w-full h-full object-contain" />
+            </div>
+            <span className="material-symbols-outlined text-on-surface-variant/50 shrink-0">chevron_right</span>
+          </button>
+        );
+      })()}
 
       {/* Legend */}
       <div className="flex gap-4 justify-center text-label-sm text-on-surface-variant/60">
@@ -815,6 +862,152 @@ function DayDetail({
         <div className="flex items-center justify-between">
           <div>
             <p className="font-label-sm text-label-sm text-on-surface-variant/70">Leitura completa</p>
+            <p className="font-body-md text-on-surface font-medium">KIN {kin} · {info.fullName}</p>
+          </div>
+          <span className="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+function DayOutOfTimeDetail({
+  galYear,
+  todayUTC,
+  onBack,
+}: {
+  galYear: number;
+  todayUTC: Date;
+  onBack: () => void;
+}) {
+  // Dia Fora do Tempo = July 25 of the Gregorian year after galactic year starts
+  const dotDate = useMemo(() => new Date(Date.UTC(galYear + 1, 6, 25)), [galYear]);
+  const kin = useMemo(() => kinFromDate(dotDate), [dotDate]);
+  const info = useMemo(() => getKinInfo(kin), [kin]);
+  const colors = COLOR_CLASS[info.seal.color];
+  const isToday = dotDate.getTime() === todayUTC.getTime();
+  const isPortal = PORTAL_KINS.has(kin);
+  const longDate = formatDate(dotDate, { day: "numeric", month: "long", year: "numeric" });
+  const weekdayDate = formatDate(dotDate, { weekday: "long" });
+
+  return (
+    <div className="space-y-3">
+      {/* ── Back bar ── */}
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
+        >
+          <span className="material-symbols-outlined">arrow_back</span>
+          <span className="font-label-sm text-label-sm">Calendário</span>
+        </button>
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-yellow-400/40 text-yellow-300 text-[10px] font-label-sm tracking-widest uppercase">
+          Lua 13 · Dia 29
+        </div>
+      </div>
+
+      {/* ── Header ── */}
+      <div className="glass-panel rounded-3xl overflow-hidden">
+        {/* Gold banner */}
+        <div className="flex items-center gap-4 px-5 py-4 bg-gradient-to-r from-yellow-400/10 to-orange-400/5 border-b border-yellow-400/20">
+          <div className="shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400/30 to-orange-400/20 border border-yellow-400/50 flex items-center justify-center">
+            <span className="material-symbols-outlined text-yellow-300 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <span className="font-label-sm text-[9px] tracking-widest uppercase text-yellow-300">Dia Fora do Tempo</span>
+              {isToday && <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[9px] font-label-sm">hoje</span>}
+            </div>
+            <h1 className="font-serif text-xl text-on-surface leading-tight">25 de julho</h1>
+            <p className="font-body-sm text-on-surface-variant/60 text-xs capitalize">{weekdayDate} · {longDate}</p>
+          </div>
+          {isPortal && (
+            <span className="shrink-0 px-2 py-0.5 rounded-full bg-error/20 text-error text-[9px] font-label-sm tracking-wide uppercase">Portal PV</span>
+          )}
+        </div>
+
+        {/* Explanation text */}
+        <div className="px-5 py-4 space-y-2">
+          <p className="font-body-md text-on-surface text-sm leading-relaxed">
+            O Dia Fora do Tempo não pertence a nenhuma das 13 Luas. É o 365º dia do calendário das 13 Luas — um dia sagrado de celebração, arte, perdão e renovação espiritual.
+          </p>
+          <p className="font-body-sm text-on-surface-variant/70 text-xs leading-relaxed">
+            Neste dia, o tempo linear é suspenso. É dedicado à paz, à expressão criativa e à preparação para o novo Ano Galáctico que começa em 26 de julho.
+          </p>
+        </div>
+      </div>
+
+      {/* ── KIN do dia ── */}
+      <div className={`relative glass-panel rounded-3xl overflow-hidden border-l-4 ${colors.border}`}>
+        <div className={`absolute inset-0 ${colors.bg}/4 pointer-events-none`} />
+
+        <div className="relative flex items-start gap-4 p-5 pb-3">
+          <div className={`shrink-0 w-16 h-16 rounded-full border-2 ${colors.border} flex items-center justify-center bg-surface/40 p-2`}>
+            <div className={`absolute w-16 h-16 rounded-full ${colors.bg} blur-2xl opacity-15`} />
+            <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain relative" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <span className={`font-label-sm text-label-sm ${colors.text} tracking-widest uppercase font-bold`}>KIN {kin}</span>
+              {isToday && <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[9px] font-label-sm">hoje</span>}
+            </div>
+            <h2 className="font-headline-md text-on-surface leading-tight mb-0.5">{info.fullName}</h2>
+            <p className="font-body-sm text-on-surface-variant/60 italic text-xs">{info.seal.maya} · {info.tone.maya}</p>
+          </div>
+          <div className={`shrink-0 flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl border ${colors.border}/50 bg-surface/30`}>
+            <p className="font-label-sm text-[8px] text-on-surface-variant/60 uppercase tracking-wider">Tom</p>
+            <p className={`font-headline-sm text-lg font-bold ${colors.text} leading-none`}>{info.tone.index}</p>
+            <p className="font-label-sm text-[8px] text-on-surface-variant/60 text-center leading-tight">{info.tone.name}</p>
+          </div>
+        </div>
+
+        {/* Mantra */}
+        <div className={`mx-5 mb-3 border-l-2 pl-4 space-y-0.5 ${colors.border}`}>
+          {info.mantra.map((line, i) => (
+            <p
+              key={i}
+              className={`leading-relaxed ${
+                i === 0 ? "font-body-md text-on-surface font-medium" :
+                i === 4 ? "font-body-sm text-on-surface-variant/70 italic mt-1" :
+                          "font-body-sm text-on-surface-variant"
+              }`}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+
+        {/* Affirmation */}
+        <div className={`mx-5 mb-5 rounded-xl px-4 py-2.5 ${colors.bg}/10 border ${colors.border}/50`}>
+          <p className={`font-label-sm text-[9px] uppercase tracking-widest mb-0.5 ${colors.text}`}>Afirmação</p>
+          <p className="font-body-sm italic text-on-surface text-sm">"{info.affirmation}"</p>
+        </div>
+      </div>
+
+      {/* ── Ano Galáctico note ── */}
+      <div className="glass-panel rounded-3xl p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="material-symbols-outlined text-base text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>sunny</span>
+          <p className="font-label-sm text-[10px] text-on-surface-variant/50 uppercase tracking-widest">Próximo Ano Galáctico</p>
+        </div>
+        <p className="font-body-md text-on-surface font-medium text-sm">
+          26 de julho de {galYear + 1}
+        </p>
+        <p className="font-body-sm text-on-surface-variant/60 text-xs mt-0.5">
+          Lua 1 · Dia 1 · início do Ano Galáctico {galYear + 1}–{galYear + 2}
+        </p>
+      </div>
+
+      {/* ── Link to full kin detail ── */}
+      <Link
+        to="/ciclos/kin/$kin"
+        params={{ kin: String(kin) }}
+        className="block glass-panel rounded-3xl p-4 hover:border-primary transition-colors border border-transparent"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-label-sm text-label-sm text-on-surface-variant/70">Leitura completa do KIN</p>
             <p className="font-body-md text-on-surface font-medium">KIN {kin} · {info.fullName}</p>
           </div>
           <span className="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
