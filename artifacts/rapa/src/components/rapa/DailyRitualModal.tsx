@@ -96,6 +96,7 @@ export function DailyFlowCards() {
                     <Link
                       to="/ciclos/kin/$kin"
                       params={{ kin: String(todayKin) }}
+                      onClick={onClose}
                       className="mt-1 self-start inline-flex items-center gap-1 text-primary font-label-sm text-label-sm hover:underline"
                     >
                       <span className="material-symbols-outlined text-sm">open_in_new</span>
@@ -107,6 +108,7 @@ export function DailyFlowCards() {
                   <Link
                     to="/ciclos/kin/$kin"
                     params={{ kin: String(todayTrecenaStart) }}
+                    onClick={onClose}
                     className="mt-1 self-start inline-flex items-center gap-1 text-primary font-label-sm text-label-sm hover:underline"
                   >
                     <span className="material-symbols-outlined text-sm">open_in_new</span>
@@ -117,6 +119,7 @@ export function DailyFlowCards() {
                   <Link
                     to="/ciclos/kin/$kin"
                     params={{ kin: String(todayKin) }}
+                    onClick={onClose}
                     className="mt-1 self-start inline-flex items-center gap-1 text-primary font-label-sm text-label-sm hover:underline"
                   >
                     <span className="material-symbols-outlined text-sm">open_in_new</span>
@@ -126,6 +129,7 @@ export function DailyFlowCards() {
                 {i === 3 && (
                   <Link
                     to="/jornada"
+                    onClick={onClose}
                     className="mt-1 self-start inline-flex items-center gap-1 text-primary font-label-sm text-label-sm hover:underline"
                   >
                     <span className="material-symbols-outlined text-sm">open_in_new</span>
