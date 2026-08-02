@@ -9,6 +9,7 @@ import { getTodayMood, setTodayMood, listEntries, addEntry } from "@/lib/journal
 import { getTodayKinInfo, sincronarioDate, cubeDayOfMoon } from "@/lib/tzolkin";
 import { SEAL_IMAGE } from "@/lib/seal-images";
 import { KinSeal } from "@/components/KinSeal";
+import { WavespellCard } from "@/components/rapa/WavespellCard";
 
 function useDFTDTState() {
   // Always use UTC so SSR and client agree regardless of local timezone.
@@ -480,6 +481,11 @@ function HojePage() {
             <span className="chip-gold px-3 py-1 rounded-full text-xs font-medium">{todayKin.tone.essence}</span>
           </div>
         </div>
+      </section>
+
+      {/* Onda Encantada */}
+      <section className="mb-section-gap">
+        <WavespellCard />
       </section>
 
       {/* Progresso da Jornada */}
