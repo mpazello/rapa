@@ -164,16 +164,15 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
   const [month, setMonth] = useState(init.getMonth());
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Close on outside click (desktop only; mobile has backdrop button)
+  // Close on outside click — desktop only (mousedown).
+  // Mobile uses the backdrop button; adding touchstart here interferes with day taps.
   useEffect(() => {
-    function onDown(e: MouseEvent | TouchEvent) {
+    function onDown(e: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) onClose();
     }
     document.addEventListener("mousedown", onDown);
-    document.addEventListener("touchstart", onDown);
     return () => {
       document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("touchstart", onDown);
     };
   }, [onClose]);
 
