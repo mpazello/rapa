@@ -11,17 +11,15 @@ import { SEAL_IMAGE } from "@/lib/seal-images";
 import { KinSeal } from "@/components/KinSeal";
 
 function useDFTDTState() {
-  // Calculated inside the component so server and client use the same timezone.
-  // suppressHydrationWarning is added to the badge text to cover any residual
-  // server/client offset during the exact midnight boundary.
+  // Always use UTC so SSR and client agree regardless of local timezone.
   const now = new Date();
-  const m = now.getMonth(); // 0-based
-  const d = now.getDate();
+  const m = now.getUTCMonth(); // 0-based
+  const d = now.getUTCDate();
   const isDFTDT = m === 6 && d === 25;
   const isNewCycle = m === 6 && d === 26;
-  const y = now.getFullYear();
-  let next = new Date(y, 6, 25);
-  if (now > next) next = new Date(y + 1, 6, 25);
+  const y = now.getUTCFullYear();
+  let next = new Date(Date.UTC(y, 6, 25));
+  if (now > next) next = new Date(Date.UTC(y + 1, 6, 25));
   const daysUntil = Math.ceil((next.getTime() - now.getTime()) / 86400000);
   return { isDFTDT, isNewCycle, daysUntil };
 }
@@ -100,7 +98,7 @@ const moods = [
 const WEEK_DAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
 function WeekProgress({ mood }: { mood: string | null }) {
-  const today = (new Date().getDay() + 6) % 7; // Mon=0 … Sun=6
+  const today = (new Date().getUTCDay() + 6) % 7; // Mon=0 … Sun=6, always UTC
   const registered = mood !== null;
   const pct = Math.round(((today + (registered ? 1 : 0.5)) / 7) * 100);
 
@@ -450,7 +448,7 @@ function HojePage() {
             <div className="flex-1 min-w-0">
               <span className="font-label-sm text-label-sm text-muted-stardust uppercase tracking-widest">
                 Ciclo do Dia
-                <span className="normal-case tracking-normal"> · {new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "short" })}</span>
+                <span className="normal-case tracking-normal"> · {new Date().toLocaleDateString("pt-BR", { timeZone: "UTC", day: "numeric", month: "short" })}</span>
               </span>
               <Link
                 to="/ciclos/kin/$kin"
