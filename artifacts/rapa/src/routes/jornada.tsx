@@ -210,17 +210,18 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
       ref={panelRef}
       className="bg-[#1a1625] border border-white/15 rounded-2xl shadow-2xl p-4 w-[300px] max-w-[92vw]"
       onClick={e => e.stopPropagation()}
+      onTouchStart={e => e.stopPropagation()}
       onTouchEnd={e => e.stopPropagation()}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 active:bg-white/20 text-on-surface-variant transition-colors">
+        <button onClick={prevMonth} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-white/10 active:bg-white/20 text-on-surface-variant transition-colors">
           <span className="material-symbols-outlined text-[20px]">chevron_left</span>
         </button>
         <span className="text-sm font-medium text-ethereal-white">
           {MONTHS_PT[month]} {year}
         </span>
-        <button onClick={nextMonth} disabled={!canGoNext} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 active:bg-white/20 text-on-surface-variant transition-colors disabled:opacity-30">
+        <button onClick={nextMonth} disabled={!canGoNext} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-white/10 active:bg-white/20 text-on-surface-variant transition-colors disabled:opacity-30">
           <span className="material-symbols-outlined text-[20px]">chevron_right</span>
         </button>
       </div>
@@ -263,13 +264,20 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
   return (
     <>
       {/* Mobile overlay */}
-      <div className="sm:hidden fixed inset-0 z-50 flex flex-col justify-end">
-        <button
+      <div className="sm:hidden fixed inset-0 z-50">
+        {/* Backdrop — só fecha se tocar fora do painel */}
+        <div
           className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           onClick={onClose}
-          aria-label="Fechar calendário"
+          onTouchEnd={e => { e.preventDefault(); onClose(); }}
         />
-        <div className="relative z-10 px-4 pb-8 pt-2">
+        {/* Bottom sheet — bloqueia todos os eventos para não vazar ao backdrop */}
+        <div
+          className="absolute bottom-0 left-0 right-0 z-10 px-4 pb-safe-bottom pb-8 pt-2"
+          onClick={e => e.stopPropagation()}
+          onTouchStart={e => e.stopPropagation()}
+          onTouchEnd={e => e.stopPropagation()}
+        >
           <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-4" />
           {panel}
         </div>
