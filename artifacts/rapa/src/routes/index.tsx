@@ -372,7 +372,7 @@ function HojePage() {
             <Link
               to="/jornada"
               aria-label="Registrar em outro dia"
-              className={`aspect-square py-5 px-4 gradient-ritual rounded-full flex items-center justify-center active:scale-[0.98] transition-transform shadow-lg shadow-astral-violet/20 ${!user ? "pointer-events-none opacity-50" : ""}`}
+              className="aspect-square py-5 px-4 gradient-ritual rounded-full flex items-center justify-center active:scale-[0.98] transition-transform shadow-lg shadow-astral-violet/20"
             >
               <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
                 calendar_month
