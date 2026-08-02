@@ -3,6 +3,56 @@ import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { DailyRitualModal } from "./DailyRitualModal";
+import { getTodayKinInfo, type SealColor } from "@/lib/tzolkin";
+import { SEAL_IMAGE } from "@/lib/seal-images";
+
+const TILE_BG: Record<SealColor, string> = {
+  vermelho: "bg-[#CC2222]",
+  branco:   "bg-[#E8E8E8]",
+  azul:     "bg-[#1A4FCC]",
+  amarelo:  "bg-[#D4A500]",
+};
+
+const TILE_BORDER: Record<SealColor, string> = {
+  vermelho: "border-[#991111]",
+  branco:   "border-[#AAAAAA]",
+  azul:     "border-[#0F3399]",
+  amarelo:  "border-[#A07800]",
+};
+
+function WavespellTile() {
+  const [info, setInfo] = useState<ReturnType<typeof getTodayKinInfo> | null>(null);
+
+  useEffect(() => {
+    setInfo(getTodayKinInfo());
+  }, []);
+
+  if (!info) {
+    // placeholder que não causa hydration mismatch
+    return <div className="w-8 h-8 rounded-lg bg-surface-container animate-pulse" />;
+  }
+
+  const { trecena } = info;
+  const src = SEAL_IMAGE[trecena.seal.index];
+  const bg = TILE_BG[trecena.seal.color];
+  const border = TILE_BORDER[trecena.seal.color];
+
+  return (
+    <span
+      className={`inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 ${bg} ${border} shadow-inner overflow-hidden`}
+      style={{ boxShadow: "inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -1px 2px rgba(0,0,0,0.3)" }}
+      title={`Onda Encantada do ${trecena.seal.name} (Kin ${trecena.kinStart})`}
+    >
+      <img
+        src={src}
+        alt={trecena.seal.name}
+        className="w-[75%] h-[75%] object-contain"
+        style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.4))" }}
+        loading="eager"
+      />
+    </span>
+  );
+}
 
 function Avatar({ userId, displayName }: { userId: string; displayName?: string | null }) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -83,6 +133,15 @@ export function TopAppBar() {
                 auto_stories
               </span>
               <span className="font-label-sm text-label-sm hidden sm:inline">Almanaque</span>
+            </Link>
+
+            {/* Onda Encantada — tile colorido com o selo da trecena atual */}
+            <Link
+              to="/ciclos"
+              aria-label="Onda Encantada"
+              className="hover:opacity-80 active:scale-95 transition-all"
+            >
+              <WavespellTile />
             </Link>
           </div>
 
