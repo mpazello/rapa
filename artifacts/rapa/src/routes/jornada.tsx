@@ -162,14 +162,19 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
   const init = new Date(value + "T00:00:00");
   const [year, setYear] = useState(init.getFullYear());
   const [month, setMonth] = useState(init.getMonth());
-  const ref = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
+  // Close on outside click (desktop only; mobile has backdrop button)
   useEffect(() => {
-    function onDown(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    function onDown(e: MouseEvent | TouchEvent) {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) onClose();
     }
     document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
+    document.addEventListener("touchstart", onDown);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("touchstart", onDown);
+    };
   }, [onClose]);
 
   const maxDate = new Date(maxIso + "T00:00:00");
@@ -181,13 +186,18 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
   function nextMonth() {
     const nm = month === 11 ? 0 : month + 1;
     const ny = month === 11 ? year + 1 : year;
-    const firstOfNext = new Date(ny, nm, 1);
-    if (firstOfNext <= maxDate) { setMonth(nm); if (month === 11) setYear(y => y + 1); }
+    if (new Date(ny, nm, 1) <= maxDate) {
+      setMonth(nm);
+      if (month === 11) setYear(y => y + 1);
+    }
   }
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const cells: (number | null)[] = [...Array(firstDay).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)];
+  const cells: (number | null)[] = [
+    ...Array(firstDay).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
   while (cells.length % 7 !== 0) cells.push(null);
 
   const canGoNext = (() => {
@@ -196,22 +206,23 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
     return new Date(ny, nm, 1) <= maxDate;
   })();
 
-  return (
+  const panel = (
     <div
-      ref={ref}
-      className="absolute z-50 top-full left-0 mt-2 bg-[#1a1625] border border-white/15 rounded-2xl shadow-2xl p-4 w-[280px]"
+      ref={panelRef}
+      className="bg-[#1a1625] border border-white/15 rounded-2xl shadow-2xl p-4 w-[300px] max-w-[92vw]"
       onClick={e => e.stopPropagation()}
+      onTouchEnd={e => e.stopPropagation()}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <button onClick={prevMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/10 text-on-surface-variant transition-colors">
-          <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+        <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 active:bg-white/20 text-on-surface-variant transition-colors">
+          <span className="material-symbols-outlined text-[20px]">chevron_left</span>
         </button>
         <span className="text-sm font-medium text-ethereal-white">
           {MONTHS_PT[month]} {year}
         </span>
-        <button onClick={nextMonth} disabled={!canGoNext} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/10 text-on-surface-variant transition-colors disabled:opacity-30">
-          <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+        <button onClick={nextMonth} disabled={!canGoNext} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 active:bg-white/20 text-on-surface-variant transition-colors disabled:opacity-30">
+          <span className="material-symbols-outlined text-[20px]">chevron_right</span>
         </button>
       </div>
 
@@ -223,7 +234,7 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
       </div>
 
       {/* Days grid */}
-      <div className="grid grid-cols-7 gap-y-0.5">
+      <div className="grid grid-cols-7 gap-y-1">
         {cells.map((day, i) => {
           if (!day) return <div key={i} />;
           const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -235,8 +246,8 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
               key={i}
               disabled={disabled}
               onClick={() => { onSelect(iso); onClose(); }}
-              className={`h-8 w-full rounded-lg text-xs font-medium transition-all
-                ${disabled ? "text-white/20 cursor-not-allowed" : "hover:bg-astral-violet/20 cursor-pointer"}
+              className={`h-9 w-full rounded-lg text-xs font-medium transition-all
+                ${disabled ? "text-white/20 cursor-not-allowed" : "hover:bg-astral-violet/20 active:bg-astral-violet/30 cursor-pointer"}
                 ${isSelected ? "bg-astral-violet text-white" : isToday ? "text-astral-violet font-bold" : "text-on-surface-variant"}
               `}
             >
@@ -246,6 +257,30 @@ function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
         })}
       </div>
     </div>
+  );
+
+  // Mobile: fixed bottom sheet com backdrop
+  // Desktop: dropdown absoluto
+  return (
+    <>
+      {/* Mobile overlay */}
+      <div className="sm:hidden fixed inset-0 z-50 flex flex-col justify-end">
+        <button
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={onClose}
+          aria-label="Fechar calendário"
+        />
+        <div className="relative z-10 px-4 pb-8 pt-2">
+          <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-4" />
+          {panel}
+        </div>
+      </div>
+
+      {/* Desktop dropdown */}
+      <div className="hidden sm:block absolute z-50 top-full right-0 mt-2">
+        {panel}
+      </div>
+    </>
   );
 }
 
