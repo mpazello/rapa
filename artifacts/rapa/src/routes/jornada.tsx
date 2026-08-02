@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { listEntries, addEntry, deleteEntry, updateEntry } from "@/lib/journal.functions";
@@ -148,6 +148,106 @@ function todayISO() {
   return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
 }
 
+// ─── Custom Date Picker ───────────────────────────────────────────────────────
+const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"];
+const MONTHS_PT = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+function DatePickerPopup({ value, maxIso, onSelect, onClose }: {
+  value: string;
+  maxIso: string;
+  onSelect: (iso: string) => void;
+  onClose: () => void;
+}) {
+  const init = new Date(value + "T00:00:00");
+  const [year, setYear] = useState(init.getFullYear());
+  const [month, setMonth] = useState(init.getMonth());
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onDown(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [onClose]);
+
+  const maxDate = new Date(maxIso + "T00:00:00");
+
+  function prevMonth() {
+    if (month === 0) { setMonth(11); setYear(y => y - 1); }
+    else setMonth(m => m - 1);
+  }
+  function nextMonth() {
+    const nm = month === 11 ? 0 : month + 1;
+    const ny = month === 11 ? year + 1 : year;
+    const firstOfNext = new Date(ny, nm, 1);
+    if (firstOfNext <= maxDate) { setMonth(nm); if (month === 11) setYear(y => y + 1); }
+  }
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cells: (number | null)[] = [...Array(firstDay).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const canGoNext = (() => {
+    const nm = month === 11 ? 0 : month + 1;
+    const ny = month === 11 ? year + 1 : year;
+    return new Date(ny, nm, 1) <= maxDate;
+  })();
+
+  return (
+    <div
+      ref={ref}
+      className="absolute z-50 top-full left-0 mt-2 bg-[#1a1625] border border-white/15 rounded-2xl shadow-2xl p-4 w-[280px]"
+      onClick={e => e.stopPropagation()}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <button onClick={prevMonth} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/10 text-on-surface-variant transition-colors">
+          <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+        </button>
+        <span className="text-sm font-medium text-ethereal-white">
+          {MONTHS_PT[month]} {year}
+        </span>
+        <button onClick={nextMonth} disabled={!canGoNext} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/10 text-on-surface-variant transition-colors disabled:opacity-30">
+          <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+        </button>
+      </div>
+
+      {/* Weekday headers */}
+      <div className="grid grid-cols-7 mb-1">
+        {WEEKDAYS.map((d, i) => (
+          <div key={i} className="text-center text-[10px] font-medium text-muted-stardust py-1">{d}</div>
+        ))}
+      </div>
+
+      {/* Days grid */}
+      <div className="grid grid-cols-7 gap-y-0.5">
+        {cells.map((day, i) => {
+          if (!day) return <div key={i} />;
+          const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+          const isSelected = iso === value;
+          const isToday = iso === todayISO();
+          const disabled = new Date(iso + "T00:00:00") > maxDate;
+          return (
+            <button
+              key={i}
+              disabled={disabled}
+              onClick={() => { onSelect(iso); onClose(); }}
+              className={`h-8 w-full rounded-lg text-xs font-medium transition-all
+                ${disabled ? "text-white/20 cursor-not-allowed" : "hover:bg-astral-violet/20 cursor-pointer"}
+                ${isSelected ? "bg-astral-violet text-white" : isToday ? "text-astral-violet font-bold" : "text-on-surface-variant"}
+              `}
+            >
+              {day}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function formatDateLabel(iso: string): string {
   const t = todayISO();
   if (iso === t) return "Hoje";
@@ -167,9 +267,8 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
   const [entryDate, setEntryDate] = useState(todayISO);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const dateInputRef = useRef<HTMLInputElement>(null);
-  const closedDateInputRef = useRef<HTMLInputElement>(null);
 
   const { listening, toggle: toggleVoice } = useVoiceInput(
     useCallback((transcript: string) => {
@@ -223,26 +322,24 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
         {/* divider */}
         <div className="w-px bg-white/8 self-stretch" />
 
-        {/* calendar icon — input overlaid directly so any click hits the native picker */}
-        <div className="relative px-4 flex items-center justify-center text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all">
-          <span className="material-symbols-outlined text-xl pointer-events-none" style={{ fontVariationSettings: "'FILL' 1" }}>
-            calendar_month
-          </span>
-          <input
-            ref={closedDateInputRef}
-            type="date"
-            max={todayISO()}
-            value={entryDate}
+        {/* calendar icon — opens custom date picker */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowDatePicker(p => !p)}
+            className="px-4 h-full flex items-center justify-center text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
             title="Registrar em outro dia"
-            onChange={(e) => {
-              if (e.target.value) {
-                setEntryDate(e.target.value);
-                setOpen(true);
-                setTimeout(() => textareaRef.current?.focus(), 80);
-              }
-            }}
-            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-          />
+          >
+            <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_month</span>
+          </button>
+          {showDatePicker && (
+            <DatePickerPopup
+              value={entryDate}
+              maxIso={todayISO()}
+              onSelect={(iso) => { setEntryDate(iso); setOpen(true); setTimeout(() => textareaRef.current?.focus(), 80); }}
+              onClose={() => setShowDatePicker(false)}
+            />
+          )}
         </div>
       </div>
     );
@@ -254,25 +351,29 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
       <div className="flex items-center gap-2">
         <span className="material-symbols-outlined text-[16px] text-astral-violet/70">calendar_today</span>
         <span className="font-label-sm text-xs text-on-surface-variant/70">Registrando para:</span>
-        <div className={`relative flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-medium transition-all ${
-            isToday
-              ? "border-astral-violet/40 text-astral-violet bg-astral-violet/10"
-              : "border-ritual-gold/40 text-ritual-gold bg-ritual-gold/10"
-          }`}
-          aria-label="Selecionar data"
-        >
-          <span className="material-symbols-outlined text-[13px] pointer-events-none" style={{ fontVariationSettings: "'FILL' 1" }}>
-            {isToday ? "today" : "event"}
-          </span>
-          <span className="pointer-events-none">{formatDateLabel(entryDate)}</span>
-          <input
-            ref={dateInputRef}
-            type="date"
-            value={entryDate}
-            max={todayISO()}
-            onChange={(e) => e.target.value && setEntryDate(e.target.value)}
-            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-          />
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowDatePicker(p => !p)}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-medium transition-all ${
+              isToday
+                ? "border-astral-violet/40 text-astral-violet bg-astral-violet/10 hover:bg-astral-violet/20"
+                : "border-ritual-gold/40 text-ritual-gold bg-ritual-gold/10 hover:bg-ritual-gold/20"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[13px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+              {isToday ? "today" : "event"}
+            </span>
+            {formatDateLabel(entryDate)}
+          </button>
+          {showDatePicker && (
+            <DatePickerPopup
+              value={entryDate}
+              maxIso={todayISO()}
+              onSelect={(iso) => setEntryDate(iso)}
+              onClose={() => setShowDatePicker(false)}
+            />
+          )}
         </div>
         {!isToday && (
           <button
