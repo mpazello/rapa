@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const Mood = z.enum(["calmo", "presente", "fluido", "vibrante", "reflexivo"]);
-const Kind = z.enum(["marco", "reflexao", "humor", "meditacao"]);
+const Kind = z.enum(["marco", "reflexao", "humor", "meditacao", "conflito"]);
 
 export const getTodayMood = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
