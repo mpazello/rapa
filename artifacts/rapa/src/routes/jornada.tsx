@@ -546,12 +546,20 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
 
 // ─── Entry Card ───────────────────────────────────────────────────────────────
 
-type EntryData = { id: string; kind: string; title?: string | null; content: string; entry_date: string; photo_url?: string | null };
+type EntryData = {
+  id: string;
+  kind: string;
+  title?: string | null;
+  content: string;
+  entry_date: string;
+  photo_url?: string | null;
+  photo_path?: string | null;
+};
 
 function EntryCard({ entry, onDelete, onEdit, deleting, saving }: {
   entry: EntryData;
   onDelete: (id: string) => void;
-  onEdit: (id: string, fields: { kind: KindKey; title: string; content: string }) => Promise<void>;
+  onEdit: (id: string, fields: { kind: KindKey; title: string; content: string; photoFile: File | null; removePhoto: boolean }) => Promise<void>;
   deleting: boolean;
   saving: boolean;
 }) {
@@ -561,6 +569,11 @@ function EntryCard({ entry, onDelete, onEdit, deleting, saving }: {
   const [editKind, setEditKind] = useState<KindKey>((entry.kind as KindKey) ?? "reflexao");
   const [editTitle, setEditTitle] = useState(entry.title ?? "");
   const [editContent, setEditContent] = useState(entry.content);
+  // foto na edição: null = sem nova foto selecionada
+  const [editPhotoFile, setEditPhotoFile] = useState<File | null>(null);
+  const [editPhotoPreview, setEditPhotoPreview] = useState<string | null>(null);
+  // removePhoto = true → apagar foto existente
+  const [removePhoto, setRemovePhoto] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const meta = KIND_META[entry.kind as KindKey] ?? KIND_META.reflexao;
@@ -570,6 +583,9 @@ function EntryCard({ entry, onDelete, onEdit, deleting, saving }: {
     setEditKind((entry.kind as KindKey) ?? "reflexao");
     setEditTitle(entry.title ?? "");
     setEditContent(entry.content);
+    setEditPhotoFile(null);
+    setEditPhotoPreview(null);
+    setRemovePhoto(false);
     setConfirmDelete(false);
     setMenuOpen(false);
     setEditing(true);
@@ -578,13 +594,27 @@ function EntryCard({ entry, onDelete, onEdit, deleting, saving }: {
 
   function cancelEdit() {
     setEditing(false);
+    setEditPhotoFile(null);
+    setEditPhotoPreview(null);
+    setRemovePhoto(false);
   }
 
   async function saveEdit() {
     if (!editContent.trim()) return;
-    await onEdit(entry.id, { kind: editKind, title: editTitle, content: editContent });
+    await onEdit(entry.id, {
+      kind: editKind,
+      title: editTitle,
+      content: editContent,
+      photoFile: editPhotoFile,
+      removePhoto,
+    });
     setEditing(false);
   }
+
+  // foto atual visível na edição: nova selecionada > existente (se não removida)
+  const currentPhotoInEdit = removePhoto
+    ? null
+    : (editPhotoPreview ?? entry.photo_url ?? null);
 
   /* ── Modo edição ── */
   if (editing) {
@@ -625,6 +655,48 @@ function EntryCard({ entry, onDelete, onEdit, deleting, saving }: {
           rows={4}
           className="w-full bg-white/5 border border-white/8 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-muted-stardust/40 focus:outline-none focus:border-astral-violet/50 transition-colors resize-none"
         />
+
+        {/* ── Foto na edição ── */}
+        {currentPhotoInEdit ? (
+          <div className="relative rounded-xl overflow-hidden border border-white/10">
+            <img src={currentPhotoInEdit} alt="Foto" className="w-full max-h-48 object-cover" />
+            <button
+              type="button"
+              onClick={() => {
+                if (editPhotoFile) {
+                  // descarta nova foto, volta à existente
+                  setEditPhotoFile(null);
+                  setEditPhotoPreview(null);
+                } else {
+                  // marca foto existente para remoção
+                  setRemovePhoto(true);
+                }
+              }}
+              className="absolute top-2 right-2 bg-obsidian-deep/80 backdrop-blur rounded-full w-9 h-9 flex items-center justify-center text-on-surface"
+              aria-label="Remover foto"
+            >
+              <span className="material-symbols-outlined text-[16px]">close</span>
+            </button>
+          </div>
+        ) : (
+          <label className="flex items-center gap-2 px-4 py-3 rounded-xl border border-dashed border-white/10 text-muted-stardust hover:border-white/20 cursor-pointer text-xs transition-colors">
+            <span className="material-symbols-outlined text-[16px]">add_a_photo</span>
+            {removePhoto ? "Adicionar nova foto" : "Adicionar foto (opcional)"}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(ev) => {
+                const f = ev.target.files?.[0];
+                if (!f) return;
+                if (f.size > 8 * 1024 * 1024) { toast.error("Máximo 8MB."); return; }
+                setEditPhotoFile(f);
+                setEditPhotoPreview(URL.createObjectURL(f));
+                setRemovePhoto(false);
+              }}
+            />
+          </label>
+        )}
 
         <div className="flex gap-2">
           <button type="button" onClick={cancelEdit} className="btn-ghost flex-1 text-sm">Cancelar</button>
@@ -772,8 +844,26 @@ function JornadaPage() {
   });
 
   const editMut = useMutation({
-    mutationFn: ({ id, kind, title, content }: { id: string; kind: KindKey; title: string; content: string }) =>
-      fnUpdate({ data: { id, kind, title: title || undefined, content: content.trim() } }),
+    mutationFn: async ({
+      id, kind, title, content, photoFile, removePhoto,
+    }: { id: string; kind: KindKey; title: string; content: string; photoFile: File | null; removePhoto: boolean }) => {
+      // photo_path: undefined = não mudar | null = remover | string = novo caminho
+      let photo_path: string | null | undefined = undefined;
+
+      if (removePhoto) {
+        photo_path = null;
+      } else if (photoFile && user) {
+        const ext = photoFile.name.split(".").pop()?.toLowerCase() || "jpg";
+        const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("journal-photos")
+          .upload(path, photoFile, { contentType: photoFile.type, upsert: false });
+        if (upErr) throw new Error(upErr.message);
+        photo_path = path;
+      }
+
+      return fnUpdate({ data: { id, kind, title: title || undefined, content: content.trim(), photo_path } });
+    },
     onSuccess: () => {
       toast.success("Registro atualizado.");
       qc.invalidateQueries({ queryKey: ["entries"] });

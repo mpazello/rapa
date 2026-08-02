@@ -99,17 +99,23 @@ export const updateEntry = createServerFn({ method: "POST" })
         kind: Kind,
         title: z.string().max(200).optional(),
         content: z.string().min(1).max(5000),
+        // undefined = não alterar foto; null = remover foto; string = novo caminho
+        photo_path: z.string().max(500).nullable().optional(),
       })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
+    const patch: Record<string, unknown> = {
+      kind: data.kind,
+      title: data.title || null,
+      content: data.content,
+    };
+    if (data.photo_path !== undefined) {
+      patch.photo_path = data.photo_path; // null ou novo caminho
+    }
     const { error } = await context.supabase
       .from("journal_entries")
-      .update({
-        kind: data.kind,
-        title: data.title || null,
-        content: data.content,
-      })
+      .update(patch)
       .eq("id", data.id)
       .eq("user_id", context.userId);
     if (error) throw new Error(error.message);
