@@ -20,10 +20,11 @@ export const Route = createFileRoute("/jornada")({
 });
 
 const KIND_META = {
-  marco:     { icon: "star",              label: "Marco",     borderClass: "border-l-ritual-gold",    chipClass: "bg-ritual-gold/10 text-ritual-gold border-ritual-gold/25",    iconClass: "text-ritual-gold"    },
-  reflexao:  { icon: "psychology_alt",    label: "Reflexão",  borderClass: "border-l-astral-violet",  chipClass: "bg-astral-violet/10 text-astral-violet border-astral-violet/25", iconClass: "text-astral-violet"  },
-  humor:     { icon: "mood",              label: "Humor",     borderClass: "border-l-cosmic-blue",    chipClass: "bg-cosmic-blue/10 text-cosmic-blue border-cosmic-blue/25",    iconClass: "text-cosmic-blue"    },
-  meditacao: { icon: "self_improvement",  label: "Meditação", borderClass: "border-l-[#6FBEDA]",     chipClass: "bg-[#6FBEDA]/10 text-[#6FBEDA] border-[#6FBEDA]/25",          iconClass: "text-[#6FBEDA]"      },
+  marco:     { icon: "star",              label: "Marco",     borderClass: "border-l-ritual-gold",    chipClass: "bg-ritual-gold/10 text-ritual-gold border-ritual-gold/25",       iconClass: "text-ritual-gold"    },
+  reflexao:  { icon: "psychology_alt",    label: "Reflexão",  borderClass: "border-l-astral-violet",  chipClass: "bg-astral-violet/10 text-astral-violet border-astral-violet/25",  iconClass: "text-astral-violet"  },
+  humor:     { icon: "mood",              label: "Humor",     borderClass: "border-l-cosmic-blue",    chipClass: "bg-cosmic-blue/10 text-cosmic-blue border-cosmic-blue/25",       iconClass: "text-cosmic-blue"    },
+  meditacao: { icon: "self_improvement",  label: "Meditação", borderClass: "border-l-[#6FBEDA]",     chipClass: "bg-[#6FBEDA]/10 text-[#6FBEDA] border-[#6FBEDA]/25",             iconClass: "text-[#6FBEDA]"      },
+  conflito:  { icon: "bolt",              label: "Conflito",  borderClass: "border-l-[#F87171]",     chipClass: "bg-[#F87171]/10 text-[#F87171] border-[#F87171]/25",             iconClass: "text-[#F87171]"      },
 } as const;
 type KindKey = keyof typeof KIND_META;
 
