@@ -139,9 +139,10 @@ export function TopAppBar() {
             <Link
               to="/ciclos"
               aria-label="Onda Encantada"
-              className="hover:opacity-80 active:scale-95 transition-all"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-astral-violet/30 hover:bg-astral-violet/10 transition-colors group"
             >
               <WavespellTile />
+              <span className="font-label-sm text-label-sm hidden sm:inline text-astral-violet">Onda Encantada</span>
             </Link>
           </div>
 
