@@ -793,9 +793,9 @@ function JornadaPage() {
 
         {/* Kind filters */}
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
-          {(["todos", "marco", "reflexao", "humor", "meditacao"] as const).map((k) => {
+          {(["todos", ...(Object.keys(KIND_META) as KindKey[])] as const).map((k) => {
             const active = filter === k;
-            const meta = k !== "todos" ? KIND_META[k] : null;
+            const meta = k !== "todos" ? KIND_META[k as KindKey] : null;
             return (
               <button
                 key={k}
