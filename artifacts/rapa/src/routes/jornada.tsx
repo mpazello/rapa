@@ -226,7 +226,15 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
         {/* calendar icon — picks a date and opens composer */}
         <button
           type="button"
-          onClick={() => closedDateInputRef.current?.click()}
+          onClick={() => {
+            const input = closedDateInputRef.current;
+            if (!input) return;
+            try {
+              (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
+            } catch {
+              input.click();
+            }
+          }}
           className="px-4 flex items-center justify-center cursor-pointer text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
           title="Registrar em outro dia"
         >
@@ -234,8 +242,8 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
             calendar_month
           </span>
         </button>
-        {/* hidden input — triggered via ref.click() from the button above so the
-            browser user-activation requirement is always met (avoids showPicker SecurityError) */}
+        {/* hidden input — must be visible (opacity-0, not display:none) and positioned
+            near the button so the native date picker appears in the right place */}
         <input
           ref={closedDateInputRef}
           type="date"
@@ -248,7 +256,7 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
               setTimeout(() => textareaRef.current?.focus(), 80);
             }
           }}
-          className="opacity-0 absolute w-px h-px pointer-events-none"
+          className="opacity-0 absolute right-0 bottom-0 w-px h-px"
           tabIndex={-1}
           aria-hidden="true"
         />
@@ -264,7 +272,15 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
         <span className="font-label-sm text-xs text-on-surface-variant/70">Registrando para:</span>
         <button
           type="button"
-          onClick={() => dateInputRef.current?.click()}
+          onClick={() => {
+            const input = dateInputRef.current;
+            if (!input) return;
+            try {
+              (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
+            } catch {
+              input.click();
+            }
+          }}
           className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-medium transition-all ${
             isToday
               ? "border-astral-violet/40 text-astral-violet bg-astral-violet/10"
