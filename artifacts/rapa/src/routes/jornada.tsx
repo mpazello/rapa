@@ -169,6 +169,7 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const closedDateInputRef = useRef<HTMLInputElement>(null);
 
   const { listening, toggle: toggleVoice } = useVoiceInput(
     useCallback((transcript: string) => {
@@ -223,27 +224,34 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
         <div className="w-px bg-white/8 self-stretch" />
 
         {/* calendar icon — picks a date and opens composer */}
-        <label
-          className="relative px-4 flex items-center justify-center cursor-pointer text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
+        <button
+          type="button"
+          onClick={() => closedDateInputRef.current?.click()}
+          className="px-4 flex items-center justify-center cursor-pointer text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
           title="Registrar em outro dia"
         >
           <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
             calendar_month
           </span>
-          <input
-            type="date"
-            max={todayISO()}
-            value={entryDate}
-            onChange={(e) => {
-              if (e.target.value) {
-                setEntryDate(e.target.value);
-                setOpen(true);
-                setTimeout(() => textareaRef.current?.focus(), 80);
-              }
-            }}
-            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-          />
-        </label>
+        </button>
+        {/* hidden input — triggered via ref.click() from the button above so the
+            browser user-activation requirement is always met (avoids showPicker SecurityError) */}
+        <input
+          ref={closedDateInputRef}
+          type="date"
+          max={todayISO()}
+          value={entryDate}
+          onChange={(e) => {
+            if (e.target.value) {
+              setEntryDate(e.target.value);
+              setOpen(true);
+              setTimeout(() => textareaRef.current?.focus(), 80);
+            }
+          }}
+          className="opacity-0 absolute w-px h-px pointer-events-none"
+          tabIndex={-1}
+          aria-hidden="true"
+        />
       </div>
     );
   }
@@ -254,29 +262,31 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
       <div className="flex items-center gap-2">
         <span className="material-symbols-outlined text-[16px] text-astral-violet/70">calendar_today</span>
         <span className="font-label-sm text-xs text-on-surface-variant/70">Registrando para:</span>
-        {/* label wraps the button so clicking it opens the native date picker
-            without JS — avoids cross-origin-iframe showPicker() SecurityError */}
-        <label className="cursor-pointer relative">
-          <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-medium transition-all ${
+        <button
+          type="button"
+          onClick={() => dateInputRef.current?.click()}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-medium transition-all ${
             isToday
               ? "border-astral-violet/40 text-astral-violet bg-astral-violet/10"
               : "border-ritual-gold/40 text-ritual-gold bg-ritual-gold/10"
-          }`}>
-            <span className="material-symbols-outlined text-[13px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-              {isToday ? "today" : "event"}
-            </span>
-            {formatDateLabel(entryDate)}
+          }`}
+          aria-label="Selecionar data"
+        >
+          <span className="material-symbols-outlined text-[13px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+            {isToday ? "today" : "event"}
           </span>
-          <input
-            ref={dateInputRef}
-            type="date"
-            value={entryDate}
-            max={todayISO()}
-            onChange={(e) => e.target.value && setEntryDate(e.target.value)}
-            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-            aria-label="Selecionar data"
-          />
-        </label>
+          {formatDateLabel(entryDate)}
+        </button>
+        <input
+          ref={dateInputRef}
+          type="date"
+          value={entryDate}
+          max={todayISO()}
+          onChange={(e) => e.target.value && setEntryDate(e.target.value)}
+          className="opacity-0 absolute w-px h-px pointer-events-none"
+          tabIndex={-1}
+          aria-hidden="true"
+        />
         {!isToday && (
           <button
             type="button"
