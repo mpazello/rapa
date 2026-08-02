@@ -309,39 +309,43 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
 
   if (!open) {
     return (
-      <div className="glass-panel rounded-2xl flex overflow-hidden border border-white/8 hover:border-white/20 transition-all">
-        {/* main area — registro para hoje */}
-        <button
-          onClick={handleOpen}
-          className="flex-1 px-5 py-4 flex items-center gap-3 text-on-surface-variant group text-left"
-        >
-          <span className="material-symbols-outlined text-xl text-astral-violet/70 group-hover:text-astral-violet transition-colors">edit_note</span>
-          <span className="font-body-md text-sm">O que aconteceu hoje?</span>
-          <span className="font-label-sm text-label-sm text-muted-stardust/60 text-xs">registrar</span>
-        </button>
+      <div className="relative">
+        <div className="glass-panel rounded-2xl flex overflow-hidden border border-white/8 hover:border-white/20 transition-all">
+          {/* main area — registro para hoje */}
+          <button
+            onClick={handleOpen}
+            className="flex-1 px-5 py-4 flex items-center gap-3 text-on-surface-variant group text-left"
+          >
+            <span className="material-symbols-outlined text-xl text-astral-violet/70 group-hover:text-astral-violet transition-colors">edit_note</span>
+            <span className="font-body-md text-sm">O que aconteceu hoje?</span>
+            <span className="font-label-sm text-label-sm text-muted-stardust/60 text-xs">registrar</span>
+          </button>
 
-        {/* divider */}
-        <div className="w-px bg-white/8 self-stretch" />
+          {/* divider */}
+          <div className="w-px bg-white/8 self-stretch" />
 
-        {/* calendar icon — opens custom date picker */}
-        <div className="relative">
+          {/* calendar icon */}
           <button
             type="button"
             onClick={() => setShowDatePicker(p => !p)}
-            className="px-4 h-full flex items-center justify-center text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
+            className="px-4 flex items-center justify-center text-on-surface-variant hover:text-astral-violet hover:bg-astral-violet/8 transition-all"
             title="Registrar em outro dia"
           >
             <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_month</span>
           </button>
-          {showDatePicker && (
+        </div>
+
+        {/* popup fora do overflow-hidden */}
+        {showDatePicker && (
+          <div className="absolute right-0 z-50">
             <DatePickerPopup
               value={entryDate}
               maxIso={todayISO()}
-              onSelect={(iso) => { setEntryDate(iso); setOpen(true); setTimeout(() => textareaRef.current?.focus(), 80); }}
+              onSelect={(iso) => { setEntryDate(iso); setOpen(true); setShowDatePicker(false); setTimeout(() => textareaRef.current?.focus(), 80); }}
               onClose={() => setShowDatePicker(false)}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }
