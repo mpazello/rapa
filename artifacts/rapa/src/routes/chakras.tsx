@@ -297,120 +297,14 @@ function BodyView({
               "radial-gradient(ellipse 60% 50% at 50% 35%, rgba(182,199,235,0.06), transparent 70%)",
           }}
         />
-        <div className="relative mx-auto" style={{ width: "min(320px, 80vw)", aspectRatio: "320/520" }}>
-          {/* Silhueta humana anatômica */}
-          <svg viewBox="0 0 320 520" className="absolute inset-0 w-full h-full" aria-hidden>
-            <defs>
-              <linearGradient id="fluxGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#b98ed6" />
-                <stop offset="50%" stopColor="#6fc98b" />
-                <stop offset="100%" stopColor="#e0524d" />
-              </linearGradient>
-              <linearGradient id="bodyFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="rgba(210,220,245,0.10)" />
-                <stop offset="100%" stopColor="rgba(210,220,245,0.04)" />
-              </linearGradient>
-            </defs>
-
-            <g
-              fill="url(#bodyFill)"
-              stroke="rgba(210,222,248,0.30)"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            >
-              {/* Cabeça — oval com queixo levemente afilado */}
-              <path d="
-                M 160 8
-                C 192 8, 194 36, 192 52
-                C 190 65, 180 80, 168 84
-                C 164 86, 156 86, 152 84
-                C 140 80, 130 65, 128 52
-                C 126 36, 128 8, 160 8 Z
-              "/>
-
-              {/* Pescoço */}
-              <path d="
-                M 151 82
-                C 149 90, 147 97, 145 106
-                L 175 106
-                C 173 97, 171 90, 169 82 Z
-              "/>
-
-              {/* Tronco — ombros, clavícula, cintura, quadril */}
-              <path d="
-                M 145 106
-                C 122 108, 94 118, 86 132
-                C 81 144, 98 157, 106 162
-                C 102 190, 116 238, 120 258
-                C 118 278, 102 308, 104 324
-                C 106 342, 130 356, 152 358
-                L 168 358
-                C 190 356, 214 342, 216 324
-                C 218 308, 202 278, 200 258
-                C 204 238, 218 190, 214 162
-                C 222 157, 239 144, 234 132
-                C 226 118, 198 108, 175 106 Z
-              "/>
-
-              {/* Braço esquerdo — pose natural, leve abertura */}
-              <path d="
-                M 88 134
-                C 72 155, 62 222, 62 258
-                C 62 298, 66 332, 66 362
-                C 66 372, 64 384, 66 392
-                C 70 400, 82 398, 88 390
-                C 92 381, 92 368, 90 358
-                C 90 330, 96 298, 98 260
-                C 100 222, 100 157, 96 138 Z
-              "/>
-
-              {/* Braço direito — espelho */}
-              <path d="
-                M 232 134
-                C 248 157, 260 222, 262 260
-                C 264 298, 270 330, 270 358
-                C 268 368, 268 381, 272 390
-                C 278 398, 290 400, 294 392
-                C 296 384, 294 372, 294 362
-                C 294 332, 298 298, 298 258
-                C 298 222, 288 155, 272 134 Z
-              "/>
-
-              {/* Perna esquerda */}
-              <path d="
-                M 104 326
-                C 102 340, 116 354, 148 360
-                L 158 360 158 432
-                C 157 456, 153 476, 150 492
-                L 90 492 90 510 90 516
-                L 164 516 164 492
-                C 164 476, 164 456, 164 432
-                L 164 360 152 358
-              "/>
-
-              {/* Perna direita */}
-              <path d="
-                M 216 326
-                C 218 340, 204 354, 172 360
-                L 164 360 164 432
-                C 164 456, 164 476, 164 492
-                L 164 516 230 516 230 510 230 492
-                L 210 492
-                C 207 476, 203 456, 202 432
-                L 202 360 168 358
-              "/>
-            </g>
-
-            {/* Canal central de energia */}
-            <line
-              x1="160" y1="10" x2="160" y2="362"
-              stroke="url(#fluxGradient)"
-              strokeWidth="1.5"
-              strokeDasharray="3 8"
-              strokeLinecap="round"
-            />
-          </svg>
+        <div className="relative mx-auto" style={{ width: "min(320px, 80vw)", aspectRatio: "1/1" }}>
+          {/* Silhueta de meditação com chakras */}
+          <img
+            src="/chakra-silhouette.png"
+            alt="Silhueta em meditação com os 7 chakras"
+            className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+            draggable={false}
+          />
 
           {/* Chakras */}
           {CHAKRAS.map((c) => {
@@ -452,7 +346,7 @@ function BodyView({
               className="absolute z-20 pointer-events-none px-4 py-3 rounded-2xl bg-surface-container-high/95 backdrop-blur-md border border-outline-variant/40 shadow-xl w-52"
               style={{
                 left: "62%",
-                top: `${Math.min(Math.max(hovered.posY * 100 - 6, 2), 72)}%`,
+                top: `${Math.min(Math.max(hovered.posY * 100 - 6, 2), 82)}%`,
               }}
             >
               <p className="font-headline-sm text-on-surface flex items-center gap-2">

@@ -44,7 +44,7 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "coronario", numero: 7, nome: "Coronário", nomeSanskrito: "Sahasrara",
     identidade: "Eu Compreendo", cor: "#b98ed6", corNome: "Violeta",
-    simbolo: "flare", localizacao: "Topo da cabeça", posY: 0.03,
+    simbolo: "flare", localizacao: "Topo da cabeça", posY: 0.04,
     elemento: "Pensamento", palavraChave: "Consciência",
     funcaoEnergetica: "Consciência superior, iluminação espiritual e conexão com o todo.",
     orgaos: "Cérebro, glândula pineal, sistema nervoso central.",
@@ -53,7 +53,7 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "terceiro-olho", numero: 6, nome: "Terceiro Olho", nomeSanskrito: "Ajna",
     identidade: "Eu Vejo", cor: "#8489e0", corNome: "Índigo",
-    simbolo: "visibility", localizacao: "Entre as sobrancelhas", posY: 0.115,
+    simbolo: "visibility", localizacao: "Entre as sobrancelhas", posY: 0.18,
     elemento: "Luz", palavraChave: "Intuição",
     funcaoEnergetica: "Intuição, percepção sutil, visão interior e sabedoria.",
     orgaos: "Glândula pineal, olhos, cerebelo, ouvidos.",
@@ -62,7 +62,7 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "laringeo", numero: 5, nome: "Laríngeo", nomeSanskrito: "Vishuddha",
     identidade: "Eu Falo", cor: "#6FBEDA", corNome: "Azul",
-    simbolo: "graphic_eq", localizacao: "Garganta", posY: 0.21,
+    simbolo: "graphic_eq", localizacao: "Garganta", posY: 0.30,
     elemento: "Éter", palavraChave: "Expressão",
     funcaoEnergetica: "Comunicação e expressão da verdade pela palavra.",
     orgaos: "Tireoide, garganta, boca, vias respiratórias.",
@@ -71,7 +71,7 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "cardiaco", numero: 4, nome: "Cardíaco", nomeSanskrito: "Anahata",
     identidade: "Eu Amo", cor: "#6fc98b", corNome: "Verde",
-    simbolo: "favorite", localizacao: "Centro do peito", posY: 0.335,
+    simbolo: "favorite", localizacao: "Centro do peito", posY: 0.43,
     elemento: "Ar", palavraChave: "Amor",
     funcaoEnergetica: "Compaixão, amor e expressão dos sentimentos.",
     orgaos: "Coração, pulmões, sistema circulatório, timo.",
@@ -80,7 +80,7 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "plexo-solar", numero: 3, nome: "Plexo Solar", nomeSanskrito: "Manipura",
     identidade: "Eu Faço", cor: "#e8c95a", corNome: "Amarelo",
-    simbolo: "wb_sunny", localizacao: "Região do abdômen", posY: 0.46,
+    simbolo: "wb_sunny", localizacao: "Região do abdômen", posY: 0.55,
     elemento: "Fogo", palavraChave: "Vontade",
     funcaoEnergetica: "Força de vontade, poder pessoal e autoconfiança.",
     orgaos: "Estômago, fígado, pâncreas, suprarrenais, músculos.",
@@ -89,7 +89,7 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "sacral", numero: 2, nome: "Sacral", nomeSanskrito: "Svadhisthana",
     identidade: "Eu Sinto", cor: "#e58b4e", corNome: "Laranja",
-    simbolo: "water_drop", localizacao: "Abaixo do umbigo", posY: 0.565,
+    simbolo: "water_drop", localizacao: "Abaixo do umbigo", posY: 0.65,
     elemento: "Água", palavraChave: "Criatividade",
     funcaoEnergetica: "Criatividade, desejo, vida familiar e convívio social.",
     orgaos: "Órgãos reprodutivos e bexiga.",
@@ -98,7 +98,7 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "raiz", numero: 1, nome: "Raiz", nomeSanskrito: "Muladhara",
     identidade: "Eu Sou", cor: "#e0524d", corNome: "Vermelho",
-    simbolo: "spa", localizacao: "Base da coluna", posY: 0.665,
+    simbolo: "spa", localizacao: "Base da coluna", posY: 0.76,
     elemento: "Terra", palavraChave: "Enraizamento",
     funcaoEnergetica: "Sobrevivência, estabilidade e vontade de viver no mundo material.",
     orgaos: "Coluna, suprarrenais, cólon, pernas, ossos.",
