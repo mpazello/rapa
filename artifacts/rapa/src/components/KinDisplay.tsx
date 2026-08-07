@@ -41,10 +41,10 @@ const SEAL_PX: Record<KinDisplaySize, number> = {
   xl: 112,   // hero / detail header
 };
 
-/** Proporção do glifo do tom em relação ao seal no layout "badge". */
-const BADGE_RATIO = 0.5;
-/** Proporção do glifo do tom em relação ao seal no layout "duo". */
-const DUO_TONE_RATIO = 0.65;
+/** Aspect ratio nativo dos SVGs do Selo (viewBox 95.8 × 101). */
+const SEAL_ASPECT = 101 / 95.8;   // ≈ 1.054  (ligeiramente mais alto que largo)
+/** Aspect ratio nativo dos SVGs do Tom (viewBox 96 × 32). */
+const TONE_ASPECT = 32 / 96;      // ≈ 0.333  (flat, 3:1)
 
 // ─── Classes de cor por família cromática ────────────────────────────────────
 
@@ -87,11 +87,12 @@ function SealCircle({
   pulse: boolean;
   eager: boolean;
 }) {
+  const sealH = Math.round(sealPx * SEAL_ASPECT);
   const imgPx = Math.round(sealPx * 0.7);
   return (
     <span
       className={`relative inline-flex items-center justify-center flex-shrink-0 rounded-full border-2 ${RING[color]} bg-surface-container-low overflow-hidden`}
-      style={{ width: sealPx, height: sealPx }}
+      style={{ width: sealPx, height: sealH }}
     >
       {pulse && (
         <span
@@ -148,7 +149,8 @@ export function KinDisplay({
   //   · Tone em z-20, Seal em z-10
   //   · -mt-2 no Seal para tightening visual lockup
   if (layout === "stack") {
-    const toneH = Math.round(sealPx * 32 / 96); // altura nativa do SVG 96×32
+    const toneH = Math.round(sealPx * TONE_ASPECT);
+    const sealH = Math.round(sealPx * SEAL_ASPECT);
     const imgPx = Math.round(sealPx * 0.7);
     return (
       <div
@@ -156,7 +158,7 @@ export function KinDisplay({
         title={info.fullName}
         aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       >
-        {/* LAYER 01: TONE — mesma largura do selo, altura nativa 96×32 */}
+        {/* LAYER 01: TONE — proporção nativa 96×32 */}
         <span
           className={`relative z-20 flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
           style={{ width: sealPx, height: toneH }}
@@ -170,10 +172,10 @@ export function KinDisplay({
             draggable={false}
           />
         </span>
-        {/* LAYER 00: SEAL — z-10, -mt-2 para overlap */}
+        {/* LAYER 00: SEAL — proporção nativa 95.8×101 */}
         <span
           className="relative z-10 -mt-2 inline-flex items-center justify-center flex-shrink-0 rounded-full"
-          style={{ width: sealPx, height: sealPx }}
+          style={{ width: sealPx, height: sealH }}
         >
           <span
             className={`absolute inset-0 rounded-full border-2 ${RING[info.seal.color]} bg-surface-container-low overflow-hidden flex items-center justify-center`}
@@ -202,14 +204,14 @@ export function KinDisplay({
 
   // ── Layout "duo": Tom à esquerda, Selo à direita ─────────────────────────
   if (layout === "duo") {
-    const toneH = Math.round(sealPx * 32 / 96); // altura nativa do SVG 96×32
+    const toneH = Math.round(sealPx * TONE_ASPECT);
     return (
       <div
         className={`inline-flex items-center gap-3 ${className}`}
         title={info.fullName}
         aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       >
-        {/* Glifo do Tom — mesma largura do selo, altura nativa 96×32 */}
+        {/* Glifo do Tom — proporção nativa 96×32 */}
         <span
           className={`flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
           style={{ width: sealPx, height: toneH }}
@@ -236,10 +238,11 @@ export function KinDisplay({
     );
   }
 
-  // ── Layout "badge": mini-stack — Tom mesma largura do Selo, altura nativa ──
-  // Tom em z-20 sobre o Selo em z-10; -mt-1 cria o tightening visual.
-  const toneH  = Math.round(sealPx * 32 / 96); // altura nativa do SVG 96×32
-  const imgPx  = Math.round(sealPx * 0.7);
+  // ── Layout "badge": mini-stack — Tom acima, Selo abaixo ────────────────────
+  // Ambos com proporções nativas das imagens.
+  const toneH = Math.round(sealPx * TONE_ASPECT); // 96×32 → ~33% da largura
+  const sealH = Math.round(sealPx * SEAL_ASPECT);  // 95.8×101 → ~105% da largura
+  const imgPx = Math.round(sealPx * 0.7);
 
   return (
     <div
@@ -247,7 +250,7 @@ export function KinDisplay({
       aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       title={info.fullName}
     >
-      {/* LAYER 01: TONE — mesma largura do selo, altura nativa 96×32 */}
+      {/* LAYER 01: TONE — proporção nativa 96×32 */}
       <span
         className={`relative z-20 flex-shrink-0 rounded-md shadow-md overflow-hidden ${TONE_BG[info.seal.color]}`}
         style={{ width: sealPx, height: toneH }}
@@ -260,10 +263,10 @@ export function KinDisplay({
         />
       </span>
 
-      {/* LAYER 00: SEAL — abaixo com leve overlap, z-10 */}
+      {/* LAYER 00: SEAL — proporção nativa 95.8×101 */}
       <span
         className="relative z-10 -mt-1 inline-flex items-center justify-center flex-shrink-0"
-        style={{ width: sealPx, height: sealPx }}
+        style={{ width: sealPx, height: sealH }}
       >
         <span
           className={`absolute inset-0 rounded-full border-2 ${RING[info.seal.color]} bg-surface-container-low overflow-hidden flex items-center justify-center`}
