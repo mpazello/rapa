@@ -144,7 +144,7 @@ function KinDetailPage() {
       {/* Header identity */}
       <section className="relative mb-8">
         <div className="relative glass-panel rounded-3xl p-8 flex flex-col items-center text-center">
-          <KinDisplay kin={kin} size="xl" layout="duo" pulse eager className="mb-6" />
+          <KinDisplay kin={kin} size="xl" layout="stack" pulse eager className="mb-6" />
           <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`} suppressHydrationWarning>
             KIN {kin}
             <span className="text-on-surface-variant/60 normal-case tracking-normal" suppressHydrationWarning> · {formatKinDate(dateFromKin(kin))}</span>

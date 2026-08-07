@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { kinFromDate, getKinInfo, sincronarioDate, PLASMAS, getEarthFamily, analogKin, antipodeKin, guideKin, occultKin, SEALS } from "@/lib/tzolkin";
 import { KinDisplay } from "@/components/KinDisplay";
+import { SEAL_IMAGE } from "@/lib/seal-images";
 import { PlasmaSymbol } from "@/components/PlasmaSymbol";
 
 // ─── Dados fixos por Selo (Dreamspell) ──────────────────────────────────────

@@ -19,7 +19,17 @@ import { TONE_IMAGE } from "@/lib/tone-images";
 // ─── Tipos ──────────────────────────────────────────────────────────────────
 
 export type KinDisplaySize = "xs" | "sm" | "md" | "lg" | "xl";
-export type KinDisplayLayout = "badge" | "duo";
+/**
+ * Layouts disponíveis:
+ *   "badge" — Tom sobreposto como badge no canto superior-esquerdo do Selo.
+ *             Ideal para espaços compactos (células, cards de lista).
+ *   "duo"   — Tom e Selo lado a lado, mesma altura.
+ *             Ideal para menções secundárias em headers.
+ *   "stack" — Tom acima, Selo abaixo com leve overlap (-mt-2).
+ *             Tom em z-20, Selo em z-10. Layout canônico para hero/detail pages.
+ *             Segue o KIN Composition Lib spec.
+ */
+export type KinDisplayLayout = "badge" | "duo" | "stack";
 
 // ─── Configuração de tamanhos ────────────────────────────────────────────────
 
@@ -123,6 +133,60 @@ export function KinDisplay({
 }) {
   const info = getKinInfo(kin);
   const sealPx = SEAL_PX[size];
+
+  // ── Layout "stack": Tom acima, Selo abaixo com leve overlap ─────────────
+  // Segue o KIN Composition Lib spec:
+  //   · flex-direction: column; align-items: center
+  //   · Tone em z-20, Seal em z-10
+  //   · -mt-2 no Seal para tightening visual lockup
+  if (layout === "stack") {
+    const tonePx = Math.round(sealPx * 0.58); // ~6/10 do seal, per spec
+    const imgPx  = Math.round(sealPx * 0.7);
+    return (
+      <div
+        className={`inline-flex flex-col items-center ${className}`}
+        title={info.fullName}
+        aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
+      >
+        {/* LAYER 01: TONE — z-20 */}
+        <img
+          src={TONE_IMAGE[info.tone.index]}
+          alt={`Tom ${info.tone.index} · ${info.tone.name}`}
+          title={`Tom ${info.tone.index} · ${info.tone.name}`}
+          style={{ width: tonePx, height: tonePx }}
+          className="relative z-20 rounded-xl shadow-lg flex-shrink-0"
+          loading={eager ? "eager" : "lazy"}
+          draggable={false}
+        />
+        {/* LAYER 00: SEAL — z-10, -mt-2 para overlap */}
+        <span
+          className="relative z-10 -mt-2 inline-flex items-center justify-center flex-shrink-0 rounded-full"
+          style={{ width: sealPx, height: sealPx }}
+        >
+          <span
+            className={`absolute inset-0 rounded-full border-2 ${RING[info.seal.color]} bg-surface-container-low overflow-hidden flex items-center justify-center`}
+          >
+            {pulse && (
+              <span
+                className={`absolute inset-0 ${GLOW[info.seal.color]} opacity-20 blur-md soft-pulse rounded-full`}
+                aria-hidden
+              />
+            )}
+            <img
+              src={SEAL_IMAGE[info.seal.index]}
+              alt={info.seal.name}
+              width={imgPx}
+              height={imgPx}
+              className="relative w-[70%] h-[70%] object-contain"
+              loading={eager ? "eager" : "lazy"}
+              decoding="async"
+              {...(eager ? { fetchPriority: "high" as const } : {})}
+            />
+          </span>
+        </span>
+      </div>
+    );
+  }
 
   // ── Layout "duo": Tom à esquerda, Selo à direita ─────────────────────────
   if (layout === "duo") {
