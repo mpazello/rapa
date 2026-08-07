@@ -148,19 +148,18 @@ export function KinDisplay({
   //   · Tone em z-20, Seal em z-10
   //   · -mt-2 no Seal para tightening visual lockup
   if (layout === "stack") {
-    const tonePx = Math.round(sealPx * 0.58); // ~6/10 do seal, per spec
-    const toneH  = Math.round(tonePx * 0.6);  // altura achatada
-    const imgPx  = Math.round(sealPx * 0.7);
+    const toneH = Math.round(sealPx * 32 / 96); // altura nativa do SVG 96×32
+    const imgPx = Math.round(sealPx * 0.7);
     return (
       <div
         className={`inline-flex flex-col items-center ${className}`}
         title={info.fullName}
         aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       >
-        {/* LAYER 01: TONE — z-20, fundo da cor do Selo */}
+        {/* LAYER 01: TONE — mesma largura do selo, altura nativa 96×32 */}
         <span
           className={`relative z-20 flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
-          style={{ width: tonePx, height: toneH }}
+          style={{ width: sealPx, height: toneH }}
         >
           <img
             src={TONE_IMAGE[info.tone.index]}
@@ -203,18 +202,17 @@ export function KinDisplay({
 
   // ── Layout "duo": Tom à esquerda, Selo à direita ─────────────────────────
   if (layout === "duo") {
-    const tonePx = Math.round(sealPx * DUO_TONE_RATIO);
-    const toneH  = Math.round(tonePx * 0.6);
+    const toneH = Math.round(sealPx * 32 / 96); // altura nativa do SVG 96×32
     return (
       <div
         className={`inline-flex items-center gap-3 ${className}`}
         title={info.fullName}
         aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       >
-        {/* Glifo do Tom — fundo da cor do Selo */}
+        {/* Glifo do Tom — mesma largura do selo, altura nativa 96×32 */}
         <span
           className={`flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
-          style={{ width: tonePx, height: toneH }}
+          style={{ width: sealPx, height: toneH }}
         >
           <img
             src={TONE_IMAGE[info.tone.index]}
@@ -238,12 +236,10 @@ export function KinDisplay({
     );
   }
 
-  // ── Layout "badge": mini-stack — Tom centrado acima, Selo abaixo ─────────
-  // Mesmo princípio do "stack" mas em escala compacta.
+  // ── Layout "badge": mini-stack — Tom mesma largura do Selo, altura nativa ──
   // Tom em z-20 sobre o Selo em z-10; -mt-1 cria o tightening visual.
-  const badgePx = Math.round(sealPx * BADGE_RATIO);
-  const badgeH  = Math.round(badgePx * 0.6);
-  const imgPx   = Math.round(sealPx * 0.7);
+  const toneH  = Math.round(sealPx * 32 / 96); // altura nativa do SVG 96×32
+  const imgPx  = Math.round(sealPx * 0.7);
 
   return (
     <div
@@ -251,10 +247,10 @@ export function KinDisplay({
       aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       title={info.fullName}
     >
-      {/* LAYER 01: TONE — centrado acima, z-20, fundo da cor do Selo */}
+      {/* LAYER 01: TONE — mesma largura do selo, altura nativa 96×32 */}
       <span
-        className={`relative z-20 flex-shrink-0 rounded-sm shadow-md overflow-hidden ${TONE_BG[info.seal.color]}`}
-        style={{ width: badgePx, height: badgeH }}
+        className={`relative z-20 flex-shrink-0 rounded-md shadow-md overflow-hidden ${TONE_BG[info.seal.color]}`}
+        style={{ width: sealPx, height: toneH }}
       >
         <img
           src={TONE_IMAGE[info.tone.index]}
