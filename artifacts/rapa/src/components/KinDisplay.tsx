@@ -149,6 +149,7 @@ export function KinDisplay({
   //   · -mt-2 no Seal para tightening visual lockup
   if (layout === "stack") {
     const tonePx = Math.round(sealPx * 0.58); // ~6/10 do seal, per spec
+    const toneH  = Math.round(tonePx * 0.6);  // altura achatada
     const imgPx  = Math.round(sealPx * 0.7);
     return (
       <div
@@ -159,7 +160,7 @@ export function KinDisplay({
         {/* LAYER 01: TONE — z-20, fundo da cor do Selo */}
         <span
           className={`relative z-20 flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
-          style={{ width: tonePx, height: tonePx }}
+          style={{ width: tonePx, height: toneH }}
         >
           <img
             src={TONE_IMAGE[info.tone.index]}
@@ -203,6 +204,7 @@ export function KinDisplay({
   // ── Layout "duo": Tom à esquerda, Selo à direita ─────────────────────────
   if (layout === "duo") {
     const tonePx = Math.round(sealPx * DUO_TONE_RATIO);
+    const toneH  = Math.round(tonePx * 0.6);
     return (
       <div
         className={`inline-flex items-center gap-3 ${className}`}
@@ -212,7 +214,7 @@ export function KinDisplay({
         {/* Glifo do Tom — fundo da cor do Selo */}
         <span
           className={`flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
-          style={{ width: tonePx, height: tonePx }}
+          style={{ width: tonePx, height: toneH }}
         >
           <img
             src={TONE_IMAGE[info.tone.index]}
@@ -240,6 +242,7 @@ export function KinDisplay({
   // Mesmo princípio do "stack" mas em escala compacta.
   // Tom em z-20 sobre o Selo em z-10; -mt-1 cria o tightening visual.
   const badgePx = Math.round(sealPx * BADGE_RATIO);
+  const badgeH  = Math.round(badgePx * 0.6);
   const imgPx   = Math.round(sealPx * 0.7);
 
   return (
@@ -251,7 +254,7 @@ export function KinDisplay({
       {/* LAYER 01: TONE — centrado acima, z-20, fundo da cor do Selo */}
       <span
         className={`relative z-20 flex-shrink-0 rounded-sm shadow-md overflow-hidden ${TONE_BG[info.seal.color]}`}
-        style={{ width: badgePx, height: badgePx }}
+        style={{ width: badgePx, height: badgeH }}
       >
         <img
           src={TONE_IMAGE[info.tone.index]}
