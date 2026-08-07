@@ -430,18 +430,21 @@ function CalendarView({
                       <span className="text-[8px] text-on-surface-variant/50 leading-none mb-1">
                         {formatDate(date, { day: "numeric", month: "numeric" })}
                       </span>
-                      {/* Kin seal */}
-                      <div className={`w-7 h-7 rounded-full border ${colorCls.border} bg-surface/40 flex items-center justify-center p-1 mb-0.5`}>
+                      {/* Kin seal + tom sobreposto */}
+                      <div className={`relative w-7 h-7 rounded-full border ${colorCls.border} bg-surface/40 flex items-center justify-center p-1 mb-0.5`}>
                         <img
                           src={SEAL_IMAGE[kinInfo.seal.index]}
                           alt={kinInfo.seal.name}
                           className="w-full h-full object-contain"
                           loading="lazy"
                         />
+                        <span className="absolute -top-1 -left-1 text-[7px] font-bold leading-none w-3 h-3 flex items-center justify-center rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface">
+                          {kinInfo.tone.index}
+                        </span>
                       </div>
                       {/* Kin number */}
                       <span className={`text-[8px] font-medium leading-none ${colorCls.text}`}>
-                        {kin}{isPortal ? " PV" : ""}
+                        {kin}{isPortal ? " ✦" : ""}
                       </span>
                     </button>
                   );

@@ -20,6 +20,7 @@ export function KinSeal({
   kin,
   size = 48,
   showKin = false,
+  showTone = false,
   pulse = false,
   eager = false,
   className = "",
@@ -27,6 +28,8 @@ export function KinSeal({
   kin: number;
   size?: number;
   showKin?: boolean;
+  /** Se true, exibe o número do Tom sobreposto no canto superior-esquerdo do selo. */
+  showTone?: boolean;
   pulse?: boolean;
   /** Se true, carrega imediatamente com prioridade alta (usar apenas para o Kin acima da dobra / LCP). */
   eager?: boolean;
@@ -58,6 +61,11 @@ export function KinSeal({
         decoding="async"
         {...(eager ? { fetchPriority: "high" as const } : {})}
       />
+      {showTone && (
+        <span className="absolute -top-1 -left-1 text-[9px] font-bold leading-none w-4 h-4 flex items-center justify-center rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface">
+          {info.tone.index}
+        </span>
+      )}
       {showKin && (
         <span className="absolute -bottom-1 -right-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface">
           {kin}
