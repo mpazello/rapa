@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { kinFromDate, getKinInfo, sincronarioDate, PLASMAS, getEarthFamily, analogKin, antipodeKin, guideKin, occultKin, SEALS } from "@/lib/tzolkin";
 import { SEAL_IMAGE } from "@/lib/seal-images";
+import { TONE_IMAGE } from "@/lib/tone-images";
 import { PlasmaSymbol } from "@/components/PlasmaSymbol";
 
 // ─── Dados fixos por Selo (Dreamspell) ──────────────────────────────────────
@@ -430,7 +431,7 @@ function CalendarView({
                       <span className="text-[8px] text-on-surface-variant/50 leading-none mb-1">
                         {formatDate(date, { day: "numeric", month: "numeric" })}
                       </span>
-                      {/* Kin seal + tom sobreposto */}
+                      {/* Kin seal + glifo do tom sobreposto */}
                       <div className={`relative w-7 h-7 rounded-full border ${colorCls.border} bg-surface/40 flex items-center justify-center p-1 mb-0.5`}>
                         <img
                           src={SEAL_IMAGE[kinInfo.seal.index]}
@@ -438,9 +439,12 @@ function CalendarView({
                           className="w-full h-full object-contain"
                           loading="lazy"
                         />
-                        <span className="absolute -top-1 -left-1 text-[7px] font-bold leading-none w-3 h-3 flex items-center justify-center rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface">
-                          {kinInfo.tone.index}
-                        </span>
+                        <img
+                          src={TONE_IMAGE[kinInfo.tone.index]}
+                          alt={`Tom ${kinInfo.tone.index}`}
+                          className="absolute -top-1.5 -left-1.5 w-4 h-4 rounded shadow-md"
+                          draggable={false}
+                        />
                       </div>
                       {/* Kin number */}
                       <span className={`text-[8px] font-medium leading-none ${colorCls.text}`}>

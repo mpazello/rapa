@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95.8 101">
+  <!-- Fundo arredondado -->
+  <rect x="2.5" y="2.5" width="90.8" height="96" rx="8" ry="8" fill="#1E1A5E"/>
+  <!-- Brilho no topo -->
+  <rect x="2.5" y="2.5" width="90.8" height="22" rx="8" ry="8" fill="white" opacity="0.08"/>
+  <rect x="12" y="75" width="72" height="11" rx="5" fill="white"/>
+  <circle cx="31" cy="22" r="10" fill="white"/>
+  <circle cx="65" cy="22" r="10" fill="white"/>
+</svg>

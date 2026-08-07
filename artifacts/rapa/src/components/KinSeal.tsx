@@ -1,5 +1,6 @@
 import { getKinInfo, type SealColor } from "@/lib/tzolkin";
 import { SEAL_IMAGE } from "@/lib/seal-images";
+import { TONE_IMAGE } from "@/lib/tone-images";
 
 const RING: Record<SealColor, string> = {
   vermelho: "border-error/50",
@@ -62,9 +63,13 @@ export function KinSeal({
         {...(eager ? { fetchPriority: "high" as const } : {})}
       />
       {showTone && (
-        <span className="absolute -top-1 -left-1 text-[9px] font-bold leading-none w-4 h-4 flex items-center justify-center rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface">
-          {info.tone.index}
-        </span>
+        <img
+          src={TONE_IMAGE[info.tone.index]}
+          alt={`Tom ${info.tone.index}`}
+          className="absolute -top-2 -left-2 rounded-md shadow-lg"
+          style={{ width: Math.round(size * 0.45), height: Math.round(size * 0.45) }}
+          draggable={false}
+        />
       )}
       {showKin && (
         <span className="absolute -bottom-1 -right-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/60 text-on-surface">
