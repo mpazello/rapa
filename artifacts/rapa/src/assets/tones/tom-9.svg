@@ -1,7 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 32">
-  <rect x="10" y="21" width="76" height="9" rx="4" fill="black"/>
-  <circle cx="11" cy="9" r="6" fill="black"/>
-  <circle cx="33" cy="9" r="6" fill="black"/>
-  <circle cx="63" cy="9" r="6" fill="black"/>
-  <circle cx="85" cy="9" r="6" fill="black"/>
+  <!-- 4 pontos em grade 2×2 -->
+  <circle cx="28" cy="7" r="5" fill="black"/>
+  <circle cx="68" cy="7" r="5" fill="black"/>
+  <circle cx="28" cy="19" r="5" fill="black"/>
+  <circle cx="68" cy="19" r="5" fill="black"/>
+  <!-- 1 barra -->
+  <rect x="10" y="26" width="76" height="5" rx="2" fill="black"/>
 </svg>
