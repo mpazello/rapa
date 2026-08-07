@@ -22,7 +22,7 @@ import {
 } from "@/lib/tzolkin";
 import { getKinJourneyStats, getNatal } from "@/lib/tzolkin.functions";
 import { askKai } from "@/lib/kai.functions";
-import { KinSeal } from "@/components/KinSeal";
+import { KinDisplay } from "@/components/KinDisplay";
 import { ToneSymbol } from "@/components/ToneSymbol";
 import { SEAL_IMAGE } from "@/lib/seal-images";
 
@@ -144,7 +144,7 @@ function KinDetailPage() {
       {/* Header identity */}
       <section className="relative mb-8">
         <div className="relative glass-panel rounded-3xl p-8 flex flex-col items-center text-center">
-          <KinSeal kin={kin} size={112} pulse eager className="mb-4" />
+          <KinDisplay kin={kin} size="xl" layout="duo" pulse eager className="mb-6" />
           <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`} suppressHydrationWarning>
             KIN {kin}
             <span className="text-on-surface-variant/60 normal-case tracking-normal" suppressHydrationWarning> · {formatKinDate(dateFromKin(kin))}</span>
@@ -346,7 +346,7 @@ function KinDetailPage() {
               params={{ kin: String(today) }}
               className="flex items-center gap-4 group"
             >
-              <KinSeal kin={today} size={64} pulse />
+              <KinDisplay kin={today} size="md" layout="badge" pulse />
               <div>
                 <p className="text-2xl font-headline-lg text-primary group-hover:opacity-80">Kin {today}</p>
                 <p className="font-title-md text-title-md">{todayInfo.fullName}</p>
@@ -433,13 +433,13 @@ function RelationCard({ label, from, to, relation }: { label: string; from: numb
       <p className="font-title-md text-title-md text-primary mb-3">{RELATION_LABEL[relation]}</p>
       <div className="flex items-center justify-between gap-3 text-sm text-on-surface-variant">
         <div className="flex items-center gap-2 min-w-0">
-          <KinSeal kin={from} size={36} />
+          <KinDisplay kin={from} size="xs" layout="badge" />
           <span className="truncate">{fromInfo.fullName}</span>
         </div>
         <span className="opacity-40">↔</span>
         <div className="flex items-center gap-2 min-w-0 justify-end">
           <span className="truncate text-right">{toInfo.fullName}</span>
-          <KinSeal kin={to} size={36} />
+          <KinDisplay kin={to} size="xs" layout="badge" />
         </div>
       </div>
     </div>
@@ -510,7 +510,7 @@ function ResonanceMap({ kin, today, natal }: { kin: number; today: number; natal
             params={{ kin: String(r.kin) }}
             className="rounded-2xl border border-outline-variant/40 px-3 py-2 flex items-center gap-3 hover:border-primary/60 transition-colors"
           >
-            <KinSeal kin={r.kin} size={36} />
+            <KinDisplay kin={r.kin} size="xs" layout="badge" />
             <div className="flex-1 min-w-0">
               <span className="block text-[10px] uppercase tracking-widest text-on-surface-variant">{r.label}</span>
               <span className="font-title-md text-title-md text-primary">Kin {r.kin}</span>

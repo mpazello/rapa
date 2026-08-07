@@ -8,7 +8,7 @@ import { SealColoringModal, SEAL_STORAGE_KEY } from "@/components/rapa/SealColor
 import { getTodayMood, setTodayMood, listEntries, addEntry } from "@/lib/journal.functions";
 import { getTodayKinInfo, sincronarioDate, cubeDayOfMoon } from "@/lib/tzolkin";
 import { SEAL_IMAGE } from "@/lib/seal-images";
-import { KinSeal } from "@/components/KinSeal";
+import { KinDisplay } from "@/components/KinDisplay";
 
 function useDFTDTState() {
   // Always use UTC so SSR and client agree regardless of local timezone.
@@ -437,7 +437,7 @@ function HojePage() {
                   className="w-14 h-14 rounded-full object-cover border-2 border-cosmic-blue/50"
                 />
               ) : (
-                <KinSeal kin={todayKin.kin} size={56} pulse eager showTone />
+                <KinDisplay kin={todayKin.kin} size="sm" layout="badge" pulse eager />
               )}
               {/* Ícone de pincel no hover */}
               <span className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity">
