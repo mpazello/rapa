@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { kinFromDate, getKinInfo, sincronarioDate, PLASMAS, getEarthFamily, analogKin, antipodeKin, guideKin, occultKin, SEALS } from "@/lib/tzolkin";
 import { KinDisplay } from "@/components/KinDisplay";
-import { SEAL_IMAGE } from "@/lib/seal-images";
 import { PlasmaSymbol } from "@/components/PlasmaSymbol";
 
 // ─── Dados fixos por Selo (Dreamspell) ──────────────────────────────────────
@@ -478,10 +477,8 @@ function CalendarView({
                 KIN {dotKin} · {dotInfo.fullName}
               </p>
             </div>
-            {/* Seal */}
-            <div className={`shrink-0 w-9 h-9 rounded-full border ${dotColors.border} flex items-center justify-center p-1.5 bg-surface/40`}>
-              <img src={SEAL_IMAGE[dotInfo.seal.index]} alt={dotInfo.seal.name} className="w-full h-full object-contain" />
-            </div>
+            {/* Seal + Tom */}
+            <KinDisplay kin={dotKin} size="xs" layout="badge" className="shrink-0" />
             <span className="material-symbols-outlined text-on-surface-variant/50 shrink-0">chevron_right</span>
           </button>
         );
@@ -516,9 +513,7 @@ function OracleKinCard({ kin, role, roleColor }: { kin: number; role: string; ro
       className={`flex flex-col items-center gap-1 p-2.5 rounded-2xl border ${colors.border}/40 bg-surface/40 hover:bg-surface-container-low transition-colors`}
     >
       <span className={`font-label-sm text-[9px] tracking-widest uppercase ${roleColor}`}>{role}</span>
-      <div className={`w-9 h-9 rounded-full border ${colors.border} flex items-center justify-center p-1 bg-surface/60`}>
-        <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain" />
-      </div>
+      <KinDisplay kin={kin} size="xs" layout="badge" />
       <span className={`font-label-sm text-[10px] font-bold ${colors.text}`}>
         {kin}{isPortal ? " PV" : ""}
       </span>
@@ -661,10 +656,7 @@ function DayDetail({
 
         {/* KIN header */}
         <div className="relative flex items-start gap-4 p-5 pb-3">
-          <div className={`shrink-0 w-16 h-16 rounded-full border-2 ${colors.border} flex items-center justify-center bg-surface/40 p-2`}>
-            <div className={`absolute w-16 h-16 rounded-full ${colors.bg} blur-2xl opacity-15`} />
-            <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain relative" />
-          </div>
+          <KinDisplay kin={kin} size="sm" layout="stack" eager className="shrink-0" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-0.5">
               <span className={`font-label-sm text-label-sm ${colors.text} tracking-widest uppercase font-bold`}>KIN {kin}</span>
@@ -748,9 +740,7 @@ function DayDetail({
       <div className="glass-panel rounded-3xl p-4">
         <p className="font-label-sm text-[10px] text-on-surface-variant/50 uppercase tracking-widest mb-3">Onda Encantada {info.tone.index}</p>
         <div className="flex items-center gap-3">
-          <div className={`w-11 h-11 shrink-0 rounded-full border ${COLOR_CLASS[SEALS[wavespell.sealIndex - 1].color].border} flex items-center justify-center p-1.5 bg-surface/40`}>
-            <img src={SEAL_IMAGE[wavespell.sealIndex]} alt={wavespell.sealName} className="w-full h-full object-contain" />
-          </div>
+          <KinDisplay kin={wavespell.kinStart} size="xs" layout="badge" className="shrink-0" />
           <div>
             <p className={`font-label-sm text-[10px] uppercase tracking-widest ${COLOR_CLASS[SEALS[wavespell.sealIndex - 1].color].text}`}>
               portador
@@ -779,9 +769,7 @@ function DayDetail({
           {/* Self */}
           <div className={`flex flex-col items-center gap-1 p-2 rounded-2xl border-2 ${colors.border} ${colors.bg}/10`}>
             <span className={`font-label-sm text-[8px] tracking-widest uppercase ${colors.text}`}>Eu</span>
-            <div className={`w-9 h-9 rounded-full border-2 ${colors.border} flex items-center justify-center p-1 bg-surface/60`}>
-              <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain" />
-            </div>
+            <KinDisplay kin={kin} size="xs" layout="badge" />
             <span className={`font-label-sm text-[10px] font-bold ${colors.text}`}>{kin}</span>
             <span className="font-body-sm text-[8px] text-on-surface-variant/70 text-center leading-tight">{info.seal.name}</span>
           </div>
@@ -821,9 +809,7 @@ function DayDetail({
       <div className="glass-panel rounded-3xl p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-full border ${COLOR_CLASS[psiInfo.seal.color].border} flex items-center justify-center p-1.5 bg-surface/40`}>
-              <img src={SEAL_IMAGE[psiInfo.seal.index]} alt={psiInfo.seal.name} className="w-full h-full object-contain" />
-            </div>
+            <KinDisplay kin={psi} size="xs" layout="badge" />
             <div>
               <p className="font-label-sm text-[9px] text-on-surface-variant/50 uppercase tracking-widest">KIN PSI do dia</p>
               <p className={`font-body-sm font-semibold ${COLOR_CLASS[psiInfo.seal.color].text}`}>KIN {psi} · {psiInfo.fullName}</p>
@@ -939,10 +925,7 @@ function DayOutOfTimeDetail({
         <div className={`absolute inset-0 ${colors.bg}/4 pointer-events-none`} />
 
         <div className="relative flex items-start gap-4 p-5 pb-3">
-          <div className={`shrink-0 w-16 h-16 rounded-full border-2 ${colors.border} flex items-center justify-center bg-surface/40 p-2`}>
-            <div className={`absolute w-16 h-16 rounded-full ${colors.bg} blur-2xl opacity-15`} />
-            <img src={SEAL_IMAGE[info.seal.index]} alt={info.seal.name} className="w-full h-full object-contain relative" />
-          </div>
+          <KinDisplay kin={kin} size="sm" layout="stack" eager className="shrink-0" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-0.5">
               <span className={`font-label-sm text-label-sm ${colors.text} tracking-widest uppercase font-bold`}>KIN {kin}</span>
