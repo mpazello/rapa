@@ -62,6 +62,14 @@ const GLOW: Record<SealColor, string> = {
   amarelo:  "bg-tertiary",
 };
 
+/** Cor de fundo do glifo do Tom — mesma família cromática do Selo. */
+const TONE_BG: Record<SealColor, string> = {
+  vermelho: "bg-error",
+  branco:   "bg-on-surface",
+  azul:     "bg-primary",
+  amarelo:  "bg-tertiary",
+};
+
 // ─── Componente interno: círculo do Selo ─────────────────────────────────────
 
 function SealCircle({
@@ -148,16 +156,20 @@ export function KinDisplay({
         title={info.fullName}
         aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       >
-        {/* LAYER 01: TONE — z-20 */}
-        <img
-          src={TONE_IMAGE[info.tone.index]}
-          alt={`Tom ${info.tone.index} · ${info.tone.name}`}
-          title={`Tom ${info.tone.index} · ${info.tone.name}`}
+        {/* LAYER 01: TONE — z-20, fundo da cor do Selo */}
+        <span
+          className={`relative z-20 flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
           style={{ width: tonePx, height: tonePx }}
-          className="relative z-20 rounded-xl shadow-lg flex-shrink-0"
-          loading={eager ? "eager" : "lazy"}
-          draggable={false}
-        />
+        >
+          <img
+            src={TONE_IMAGE[info.tone.index]}
+            alt={`Tom ${info.tone.index} · ${info.tone.name}`}
+            title={`Tom ${info.tone.index} · ${info.tone.name}`}
+            className="w-full h-full object-contain p-[10%]"
+            loading={eager ? "eager" : "lazy"}
+            draggable={false}
+          />
+        </span>
         {/* LAYER 00: SEAL — z-10, -mt-2 para overlap */}
         <span
           className="relative z-10 -mt-2 inline-flex items-center justify-center flex-shrink-0 rounded-full"
@@ -197,16 +209,20 @@ export function KinDisplay({
         title={info.fullName}
         aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       >
-        {/* Glifo do Tom */}
-        <img
-          src={TONE_IMAGE[info.tone.index]}
-          alt={`Tom ${info.tone.index} · ${info.tone.name}`}
-          title={`Tom ${info.tone.index} · ${info.tone.name}`}
+        {/* Glifo do Tom — fundo da cor do Selo */}
+        <span
+          className={`flex-shrink-0 rounded-xl shadow-lg overflow-hidden ${TONE_BG[info.seal.color]}`}
           style={{ width: tonePx, height: tonePx }}
-          className="rounded-xl shadow-lg flex-shrink-0"
-          loading={eager ? "eager" : "lazy"}
-          draggable={false}
-        />
+        >
+          <img
+            src={TONE_IMAGE[info.tone.index]}
+            alt={`Tom ${info.tone.index} · ${info.tone.name}`}
+            title={`Tom ${info.tone.index} · ${info.tone.name}`}
+            className="w-full h-full object-contain p-[10%]"
+            loading={eager ? "eager" : "lazy"}
+            draggable={false}
+          />
+        </span>
         {/* Círculo do Selo */}
         <SealCircle
           sealIndex={info.seal.index}
@@ -232,14 +248,18 @@ export function KinDisplay({
       aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       title={info.fullName}
     >
-      {/* LAYER 01: TONE — centrado acima, z-20 */}
-      <img
-        src={TONE_IMAGE[info.tone.index]}
-        alt={`Tom ${info.tone.index}`}
-        className="relative z-20 rounded-sm shadow-md flex-shrink-0"
+      {/* LAYER 01: TONE — centrado acima, z-20, fundo da cor do Selo */}
+      <span
+        className={`relative z-20 flex-shrink-0 rounded-sm shadow-md overflow-hidden ${TONE_BG[info.seal.color]}`}
         style={{ width: badgePx, height: badgePx }}
-        draggable={false}
-      />
+      >
+        <img
+          src={TONE_IMAGE[info.tone.index]}
+          alt={`Tom ${info.tone.index}`}
+          className="w-full h-full object-contain p-[8%]"
+          draggable={false}
+        />
+      </span>
 
       {/* LAYER 00: SEAL — abaixo com leve overlap, z-10 */}
       <span
