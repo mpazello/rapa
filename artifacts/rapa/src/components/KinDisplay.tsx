@@ -220,47 +220,53 @@ export function KinDisplay({
     );
   }
 
-  // ── Layout "badge": Tom sobreposto como badge no canto do Selo ───────────
+  // ── Layout "badge": mini-stack — Tom centrado acima, Selo abaixo ─────────
+  // Mesmo princípio do "stack" mas em escala compacta.
+  // Tom em z-20 sobre o Selo em z-10; -mt-1 cria o tightening visual.
   const badgePx = Math.round(sealPx * BADGE_RATIO);
   const imgPx   = Math.round(sealPx * 0.7);
 
   return (
-    <span
-      className={`relative inline-flex items-center justify-center flex-shrink-0 ${className}`}
-      style={{ width: sealPx, height: sealPx }}
+    <div
+      className={`inline-flex flex-col items-center flex-shrink-0 ${className}`}
       aria-label={`${info.fullName} — Tom ${info.tone.index} ${info.tone.name}`}
       title={info.fullName}
     >
-      {/* Círculo do Selo (overflow-hidden próprio) */}
-      <span
-        className={`absolute inset-0 rounded-full border-2 ${RING[info.seal.color]} bg-surface-container-low overflow-hidden flex items-center justify-center`}
-      >
-        {pulse && (
-          <span
-            className={`absolute inset-0 ${GLOW[info.seal.color]} opacity-20 blur-md soft-pulse rounded-full`}
-            aria-hidden
-          />
-        )}
-        <img
-          src={SEAL_IMAGE[info.seal.index]}
-          alt=""
-          width={imgPx}
-          height={imgPx}
-          className="relative w-[70%] h-[70%] object-contain"
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
-          {...(eager ? { fetchPriority: "high" as const } : {})}
-        />
-      </span>
-
-      {/* Glifo do Tom — badge no canto superior-esquerdo, dentro dos bounds */}
+      {/* LAYER 01: TONE — centrado acima, z-20 */}
       <img
         src={TONE_IMAGE[info.tone.index]}
         alt={`Tom ${info.tone.index}`}
-        className="absolute top-0 left-0 rounded-md shadow-lg z-10 flex-shrink-0"
+        className="relative z-20 rounded-sm shadow-md flex-shrink-0"
         style={{ width: badgePx, height: badgePx }}
         draggable={false}
       />
-    </span>
+
+      {/* LAYER 00: SEAL — abaixo com leve overlap, z-10 */}
+      <span
+        className="relative z-10 -mt-1 inline-flex items-center justify-center flex-shrink-0"
+        style={{ width: sealPx, height: sealPx }}
+      >
+        <span
+          className={`absolute inset-0 rounded-full border-2 ${RING[info.seal.color]} bg-surface-container-low overflow-hidden flex items-center justify-center`}
+        >
+          {pulse && (
+            <span
+              className={`absolute inset-0 ${GLOW[info.seal.color]} opacity-20 blur-md soft-pulse rounded-full`}
+              aria-hidden
+            />
+          )}
+          <img
+            src={SEAL_IMAGE[info.seal.index]}
+            alt=""
+            width={imgPx}
+            height={imgPx}
+            className="relative w-[70%] h-[70%] object-contain"
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            {...(eager ? { fetchPriority: "high" as const } : {})}
+          />
+        </span>
+      </span>
+    </div>
   );
 }
