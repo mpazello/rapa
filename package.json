@@ -16,5 +16,10 @@
   "devDependencies": {
     "prettier": "^3.9.6",
     "typescript": "~5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "brace-expansion": "^5.0.9"
+    }
   }
 }
