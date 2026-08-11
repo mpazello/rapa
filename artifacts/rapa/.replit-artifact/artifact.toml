@@ -29,7 +29,6 @@ args = [ "node", "artifacts/rapa/.output/server/index.mjs" ]
 PORT = "25683"
 NODE_ENV = "production"
 SUPABASE_URL = "https://hzjmivuaxqlhwxbjbsht.supabase.co"
-SUPABASE_PUBLISHABLE_KEY = "REDACTED_SUPABASE_ANON_KEY"
 
 [services.env]
 PORT = "25683"
