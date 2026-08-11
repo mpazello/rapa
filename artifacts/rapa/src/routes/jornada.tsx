@@ -357,30 +357,34 @@ function EntryComposer({ onSave }: { onSave: (data: { kind: KindKey; title: stri
   if (!open) {
     return (
       <div>
-        <button
-          onClick={handleOpen}
-          className="w-full glass-panel rounded-2xl px-5 py-4 flex items-center gap-3 text-left border border-white/8 hover:border-astral-violet/30 active:border-astral-violet/40 transition-all group"
-        >
-          <span className="w-9 h-9 rounded-full bg-astral-violet/15 flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-[20px] text-astral-violet" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
-          </span>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">O que aconteceu hoje?</p>
-            <p className="text-xs text-muted-stardust/60 mt-0.5">{formatDateLabel(todayISO())} · toque para registrar</p>
-          </div>
+        {/* Usar div + área clicável separada para evitar button-in-button (inválido em HTML) */}
+        <div className="w-full glass-panel rounded-2xl flex items-center gap-3 border border-white/8 hover:border-astral-violet/30 active:border-astral-violet/40 transition-all group overflow-hidden">
+          <button
+            type="button"
+            onClick={handleOpen}
+            className="flex-1 flex items-center gap-3 text-left px-5 py-4 min-w-0"
+          >
+            <span className="w-9 h-9 rounded-full bg-astral-violet/15 flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-[20px] text-astral-violet" style={{ fontVariationSettings: "'FILL' 1" }}>edit_note</span>
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">O que aconteceu hoje?</p>
+              <p className="text-xs text-muted-stardust/60 mt-0.5">{formatDateLabel(todayISO())} · toque para registrar</p>
+            </div>
+          </button>
           <button
             type="button"
             onPointerDown={(e) => {
               e.stopPropagation();
               setShowDatePicker(p => !p);
             }}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-muted-stardust hover:text-astral-violet hover:bg-astral-violet/10 active:bg-astral-violet/20 transition-all shrink-0"
+            className="w-10 h-10 mr-2 flex items-center justify-center rounded-full text-muted-stardust hover:text-astral-violet hover:bg-astral-violet/10 active:bg-astral-violet/20 transition-all shrink-0"
             title="Registrar em outro dia"
             aria-label="Escolher data"
           >
             <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_month</span>
           </button>
-        </button>
+        </div>
 
         {showDatePicker && (
           <DatePickerPopup
