@@ -484,7 +484,7 @@ function HojePage() {
       </section>
 
       {/* Onda Encantada */}
-      <section className="mb-section-gap">
+      <section id="onda-encantada" className="mb-section-gap scroll-mt-20">
         <WavespellCard />
       </section>
 
