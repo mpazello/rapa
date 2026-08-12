@@ -137,7 +137,7 @@ export function TopAppBar() {
 
             {/* Onda Encantada — tile colorido com o selo da trecena atual */}
             <Link
-              to="/ciclos"
+              to="/onda-encantada"
               aria-label="Onda Encantada"
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-astral-violet/30 hover:bg-astral-violet/10 transition-colors group"
             >

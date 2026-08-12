@@ -1,0 +1,255 @@
+import { useState, useEffect } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  getTodayKinInfo,
+  getKinInfo,
+  TONES,
+  type SealColor,
+} from "@/lib/tzolkin";
+import { SEAL_IMAGE } from "@/lib/seal-images";
+
+export const Route = createFileRoute("/onda-encantada")({
+  head: () => ({
+    meta: [
+      { title: "Onda Encantada — RAPPAA" },
+      { name: "description", content: "Os 13 Kins da Onda Encantada atual no Tzolkin Dreamspell." },
+    ],
+  }),
+  component: OndaEncantadaPage,
+});
+
+// ─── Cores dos tiles ──────────────────────────────────────────────────────────
+const TILE_BG: Record<SealColor, string> = {
+  vermelho: "#CC2222",
+  branco:   "#E0E0E0",
+  azul:     "#1A4FCC",
+  amarelo:  "#D4A500",
+};
+const TILE_BORDER: Record<SealColor, string> = {
+  vermelho: "#991111",
+  branco:   "#AAAAAA",
+  azul:     "#0F3399",
+  amarelo:  "#A07800",
+};
+const TILE_GLOW: Record<SealColor, string> = {
+  vermelho: "rgba(204,34,34,0.55)",
+  branco:   "rgba(200,200,200,0.4)",
+  azul:     "rgba(26,79,204,0.55)",
+  amarelo:  "rgba(212,165,0,0.55)",
+};
+const COLOR_TEXT: Record<SealColor, string> = {
+  vermelho: "text-error",
+  branco:   "text-on-surface",
+  azul:     "text-primary",
+  amarelo:  "text-tertiary",
+};
+
+// ─── Layout em L (row, col) para os 13 Kins ──────────────────────────────────
+// Grade 5 × 6:
+//   Coluna esquerda: rows 0-4, col 0  → Kins 1-5
+//   Linha inferior : row 4, cols 1-5  → Kins 6-10
+//   Coluna direita : rows 2-0, col 5  → Kins 11-13
+const POSITIONS: [number, number][] = [
+  [0,0],[1,0],[2,0],[3,0],[4,0],
+  [4,1],[4,2],[4,3],[4,4],[4,5],
+  [2,5],[1,5],[0,5],
+];
+
+function Tile({
+  kin,
+  toneNumber,
+  isToday,
+}: {
+  kin: number;
+  toneNumber: number;
+  isToday: boolean;
+}) {
+  const info = getKinInfo(kin);
+  const src  = SEAL_IMAGE[info.seal.index];
+  const bg   = TILE_BG[info.seal.color];
+  const bd   = TILE_BORDER[info.seal.color];
+  const glow = TILE_GLOW[info.seal.color];
+
+  return (
+    <Link
+      to="/ciclos/kin/$kin"
+      params={{ kin: String(kin) }}
+      title={`Kin ${kin}: ${info.fullName}`}
+      className="relative flex flex-col items-center justify-center rounded-xl overflow-hidden select-none transition-transform active:scale-95 hover:scale-105"
+      style={{
+        backgroundColor: bg,
+        border: `2px solid ${bd}`,
+        aspectRatio: "1",
+        boxShadow: isToday
+          ? `0 0 0 3px #fff, 0 0 14px 5px ${glow}, inset 0 1px 2px rgba(255,255,255,0.3)`
+          : `inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -1px 2px rgba(0,0,0,0.3), 0 2px 5px rgba(0,0,0,0.4)`,
+      }}
+    >
+      <img
+        src={src}
+        alt={info.seal.name}
+        className="w-[68%] h-[68%] object-contain"
+        style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))" }}
+        loading="lazy"
+      />
+      <span
+        className="absolute bottom-0.5 right-1 text-[9px] font-bold leading-none"
+        style={{ color: info.seal.color === "branco" ? "#333" : "rgba(255,255,255,0.85)" }}
+      >
+        {toneNumber}
+      </span>
+    </Link>
+  );
+}
+
+function OndaEncantadaPage() {
+  const [data, setData] = useState<{
+    todayKin: number;
+    kins: number[];
+    sealName: string;
+    sealColor: SealColor;
+    kinStart: number;
+    kinEnd: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const info = getTodayKinInfo();
+    const { kinStart, seal } = info.trecena;
+    const kins = Array.from({ length: 13 }, (_, i) => ((kinStart - 1 + i) % 260) + 1);
+    setData({
+      todayKin: info.kin,
+      kins,
+      sealName: seal.name,
+      sealColor: seal.color,
+      kinStart,
+      kinEnd: kins[12],
+    });
+  }, []);
+
+  // ─── Grade ────────────────────────────────────────────────────────────────
+  const grid = data
+    ? (() => {
+        const g: (number | null)[][] = Array.from({ length: 5 }, () => Array(6).fill(null));
+        POSITIONS.forEach(([r, c], i) => { g[r][c] = data.kins[i]; });
+        return g;
+      })()
+    : null;
+
+  return (
+    <main className="pt-20 pb-32 px-container-margin max-w-[520px] mx-auto space-y-6">
+
+      {/* Cabeçalho */}
+      <div className="space-y-1">
+        <p className="font-label-sm text-label-sm text-muted-stardust uppercase tracking-widest text-xs">
+          Onda Encantada
+        </p>
+        {data ? (
+          <>
+            <h1 className={`font-serif text-3xl ${COLOR_TEXT[data.sealColor]}`}>
+              {data.sealName}
+            </h1>
+            <p className="text-muted-stardust/70 text-sm">
+              Kin {data.kinStart} → {data.kinEnd}
+            </p>
+          </>
+        ) : (
+          <>
+            <div className="h-9 w-40 bg-white/10 rounded animate-pulse" />
+            <div className="h-4 w-24 bg-white/8 rounded animate-pulse" />
+          </>
+        )}
+      </div>
+
+      {/* Grade de tiles em L */}
+      {grid ? (
+        <div
+          className="grid gap-2"
+          style={{ gridTemplateColumns: "repeat(6, 1fr)", gridTemplateRows: "repeat(5, 1fr)" }}
+        >
+          {grid.flatMap((row, rIdx) =>
+            row.map((kin, cIdx) =>
+              kin === null ? (
+                <div key={`${rIdx}-${cIdx}`} />
+              ) : (
+                <Tile
+                  key={kin}
+                  kin={kin}
+                  toneNumber={data!.kins.indexOf(kin) + 1}
+                  isToday={kin === data!.todayKin}
+                />
+              )
+            )
+          )}
+        </div>
+      ) : (
+        <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+      )}
+
+      {/* Posição de hoje */}
+      {data && data.kins.includes(data.todayKin) && (
+        <p className="text-center text-sm text-muted-stardust/70">
+          Você está no tom{" "}
+          <span className="font-semibold text-astral-violet">
+            {data.kins.indexOf(data.todayKin) + 1}
+          </span>{" "}
+          · Kin {data.todayKin}
+        </p>
+      )}
+
+      {/* Lista dos 13 Kins */}
+      {data && (
+        <section className="glass-card rounded-2xl divide-y divide-outline-variant/20 overflow-hidden">
+          {data.kins.map((kin, i) => {
+            const info   = getKinInfo(kin);
+            const tone   = TONES[i]; // tons 1-13
+            const isToday = kin === data.todayKin;
+            return (
+              <Link
+                key={kin}
+                to="/ciclos/kin/$kin"
+                params={{ kin: String(kin) }}
+                className={`flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors ${isToday ? "bg-astral-violet/10" : ""}`}
+              >
+                {/* Tile pequeno */}
+                <span
+                  className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center overflow-hidden border-2"
+                  style={{
+                    backgroundColor: TILE_BG[info.seal.color],
+                    borderColor: TILE_BORDER[info.seal.color],
+                  }}
+                >
+                  <img
+                    src={SEAL_IMAGE[info.seal.index]}
+                    alt={info.seal.name}
+                    className="w-[70%] h-[70%] object-contain"
+                    style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))" }}
+                    loading="lazy"
+                  />
+                </span>
+
+                {/* Texto */}
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-medium truncate ${isToday ? "text-astral-violet" : "text-on-surface"}`}>
+                    {info.fullName}
+                  </p>
+                  <p className="text-xs text-muted-stardust/60">
+                    Kin {kin} · Tom {tone?.name ?? i + 1}
+                  </p>
+                </div>
+
+                {/* Tom número */}
+                <span className="text-xs text-muted-stardust/50 shrink-0">{i + 1}</span>
+
+                {isToday && (
+                  <span className="text-[10px] bg-astral-violet/20 text-astral-violet px-2 py-0.5 rounded-full shrink-0">
+                    hoje
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </section>
+      )}
+    </main>
+  );
+}

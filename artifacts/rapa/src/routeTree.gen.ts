@@ -18,6 +18,7 @@ import { Route as CiclosRouteImport } from './routes/ciclos'
 import { Route as DiaForaDoTempoRouteImport } from './routes/dia-fora-do-tempo'
 import { Route as JornadaRouteImport } from './routes/jornada'
 import { Route as KaiRouteImport } from './routes/kai'
+import { Route as OndaEncantadaRouteImport } from './routes/onda-encantada'
 import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
@@ -67,6 +68,11 @@ const KaiRoute = KaiRouteImport.update({
   path: '/kai',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OndaEncantadaRoute = OndaEncantadaRouteImport.update({
+  id: '/onda-encantada',
+  path: '/onda-encantada',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RedefinirSenhaRoute = RedefinirSenhaRouteImport.update({
   id: '/redefinir-senha',
   path: '/redefinir-senha',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/dia-fora-do-tempo': typeof DiaForaDoTempoRoute
   '/jornada': typeof JornadaRoute
   '/kai': typeof KaiRoute
+  '/onda-encantada': typeof OndaEncantadaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/perfil': typeof AuthenticatedPerfilRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/dia-fora-do-tempo': typeof DiaForaDoTempoRoute
   '/jornada': typeof JornadaRoute
   '/kai': typeof KaiRoute
+  '/onda-encantada': typeof OndaEncantadaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/perfil': typeof AuthenticatedPerfilRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/dia-fora-do-tempo': typeof DiaForaDoTempoRoute
   '/jornada': typeof JornadaRoute
   '/kai': typeof KaiRoute
+  '/onda-encantada': typeof OndaEncantadaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/dia-fora-do-tempo'
     | '/jornada'
     | '/kai'
+    | '/onda-encantada'
     | '/redefinir-senha'
     | '/admin'
     | '/perfil'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/dia-fora-do-tempo'
     | '/jornada'
     | '/kai'
+    | '/onda-encantada'
     | '/redefinir-senha'
     | '/admin'
     | '/perfil'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/dia-fora-do-tempo'
     | '/jornada'
     | '/kai'
+    | '/onda-encantada'
     | '/redefinir-senha'
     | '/_authenticated/admin'
     | '/_authenticated/perfil'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   DiaForaDoTempoRoute: typeof DiaForaDoTempoRoute
   JornadaRoute: typeof JornadaRoute
   KaiRoute: typeof KaiRoute
+  OndaEncantadaRoute: typeof OndaEncantadaRoute
   RedefinirSenhaRoute: typeof RedefinirSenhaRoute
 }
 
@@ -257,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KaiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onda-encantada': {
+      id: '/onda-encantada'
+      path: '/onda-encantada'
+      fullPath: '/onda-encantada'
+      preLoaderRoute: typeof OndaEncantadaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/redefinir-senha': {
       id: '/redefinir-senha'
       path: '/redefinir-senha'
@@ -313,6 +333,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiaForaDoTempoRoute: DiaForaDoTempoRoute,
   JornadaRoute: JornadaRoute,
   KaiRoute: KaiRoute,
+  OndaEncantadaRoute: OndaEncantadaRoute,
   RedefinirSenhaRoute: RedefinirSenhaRoute,
 }
 export const routeTree = rootRouteImport

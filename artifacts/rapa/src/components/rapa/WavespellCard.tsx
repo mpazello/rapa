@@ -133,8 +133,7 @@ export function WavespellCard() {
           </p>
         </div>
         <Link
-          to="/ciclos/kin/$kin"
-          params={{ kin: String(kinStart) }}
+          to="/onda-encantada"
           className="text-xs text-astral-violet hover:underline"
         >
           Ver tudo →
