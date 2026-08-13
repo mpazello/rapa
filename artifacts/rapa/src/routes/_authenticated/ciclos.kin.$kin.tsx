@@ -14,6 +14,7 @@ import {
   antipodeKin,
   occultKin,
   SEAL_DETAILS,
+  TONE_DETAILS,
   getEarthFamily,
   getCastleOfKin,
   SEALS,
@@ -23,8 +24,9 @@ import {
 import { getKinJourneyStats, getNatal } from "@/lib/tzolkin.functions";
 import { askKai } from "@/lib/kai.functions";
 import { KinDisplay } from "@/components/KinDisplay";
-import { ToneSymbol } from "@/components/ToneSymbol";
+import { KinBadge } from "@/components/KinBadge";
 import { SEAL_IMAGE } from "@/lib/seal-images";
+import { TONE_IMAGE } from "@/lib/tone-images";
 
 export const Route = createFileRoute("/_authenticated/ciclos/kin/$kin")({
   head: ({ params }) => {
@@ -144,13 +146,39 @@ function KinDetailPage() {
       {/* Header identity */}
       <section className="relative mb-8">
         <div className="relative glass-panel rounded-3xl p-8 flex flex-col items-center text-center">
-          <KinDisplay kin={kin} size="xl" layout="stack" pulse eager className="mb-6" />
+          {/* KinBadge unificado como hero principal */}
+          <KinBadge kin={kin} size={156} pulse eager className="mb-5" />
+
           <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`} suppressHydrationWarning>
             KIN {kin}
             <span className="text-on-surface-variant/60 normal-case tracking-normal" suppressHydrationWarning> · {formatKinDate(dateFromKin(kin))}</span>
           </span>
-          <h1 className="font-headline-lg text-headline-lg text-on-surface mb-1">{info.fullName}</h1>
-          <p className="font-body-md text-on-surface-variant italic">
+          <h1 className="font-headline-lg text-headline-lg text-on-surface mb-4">{info.fullName}</h1>
+
+          {/* Tom em destaque: imagem + nome + essência */}
+          <div className={`inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl ${colors.bg}/15 border ${colors.border} mb-3 w-full max-w-xs`}>
+            <span className={`w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center ${colors.bg}/30`}>
+              <img
+                src={TONE_IMAGE[info.tone.index]}
+                alt={`Tom ${info.tone.index} · ${info.tone.name}`}
+                className="w-7 h-7 object-contain"
+                style={{ filter: "brightness(0) invert(1) opacity(0.92)" }}
+                loading="eager"
+                decoding="async"
+                draggable={false}
+              />
+            </span>
+            <div className="text-left min-w-0">
+              <p className={`font-title-md text-title-md ${colors.text}`}>
+                Tom {info.tone.index} · {info.tone.name}
+              </p>
+              <p className="font-body-sm text-on-surface-variant truncate">
+                {info.tone.essence} · {info.tone.power}
+              </p>
+            </div>
+          </div>
+
+          <p className="font-body-sm text-on-surface-variant/70 italic">
             {info.seal.maya} · {info.tone.maya}
           </p>
         </div>
@@ -246,15 +274,46 @@ function KinDetailPage() {
               </p>
             </div>
             <div className="glass-panel rounded-3xl p-6">
-              <h4 className="font-title-md text-title-md mb-2 flex items-center gap-2">
-                <ToneSymbol tone={info.tone.index} size={22} className="text-primary" />
-                Tom {info.tone.index} · {info.tone.name}
-              </h4>
-              <p className="font-body-md text-on-surface-variant">
+              {/* Cabeçalho: imagem maia do Tom + nome + vibração */}
+              <div className="flex items-center gap-3 mb-3">
+                <span className={`w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center ${colors.bg}/20 border ${colors.border}`}>
+                  <img
+                    src={TONE_IMAGE[info.tone.index]}
+                    alt={`Tom ${info.tone.index} · ${info.tone.name}`}
+                    className="w-9 h-9 object-contain"
+                    style={{ filter: "brightness(0) invert(1) opacity(0.9)" }}
+                    loading="lazy"
+                    decoding="async"
+                    draggable={false}
+                  />
+                </span>
+                <div className="min-w-0">
+                  <h4 className="font-title-md text-title-md">
+                    Tom {info.tone.index} · {info.tone.name}
+                  </h4>
+                  <p className={`font-label-sm text-label-sm ${colors.text} uppercase tracking-wide`}>
+                    {TONE_DETAILS[info.tone.index].vibration}
+                  </p>
+                </div>
+              </div>
+
+              <p className="font-body-md text-on-surface-variant mb-2">
                 <strong className="text-on-surface">{info.tone.action}</strong> — {info.tone.essence.toLowerCase()} através de{" "}
                 {info.tone.power.toLowerCase()}.
               </p>
-              <p className="mt-3 font-label-sm text-label-sm text-on-surface-variant/70">Nome maia: {info.tone.maya}</p>
+
+              <p className="font-body-sm text-on-surface-variant/90 mb-3">
+                {TONE_DETAILS[info.tone.index].summary}
+              </p>
+
+              <div className={`rounded-2xl px-4 py-3 ${colors.bg}/12 border ${colors.border} mb-3`}>
+                <p className={`font-label-sm text-label-sm uppercase tracking-widest mb-1.5 ${colors.text}`}>Orientação</p>
+                <p className="font-body-sm italic leading-relaxed text-on-surface-variant">
+                  {TONE_DETAILS[info.tone.index].guidance}
+                </p>
+              </div>
+
+              <p className="font-label-sm text-label-sm text-on-surface-variant/70">Nome maia: {info.tone.maya}</p>
             </div>
           </div>
 
