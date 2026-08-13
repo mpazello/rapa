@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
-import { KinSeal } from "@/components/KinSeal";
+import { KinBadge } from "@/components/KinBadge";
 import { sincronarioDate, yearBearer, sincronarioCoordinate, personalCubicPattern, CUBE_DAYS, getKinInfo, type SealColor } from "@/lib/tzolkin";
 
 export const Route = createFileRoute("/_authenticated/perfil")({
@@ -245,7 +245,7 @@ function PerfilPage() {
           params={{ kin: String(natalKin) }}
           className="glass-card rounded-3xl p-5 mb-6 hover:border-primary border border-transparent transition-colors flex items-center gap-4"
         >
-          <KinSeal kin={natalKin} size={64} pulse />
+          <KinBadge kin={natalKin} size={64} pulse />
           <div>
             <span className="text-xs uppercase tracking-widest text-primary">Seu Kin natal</span>
             <p className="font-title-lg text-title-lg mt-1">Kin {natalKin}</p>
@@ -368,7 +368,7 @@ function CubicPatternCard({ natalKin }: { natalKin: number }) {
               params={{ kin: String(kin) }}
               className="glass-panel rounded-xl p-2 flex flex-col items-center gap-1 border border-transparent hover:border-primary transition-colors"
             >
-              <KinSeal kin={kin} size={40} />
+              <KinBadge kin={kin} size={40} />
               <span className={`font-title-sm text-xs ${colorTone[day.color]}`}>
                 {day.index}. {day.codon}
               </span>

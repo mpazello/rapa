@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { kinFromDate, getKinInfo } from "@/lib/tzolkin";
-import { KinSeal } from "@/components/KinSeal";
+import { KinBadge } from "@/components/KinBadge";
 
 const DAILY_FLOW_STEPS = [
   {
@@ -72,8 +72,8 @@ export function DailyFlowCards({ onClose }: { onClose?: () => void }) {
                 {i === 0 && (
                   <>
                     <div className="flex items-center gap-4 my-1">
-                      <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
-                        <KinSeal kin={todayKin} size={52} eager />
+                      <div className="flex-shrink-0 w-14 h-14">
+                        <KinBadge kin={todayKin} eager className="w-full h-full" />
                       </div>
                       <div className="min-w-0">
                         <p className="font-label-sm text-label-sm uppercase tracking-wider text-primary/60 mb-0.5">

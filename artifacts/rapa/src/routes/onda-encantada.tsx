@@ -6,7 +6,7 @@ import {
   TONES,
   type SealColor,
 } from "@/lib/tzolkin";
-import { SEAL_IMAGE } from "@/lib/seal-images";
+import { KinBadge } from "@/components/KinBadge";
 
 export const Route = createFileRoute("/onda-encantada")({
   head: () => ({
@@ -18,25 +18,6 @@ export const Route = createFileRoute("/onda-encantada")({
   component: OndaEncantadaPage,
 });
 
-// ─── Cores dos tiles ──────────────────────────────────────────────────────────
-const TILE_BG: Record<SealColor, string> = {
-  vermelho: "#CC2222",
-  branco:   "#E0E0E0",
-  azul:     "#1A4FCC",
-  amarelo:  "#D4A500",
-};
-const TILE_BORDER: Record<SealColor, string> = {
-  vermelho: "#991111",
-  branco:   "#AAAAAA",
-  azul:     "#0F3399",
-  amarelo:  "#A07800",
-};
-const TILE_GLOW: Record<SealColor, string> = {
-  vermelho: "rgba(204,34,34,0.55)",
-  branco:   "rgba(200,200,200,0.4)",
-  azul:     "rgba(26,79,204,0.55)",
-  amarelo:  "rgba(212,165,0,0.55)",
-};
 const COLOR_TEXT: Record<SealColor, string> = {
   vermelho: "text-error",
   branco:   "text-on-surface",
@@ -57,47 +38,19 @@ const POSITIONS: [number, number][] = [
 
 function Tile({
   kin,
-  toneNumber,
   isToday,
 }: {
   kin: number;
   toneNumber: number;
   isToday: boolean;
 }) {
-  const info = getKinInfo(kin);
-  const src  = SEAL_IMAGE[info.seal.index];
-  const bg   = TILE_BG[info.seal.color];
-  const bd   = TILE_BORDER[info.seal.color];
-  const glow = TILE_GLOW[info.seal.color];
-
   return (
     <Link
       to="/ciclos/kin/$kin"
       params={{ kin: String(kin) }}
-      title={`Kin ${kin}: ${info.fullName}`}
-      className="relative flex flex-col items-center justify-center rounded-xl overflow-hidden select-none transition-transform active:scale-95 hover:scale-105"
-      style={{
-        backgroundColor: bg,
-        border: `2px solid ${bd}`,
-        aspectRatio: "1",
-        boxShadow: isToday
-          ? `0 0 0 3px #fff, 0 0 14px 5px ${glow}, inset 0 1px 2px rgba(255,255,255,0.3)`
-          : `inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -1px 2px rgba(0,0,0,0.3), 0 2px 5px rgba(0,0,0,0.4)`,
-      }}
+      className="block w-full aspect-square transition-transform active:scale-95 hover:scale-105"
     >
-      <img
-        src={src}
-        alt={info.seal.name}
-        className="w-[68%] h-[68%] object-contain"
-        style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))" }}
-        loading="lazy"
-      />
-      <span
-        className="absolute bottom-0.5 right-1 text-[9px] font-bold leading-none"
-        style={{ color: info.seal.color === "branco" ? "#333" : "rgba(255,255,255,0.85)" }}
-      >
-        {toneNumber}
-      </span>
+      <KinBadge kin={kin} isToday={isToday} className="w-full h-full" />
     </Link>
   );
 }
@@ -211,20 +164,8 @@ function OndaEncantadaPage() {
                 className={`flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors ${isToday ? "bg-astral-violet/10" : ""}`}
               >
                 {/* Tile pequeno */}
-                <span
-                  className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center overflow-hidden border-2"
-                  style={{
-                    backgroundColor: TILE_BG[info.seal.color],
-                    borderColor: TILE_BORDER[info.seal.color],
-                  }}
-                >
-                  <img
-                    src={SEAL_IMAGE[info.seal.index]}
-                    alt={info.seal.name}
-                    className="w-[70%] h-[70%] object-contain"
-                    style={{ filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))" }}
-                    loading="lazy"
-                  />
+                <span className="w-9 h-9 shrink-0">
+                  <KinBadge kin={kin} isToday={isToday} className="w-full h-full" />
                 </span>
 
                 {/* Texto */}
