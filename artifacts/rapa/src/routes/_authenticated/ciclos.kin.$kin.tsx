@@ -73,17 +73,20 @@ function dateFromKin(targetKin: number): Date {
 }
 
 function formatKinDate(d: Date): string {
+  return d.toLocaleDateString("pt-BR", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+}
+
+function kinDateRelation(d: Date): "today" | "tomorrow" | "yesterday" | "other" {
   const today = new Date();
-  const formatted = d.toLocaleDateString("pt-BR", { day: "numeric", month: "short" });
   const dStr = d.toDateString();
-  if (dStr === today.toDateString()) return `hoje · ${formatted}`;
+  if (dStr === today.toDateString()) return "today";
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
+  if (dStr === tomorrow.toDateString()) return "tomorrow";
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
-  if (dStr === tomorrow.toDateString()) return `amanhã · ${formatted}`;
-  if (dStr === yesterday.toDateString()) return `ontem · ${formatted}`;
-  return formatted;
+  if (dStr === yesterday.toDateString()) return "yesterday";
+  return "other";
 }
 
 function KinDetailPage() {
@@ -151,8 +154,34 @@ function KinDetailPage() {
 
           <span className={`font-label-sm text-label-sm ${colors.text} mb-1 tracking-widest`} suppressHydrationWarning>
             KIN {kin}
-            <span className="text-on-surface-variant/60 normal-case tracking-normal" suppressHydrationWarning> · {formatKinDate(dateFromKin(kin))}</span>
           </span>
+          {(() => {
+            const kinDate = dateFromKin(kin);
+            const rel = kinDateRelation(kinDate);
+            return (
+              <div className="flex items-center justify-center gap-2 mb-1 flex-wrap" suppressHydrationWarning>
+                {rel === "today" && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">
+                    <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>today</span>
+                    Hoje
+                  </span>
+                )}
+                {rel === "tomorrow" && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-outline-variant/50 text-on-surface-variant font-label-sm text-label-sm">
+                    amanhã
+                  </span>
+                )}
+                {rel === "yesterday" && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-outline-variant/50 text-on-surface-variant font-label-sm text-label-sm">
+                    ontem
+                  </span>
+                )}
+                <span className="font-label-sm text-label-sm text-on-surface-variant/60 normal-case tracking-normal">
+                  {formatKinDate(kinDate)}
+                </span>
+              </div>
+            );
+          })()}
           <h1 className="font-headline-lg text-headline-lg text-on-surface mb-4">{info.fullName}</h1>
 
           {/* Tom em destaque: imagem + nome + essência */}
