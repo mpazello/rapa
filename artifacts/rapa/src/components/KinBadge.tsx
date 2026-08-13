@@ -54,13 +54,6 @@ const DIVIDER: Record<SealColor, string> = {
   amarelo:  "rgba(0,0,0,0.28)",
 };
 
-/** Filtro CSS para as imagens SVG (preto/branco sobre o fundo colorido). */
-const IMG_FILTER: Record<SealColor, string> = {
-  vermelho: "brightness(0) invert(1) opacity(0.92)",
-  branco:   "brightness(0) opacity(0.72)",
-  azul:     "brightness(0) invert(1) opacity(0.92)",
-  amarelo:  "brightness(0) invert(1) opacity(0.92)",
-};
 
 // ─── Componente ──────────────────────────────────────────────────────────────
 
@@ -131,7 +124,6 @@ export function KinBadge({
           style={{
             width:  "76%",
             height: "74%",
-            filter: IMG_FILTER[color],
           }}
           loading={eager ? "eager" : "lazy"}
           decoding="async"
@@ -149,7 +141,7 @@ export function KinBadge({
           style={{
             width:  "72%",
             height: "72%",
-            filter: IMG_FILTER[color],
+            filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.5))",
           }}
           loading={eager ? "eager" : "lazy"}
           decoding="async"
