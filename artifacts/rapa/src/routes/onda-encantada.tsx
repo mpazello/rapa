@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   getTodayKinInfo,
   getKinInfo,
+  dateFromKin,
   TONES,
   type SealColor,
 } from "@/lib/tzolkin";
@@ -36,6 +37,44 @@ const POSITIONS: [number, number][] = [
   [3,5],[2,5],[1,5],
 ];
 
+// ─── Formatação de datas ──────────────────────────────────────────────────────
+
+const WEEKDAYS_PT = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+const MONTHS_PT   = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+
+/** Formata uma data UTC como "qui, 14/08". Se isToday=true, prefixa com "Hoje · ". */
+function formatKinDate(date: Date, isToday: boolean): string {
+  const wd  = WEEKDAYS_PT[date.getUTCDay()];
+  const dd  = String(date.getUTCDate()).padStart(2, "0");
+  const mm  = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const formatted = `${wd}, ${dd}/${mm}`;
+  return isToday ? `Hoje · ${formatted}` : formatted;
+}
+
+/** Formata o intervalo de datas da onda: "13–25 de ago." ou "28 de jul – 9 de ago." */
+function formatDateRange(start: Date, end: Date): string {
+  const sd = start.getUTCDate();
+  const ed = end.getUTCDate();
+  const sm = MONTHS_PT[start.getUTCMonth()];
+  const em = MONTHS_PT[end.getUTCMonth()];
+  if (sm === em) return `${sd}–${ed} de ${sm}.`;
+  return `${sd} de ${sm}. – ${ed} de ${em}.`;
+}
+
+/**
+ * Avança 1 dia Dreamspell a partir de uma data UTC, pulando 29/fev.
+ * Usado para calcular datas dos 13 Kins consecutivos da onda.
+ */
+function nextDreamspellDay(date: Date): Date {
+  let next = new Date(date.getTime() + 86400000);
+  if (next.getUTCMonth() === 1 && next.getUTCDate() === 29) {
+    next = new Date(next.getTime() + 86400000);
+  }
+  return next;
+}
+
+// ─── Tile ─────────────────────────────────────────────────────────────────────
+
 function Tile({
   kin,
   isToday,
@@ -55,10 +94,13 @@ function Tile({
   );
 }
 
+// ─── Página ───────────────────────────────────────────────────────────────────
+
 function OndaEncantadaPage() {
   const [data, setData] = useState<{
     todayKin: number;
     kins: number[];
+    dates: Date[];
     sealName: string;
     sealColor: SealColor;
     kinStart: number;
@@ -69,9 +111,19 @@ function OndaEncantadaPage() {
     const info = getTodayKinInfo();
     const { kinStart, seal } = info.trecena;
     const kins = Array.from({ length: 13 }, (_, i) => ((kinStart - 1 + i) % 260) + 1);
+
+    // Calcular as 13 datas gregorianas consecutivas (pulando 29/fev)
+    const dates: Date[] = [];
+    let current = dateFromKin(kinStart);
+    for (let i = 0; i < 13; i++) {
+      dates.push(current);
+      current = nextDreamspellDay(current);
+    }
+
     setData({
       todayKin: info.kin,
       kins,
+      dates,
       sealName: seal.name,
       sealColor: seal.color,
       kinStart,
@@ -103,12 +155,14 @@ function OndaEncantadaPage() {
             </h1>
             <p className="text-muted-stardust/70 text-sm">
               Kin {data.kinStart} → {data.kinEnd}
+              <span className="mx-2 opacity-40">·</span>
+              {formatDateRange(data.dates[0], data.dates[12])}
             </p>
           </>
         ) : (
           <>
             <div className="h-9 w-40 bg-white/10 rounded animate-pulse" />
-            <div className="h-4 w-24 bg-white/8 rounded animate-pulse" />
+            <div className="h-4 w-48 bg-white/8 rounded animate-pulse" />
           </>
         )}
       </div>
@@ -153,9 +207,10 @@ function OndaEncantadaPage() {
       {data && (
         <section className="glass-card rounded-2xl divide-y divide-outline-variant/20 overflow-hidden">
           {data.kins.map((kin, i) => {
-            const info   = getKinInfo(kin);
-            const tone   = TONES[i]; // tons 1-13
+            const info    = getKinInfo(kin);
+            const tone    = TONES[i]; // tons 1-13
             const isToday = kin === data.todayKin;
+            const kinDate = data.dates[i];
             return (
               <Link
                 key={kin}
@@ -178,14 +233,10 @@ function OndaEncantadaPage() {
                   </p>
                 </div>
 
-                {/* Tom número */}
-                <span className="text-xs text-muted-stardust/50 shrink-0">{i + 1}</span>
-
-                {isToday && (
-                  <span className="text-[10px] bg-astral-violet/20 text-astral-violet px-2 py-0.5 rounded-full shrink-0">
-                    hoje
-                  </span>
-                )}
+                {/* Data gregoriana / Hoje */}
+                <span className={`text-xs shrink-0 ${isToday ? "bg-astral-violet/20 text-astral-violet px-2 py-0.5 rounded-full font-medium" : "text-muted-stardust/50"}`}>
+                  {formatKinDate(kinDate, isToday)}
+                </span>
               </Link>
             );
           })}

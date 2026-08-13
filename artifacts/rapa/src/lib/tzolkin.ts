@@ -504,6 +504,43 @@ export function kinFromDate(date: Date = new Date()): number {
   return kin;
 }
 
+/**
+ * Inversa de kinFromDate: dado um Kin (1–260) e uma data de referência, retorna
+ * o Date gregoriano (UTC) da ocorrência mais próxima da referência.
+ * Em anos bissextos, o 29/fev é pulado (Dreamspell não conta esse dia);
+ * se o resultado cair em 29/fev, retorna 28/fev (mesmo Kin, último dia nomeado).
+ */
+export function dateFromKin(kin: number, near: Date = new Date()): Date {
+  // Offset Dreamspell do kin em relação ao EPOCH_KIN (0..259)
+  const kinOffset = ((kin - EPOCH_KIN + 260) % 260);
+
+  // Dia Dreamspell da data de referência
+  const nearUtc = Date.UTC(near.getUTCFullYear(), near.getUTCMonth(), near.getUTCDate());
+  const nearRaw = Math.round((nearUtc - EPOCH_UTC) / 86400000);
+  const nearDs  = nearRaw - feb29sBetween(EPOCH_UTC, nearUtc);
+
+  // Ciclo de 260 mais próximo da referência
+  const n = Math.round((nearDs - kinOffset) / 260);
+  const targetDs = kinOffset + 260 * n;
+
+  // Inverter dreamspellDays → rawDays (itera para incluir 29/fev pulados)
+  let rawDays = targetDs;
+  for (let i = 0; i < 5; i++) {
+    const utc = EPOCH_UTC + rawDays * 86400000;
+    const skipped = feb29sBetween(EPOCH_UTC, utc);
+    const next = targetDs + skipped;
+    if (next === rawDays) break;
+    rawDays = next;
+  }
+
+  // Se cair em 29/fev, retrocede para 28/fev (mesmo Kin)
+  const result = new Date(EPOCH_UTC + rawDays * 86400000);
+  if (result.getUTCMonth() === 1 && result.getUTCDate() === 29) {
+    return new Date(EPOCH_UTC + (rawDays - 1) * 86400000);
+  }
+  return result;
+}
+
 /** Decompõe um Kin em Selo (1..20) e Tom (1..13). Ambos ciclam independentemente. */
 export function decomposeKin(kin: number): { toneIndex: number; sealIndex: number } {
   const k = ((kin - 1) % 260 + 260) % 260;
