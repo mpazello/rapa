@@ -11,7 +11,7 @@ import { KinBadge } from "@/components/KinBadge";
 const POSITIONS: [number, number][] = [
   [0, 0], [1, 0], [2, 0], [3, 0], [4, 0],   // KINs 1–5  (coluna esquerda)
   [4, 1], [4, 2], [4, 3], [4, 4], [4, 5],   // KINs 6–10 (linha inferior)
-  [2, 5], [1, 5], [0, 5],                    // KINs 11–13 (coluna direita, subindo)
+  [3, 5], [2, 5], [1, 5],                    // KINs 11–13 (coluna direita, subindo)
 ];
 
 // ─── Tile individual ──────────────────────────────────────────────────────────
