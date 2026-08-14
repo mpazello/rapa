@@ -78,18 +78,24 @@ function nextDreamspellDay(date: Date): Date {
 function Tile({
   kin,
   isToday,
+  date,
 }: {
   kin: number;
   toneNumber: number;
   isToday: boolean;
+  date: Date;
 }) {
+  const info = getKinInfo(kin);
+  const dd = String(date.getUTCDate()).padStart(2, "0");
+  const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const tooltipTitle = `${dd}/${mm} · Kin ${kin}: ${info.fullName}`;
   return (
     <Link
       to="/ciclos/kin/$kin"
       params={{ kin: String(kin) }}
       className="block w-full aspect-square transition-transform active:scale-95 hover:scale-105"
     >
-      <KinBadge kin={kin} isToday={isToday} className="w-full h-full" />
+      <KinBadge kin={kin} isToday={isToday} className="w-full h-full" title={tooltipTitle} />
     </Link>
   );
 }
@@ -183,6 +189,7 @@ function OndaEncantadaPage() {
                   kin={kin}
                   toneNumber={data!.kins.indexOf(kin) + 1}
                   isToday={kin === data!.todayKin}
+                  date={data!.dates[data!.kins.indexOf(kin)]}
                 />
               )
             )

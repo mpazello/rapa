@@ -64,6 +64,7 @@ export function KinBadge({
   isToday = false,
   eager = false,
   className = "",
+  title: customTitle,
 }: {
   kin: number;
   size?: number;
@@ -71,9 +72,11 @@ export function KinBadge({
   isToday?: boolean;
   eager?: boolean;
   className?: string;
+  title?: string;
 }) {
   const info  = getKinInfo(kin);
   const color = info.seal.color;
+  const titleText = customTitle ?? `Kin ${kin}: ${info.fullName}`;
 
   // Quando `size` é omitido, preenche o container pai.
   const fixedStyle: CSSProperties = size
@@ -97,8 +100,8 @@ export function KinBadge({
     <span
       className={`relative inline-flex flex-col overflow-hidden select-none flex-shrink-0 ${fillMode ? "w-full h-full" : ""} ${className}`}
       style={containerStyle}
-      aria-label={`Kin ${kin}: ${info.fullName}`}
-      title={`Kin ${kin}: ${info.fullName}`}
+      aria-label={titleText}
+      title={titleText}
     >
       {/* Pulse glow */}
       {pulse && (
