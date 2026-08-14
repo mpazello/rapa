@@ -426,15 +426,17 @@ function CalendarView({
                       <span className={`font-headline-sm text-[15px] font-bold leading-none mb-0.5 ${isToday ? "text-primary" : "text-on-surface"}`}>
                         {dayInMoon}
                       </span>
-                      {/* Gregorian date */}
-                      <span className="text-[8px] text-on-surface-variant/50 leading-none mb-1">
-                        {formatDate(date, { day: "numeric", month: "numeric" })}
-                      </span>
-                      <KinBadge kin={kin} size={40} className="mb-0.5" />
-                      {/* Kin number */}
-                      <span className={`text-[8px] font-medium leading-none ${colorCls.text}`}>
-                        {kin}{isPortal ? " ✦" : ""}
-                      </span>
+                      {/* Gregorian date + Kin number lado a lado */}
+                      <div className="flex items-center gap-0.5 mb-1 leading-none">
+                        <span className="text-[8px] text-on-surface-variant/50">
+                          {formatDate(date, { day: "numeric", month: "numeric" })}
+                        </span>
+                        <span className="text-[8px] text-on-surface-variant/30">·</span>
+                        <span className={`text-[8px] font-semibold ${colorCls.text}`}>
+                          {kin}{isPortal ? "✦" : ""}
+                        </span>
+                      </div>
+                      <KinBadge kin={kin} size={52} />
                     </button>
                   );
                 })}
