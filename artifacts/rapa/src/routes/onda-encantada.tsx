@@ -77,6 +77,7 @@ function nextDreamspellDay(date: Date): Date {
 
 function Tile({
   kin,
+  toneNumber,
   isToday,
   date,
 }: {
@@ -86,16 +87,35 @@ function Tile({
   date: Date;
 }) {
   const info = getKinInfo(kin);
+  const colorText = COLOR_TEXT[info.seal.color];
   const dd = String(date.getUTCDate()).padStart(2, "0");
   const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const tooltipTitle = `${dd}/${mm} · Kin ${kin}: ${info.fullName}`;
+
   return (
     <Link
       to="/ciclos/kin/$kin"
       params={{ kin: String(kin) }}
-      className="block w-full aspect-square transition-transform active:scale-95 hover:scale-105"
+      className={`flex flex-col items-center rounded-xl p-1 transition-all active:scale-95 border ${
+        isToday
+          ? "border-primary bg-primary/15 shadow-[0_0_12px_rgba(99,102,241,0.3)]"
+          : "border-transparent hover:border-white/20 hover:bg-white/5"
+      }`}
     >
-      <KinBadge kin={kin} isToday={isToday} className="w-full h-full" title={tooltipTitle} />
+      {/* Tom · data · kin — mesma linha */}
+      <div className="flex items-center gap-[3px] mb-1 leading-none flex-wrap justify-center">
+        <span className={`text-[9px] font-bold ${isToday ? "text-primary" : "text-on-surface"}`}>
+          {toneNumber}
+        </span>
+        <span className="text-[8px] text-on-surface-variant/30">·</span>
+        <span className="text-[8px] text-on-surface-variant/50">
+          {dd}/{mm}
+        </span>
+        <span className="text-[8px] text-on-surface-variant/30">·</span>
+        <span className={`text-[8px] font-semibold ${colorText}`}>
+          {kin}
+        </span>
+      </div>
+      <KinBadge kin={kin} isToday={isToday} size={52} />
     </Link>
   );
 }
@@ -177,7 +197,7 @@ function OndaEncantadaPage() {
       {grid ? (
         <div
           className="grid gap-2"
-          style={{ gridTemplateColumns: "repeat(6, 1fr)", gridTemplateRows: "repeat(5, 1fr)" }}
+          style={{ gridTemplateColumns: "repeat(6, 1fr)", gridTemplateRows: "repeat(5, auto)" }}
         >
           {grid.flatMap((row, rIdx) =>
             row.map((kin, cIdx) =>
