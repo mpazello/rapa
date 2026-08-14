@@ -1,5 +1,4 @@
 {
   "buildCommand": "pnpm --filter @workspace/rapa run build:vercel",
-  "outputDirectory": "artifacts/rapa/.vercel/output",
   "framework": null
 }
