@@ -1,13 +1,8 @@
-import { createRequire } from "module";
 import express, { type Express } from "express";
 import cors from "cors";
+import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
-
-// pino-http é CJS puro (module.exports = fn). createRequire garante import
-// correto independente de moduleResolution/esModuleInterop do TypeScript.
-const require = createRequire(import.meta.url);
-const pinoHttp = require("pino-http") as typeof import("pino-http").default;
 
 const app: Express = express();
 

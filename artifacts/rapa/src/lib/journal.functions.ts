@@ -77,8 +77,7 @@ export const addEntry = createServerFn({ method: "POST" })
       .from("journal_entries")
       .insert({
         user_id: context.userId,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        kind: data.kind as any,
+        kind: data.kind,
         title: data.title || null,
         content: data.content,
         entry_date: data.entry_date ?? new Date().toISOString().slice(0, 10), // client always passes entry_date
@@ -106,10 +105,7 @@ export const updateEntry = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    // Supabase generated types may lag behind the actual DB schema;
-    // cast to any to allow partial updates without exhaustive typing.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const patch: any = {
+    const patch: Record<string, unknown> = {
       kind: data.kind,
       title: data.title || null,
       content: data.content,
