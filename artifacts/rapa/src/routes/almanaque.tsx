@@ -422,12 +422,12 @@ function CalendarView({
                           : `border-transparent hover:border-outline-variant/40 hover:bg-surface-container-low`
                       }`}
                     >
-                      {/* Day number */}
-                      <span className={`font-headline-sm text-[15px] font-bold leading-none mb-0.5 ${isToday ? "text-primary" : "text-on-surface"}`}>
-                        {dayInMoon}
-                      </span>
-                      {/* Gregorian date + Kin number lado a lado */}
-                      <div className="flex items-center gap-0.5 mb-1 leading-none">
+                      {/* Dia · data · kin — tudo na mesma linha */}
+                      <div className="flex items-center gap-[3px] mb-1 leading-none flex-wrap justify-center">
+                        <span className={`text-[9px] font-bold ${isToday ? "text-primary" : "text-on-surface"}`}>
+                          {dayInMoon}
+                        </span>
+                        <span className="text-[8px] text-on-surface-variant/30">·</span>
                         <span className="text-[8px] text-on-surface-variant/50">
                           {formatDate(date, { day: "numeric", month: "numeric" })}
                         </span>
@@ -436,7 +436,7 @@ function CalendarView({
                           {kin}{isPortal ? "✦" : ""}
                         </span>
                       </div>
-                      <KinBadge kin={kin} size={52} />
+                      <KinBadge kin={kin} size={60} />
                     </button>
                   );
                 })}
