@@ -1,6 +1,5 @@
 {
-  "buildCommand": "NITRO_PRESET=vercel pnpm --filter @workspace/rapa run build",
-  "installCommand": "pnpm install",
+  "buildCommand": "pnpm install && cd artifacts/rapa && NITRO_PRESET=vercel pnpm run build",
   "outputDirectory": "artifacts/rapa/.vercel/output",
   "framework": null
 }
