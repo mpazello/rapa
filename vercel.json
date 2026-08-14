@@ -1,6 +1,0 @@
-{
-  "rootDirectory": "artifacts/rapa",
-  "installCommand": "cd ../.. && pnpm install",
-  "buildCommand": "NITRO_PRESET=vercel vite build",
-  "framework": null
-}
