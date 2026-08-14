@@ -96,15 +96,15 @@ function GuestState() {
 // ─── Voice-to-text hook ───────────────────────────────────────────────────────
 function useVoiceInput(onTranscript: (text: string) => void) {
   const [listening, setListening] = useState(false);
-  const recRef = useRef<InstanceType<typeof window.SpeechRecognition> | null>(null);
+  const recRef = useRef<SpeechRecognition | null>(null);
 
   const toggle = useCallback(() => {
-    const SpeechRecognition =
-      (window as typeof window & { SpeechRecognition?: typeof window.SpeechRecognition; webkitSpeechRecognition?: typeof window.SpeechRecognition })
-        .SpeechRecognition ??
-      (window as typeof window & { webkitSpeechRecognition?: typeof window.SpeechRecognition }).webkitSpeechRecognition;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Ctor = ((window as any).SpeechRecognition ??
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).webkitSpeechRecognition) as (new () => SpeechRecognition) | undefined;
 
-    if (!SpeechRecognition) {
+    if (!Ctor) {
       toast.error("Seu navegador não suporta entrada de voz.");
       return;
     }
@@ -114,7 +114,7 @@ function useVoiceInput(onTranscript: (text: string) => void) {
       return;
     }
 
-    const rec = new SpeechRecognition();
+    const rec = new Ctor();
     rec.lang = "pt-BR";
     rec.continuous = true;
     rec.interimResults = false;
